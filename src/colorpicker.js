@@ -6,7 +6,7 @@ import { VSlider } from "./vslider.js";
 
 /**
  * Creates a input for entering color values, with a preview swatch. Now includes optional sliders for visually setting colors.
- * <div><img src="https://www.minimalcomps2.com/images/colorpicker.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/colorpicker.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 200, 200);
  * new ColorPicker(panel, 20, 20, "Color", "#f00", event => console.log(event.target.color));

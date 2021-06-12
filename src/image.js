@@ -4,7 +4,7 @@ import { Style } from "./style.js";
 
 /**
  * A component that displays an image loaded from a URL.
- * <div><img src="https://www.minimalcomps2.com/images/image.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/image.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 200, 200);
  * new Image(panel, 20, 20, "http://www.example.com/someimage.png");

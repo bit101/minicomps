@@ -3,7 +3,7 @@ import { Style } from "./style.js";
 
 /**
  * Creates an HTML Canvas element for dynamically drawn content.
- * <div><img src="https://www.minimalcomps2.com/images/canvas.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/canvas.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 240, 240);
  * const canvas = new Canvas(panel, 20, 20, 200, 200);

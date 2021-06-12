@@ -6,7 +6,7 @@ import { Style } from "./style.js";
 /**
  * Creates a clickable radio button with a label that can be selected by clicking. Radio buttons are assigned to a group and only one radio button in a group will be selected at any one time.
  * You can get the text of the currently checked radio button in a group by calling RadioButtonGroup.getValueForGroup(group).
- * <div><img src="https://www.minimalcomps2.com/images/radiobutton.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/radiobutton.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 200, 200);
  * const vbox = new VBox(panel, 20, 20, 10);

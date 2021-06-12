@@ -5,7 +5,7 @@ import { Style } from "./style.js";
 
 /**
  * Creates a clickable toggle that can be switched off and on.
- * <div><img src="https://www.minimalcomps2.com/images/toggle.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/toggle.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 200, 200);
  * new Toggle(panel, 20, 20, "Toggle", false, event => console.log(event.target.toggled));

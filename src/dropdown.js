@@ -4,7 +4,7 @@ import { Style } from "./style.js";
 
 /**
  * Provides a dropdown list of items when clicked. One of those items can then be selected and be shown in the main component.
- * <div><img src="https://www.minimalcomps2.com/images/dropdown.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/dropdown.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 200, 200);
  * const items = ["Item 1", "Item 2", "Item 3"];

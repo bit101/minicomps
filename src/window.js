@@ -4,7 +4,7 @@ import { Style } from "./style.js";
 
 /**
  * Creates a draggable, collapsible window to be used as a parent for other components.
- * <div><img src="https://www.minimalcomps2.com/images/window.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/window.png"/></div>
  * @example
  * const win = new Window(document.body, 20, 20, 200, 200);
  * new Button(win, 20, 20, "Click");

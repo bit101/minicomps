@@ -5,7 +5,7 @@ import { Style } from "./style.js";
 
 /**
  * A representation of a colored LED. It can be set to lit or unlit and be set to blink at any rate. The color of the LED can be set to any valid CSS color. It also has a text label.
- * <div><img src="https://www.minimalcomps2.com/images/led.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/led.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 240, 240);
  * const canvas = new LED(panel, 20, 20, "LED", "#f00", true);

@@ -3,7 +3,7 @@ import { Style } from "./style.js";
 
 /**
  * Creates a clickable pushbutton with play/pause icons.
- * <div><img src="https://www.minimalcomps2.com/images/playbutton.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/playbutton.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 200, 200);
  * new PlayButton(panel, 20, 20, false, event => console.log("playing!"));

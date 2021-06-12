@@ -4,7 +4,7 @@ import { Style } from "./style.js";
 
 /**
  * A vertical slider for visually selecting a numeric value. The slider can be moved by clicking and dragging, scrolling with a mouse wheel or trackpad or the use of the keyboard (arrow keys, page up/down, home/end).
- * <div><img src="https://www.minimalcomps2.com/images/vslider.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/vslider.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 200, 200);
  * new VSlider(panel, 20, 20, "Volume", 50, 0, 100,  event => console.log(event.target.value));
@@ -147,7 +147,7 @@ export class VSlider extends HSlider {
 
   /**
    * Gets and sets the height of the draggable slider handle. If you make the slider thicker by changing its width, you may want to adjust the handle size as well. If handleSize is the same as the slider width, then the handle will be a square.
-   * <div><img src="https://www.minimalcomps2.com/images/vsliderhandlesize.png"/></div>
+   * <div><img src="https://www.minicomps.org/images/vsliderhandlesize.png"/></div>
    */
   get handleSize() {
     return this._handleSize;

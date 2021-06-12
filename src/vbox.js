@@ -2,7 +2,7 @@ import { Component } from "./component.js";
 
 /**
  * A container that lays out its children in a vertical column with a set spacing between each child.
- * <div><img src="https://www.minimalcomps2.com/images/vbox.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/vbox.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 200, 200);
  * const vbox = new VBox(panel, 20, 20, 10);

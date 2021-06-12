@@ -5,7 +5,7 @@ import { Style } from "./style.js";
 
 /**
  * A horizontal slider for visually selecting a numeric value. The slider can be moved by clicking and dragging, scrolling with a mouse wheel or trackpad or the use of the keyboard (arrow keys, page up/down, home/end).
- * <div><img src="https://www.minimalcomps2.com/images/hslider.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/hslider.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 200, 200);
  * new HSlider(panel, 20, 20, "Volume", 50, 0, 100,  event => console.log(event.target.value));
@@ -473,7 +473,7 @@ export class HSlider extends Component {
 
   /**
    * Gets and sets the width of the draggable slider handle. If you make the slider thicker by changing its height, you may want to adjust the handle size as well. If handleSize is the same as the slider height, then the handle will be a square.
-   * <div><img src="https://www.minimalcomps2.com/images/hsliderhandlesize.png"/></div>
+   * <div><img src="https://www.minicomps.org/images/hsliderhandlesize.png"/></div>
    */
   get handleSize() {
     return this._handleSize;

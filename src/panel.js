@@ -3,7 +3,7 @@ import { Style } from "./style.js";
 
 /**
  * Creates a panel to be used as a parent for other components.
- * <div><img src="https://www.minimalcomps2.com/images/panel.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/panel.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 200, 200);
  * new Button(panel, 20, 20, "Click");

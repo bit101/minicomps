@@ -3,7 +3,7 @@ import { Style } from "./style.js";
 
 /**
  * Creates a progress bar that tracks a value compared to a potential total.
- * <div><img src="https://www.minimalcomps2.com/images/progressbar.png"/></div>
+ * <div><img src="https://www.minicomps.org/images/progressbar.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 200, 200);
  * const pb = new ProgressBar(panel, 20, 20, 0, 100);
