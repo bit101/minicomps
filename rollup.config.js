@@ -1,13 +1,13 @@
 export default {
-  input: "src/allcomps",
+  input: "src/minicomps",
   output: [
     {
-      file: `dist/minimalcomps.js`,
+      file: `dist/minicomps.js`,
       format: 'iife',
-      name: "mc2",
+      name: "minicomps",
     },
     {
-      file: `dist/minimalcomps.mjs`,
+      file: `dist/minicomps.mjs`,
       format: 'es',
     },
   ],

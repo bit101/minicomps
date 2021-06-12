@@ -1,12 +1,12 @@
-# MinimalComps2
+# MiniComps
 
 A Web UI tookkit for creating rapid prototypes, experiments and proof of concept projects.
 
 ##
 
-The site: [https://www.minimalcomps2.com/](https://www.minimalcomps2.com/)
+The site: [https://www.minicomps.org/](https://www.minicomps.org/)
 
-Full [documentation](https://www.minimalcomps2.com/docs) and [live demos](https://www.minimalcomps2.com/demos).
+Full [documentation](https://www.minicomps.com/org) and [live demos](https://www.minicomps.org/demos).
 
 ## Summary
 
@@ -27,7 +27,7 @@ The general API for each component is
 
 ```new ComponentName(parent, x, y, <possible other params>, defaultEventHandler);```
 
-Full documentation here: https://www.minimalcomps2.com/documentation/index.html
+Full documentation here: https://www.minicomps.org/documentation/index.html
 
 No need to worry about styles or layout. Just give everything a parent, a position, a prop or two and maybe an event handler.
 
