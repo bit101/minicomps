@@ -42,7 +42,7 @@ export class ProgressBar extends Component {
 
   _createChildren() {
     this._setWrapperClass("MinimalProgressBar");
-    this.fill = this._createDiv(this.wrapper, "MinimalProgressBarFill");
+    this.fill = this._createDiv(this._wrapper, "MinimalProgressBarFill");
   }
 
   _createStyle() {

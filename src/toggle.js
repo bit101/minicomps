@@ -43,9 +43,9 @@ export class Toggle extends Component {
 
   _createChildren() {
     this._setWrapperClass("MinimalToggle");
-    this.wrapper.tabIndex = 0;
-    this.label = new Label(this.wrapper, 0, -15, this._text);
-    this.handle = this._createDiv(this.wrapper, "MinimalToggleHandle");
+    this._wrapper.tabIndex = 0;
+    this.label = new Label(this._wrapper, 0, -15, this._text);
+    this.handle = this._createDiv(this._wrapper, "MinimalToggleHandle");
   }
 
   _createStyle() {
@@ -57,8 +57,8 @@ export class Toggle extends Component {
   _createListeners() {
     this._onClick = this._onClick.bind(this);
     this._onKeyPress = this._onKeyPress.bind(this);
-    this.wrapper.addEventListener("click", this._onClick);
-    this.wrapper.addEventListener("keypress", this._onKeyPress);
+    this._wrapper.addEventListener("click", this._onClick);
+    this._wrapper.addEventListener("keypress", this._onKeyPress);
   }
 
   //////////////////////////////////
@@ -75,7 +75,7 @@ export class Toggle extends Component {
 
   _onKeyPress(event) {
     if (event.keyCode === 13 && this.enabled) {
-      this.wrapper.click();
+      this._wrapper.click();
     }
   }
 
@@ -197,10 +197,10 @@ export class Toggle extends Component {
       this.label.enable = enabled;
       if (this.enabled) {
         this._setWrapperClass("MinimalToggle");
-        this.wrapper.tabIndex = 0;
+        this._wrapper.tabIndex = 0;
       } else {
         this._setWrapperClass("MinimalToggleDisabled");
-        this.wrapper.tabIndex = -1;
+        this._wrapper.tabIndex = -1;
       }
     }
   }

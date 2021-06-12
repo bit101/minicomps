@@ -38,7 +38,7 @@ export class Canvas extends Component {
   //////////////////////////////////
 
   _createChildren() {
-    this.canvas = this._createElement(this.wrapper, "canvas", "MinimalCanvas");
+    this.canvas = this._createElement(this._wrapper, "canvas", "MinimalCanvas");
     this._context = this.canvas.getContext("2d");
   }
 
@@ -49,12 +49,38 @@ export class Canvas extends Component {
   }
 
   //////////////////////////////////
-  // Handlers
+  // Public
   //////////////////////////////////
 
-  //////////////////////////////////
-  // General
-  //////////////////////////////////
+  /**
+   * Gets the current 2d drawing context of the canvas (read only).
+   * @returns This 2d drawing context.
+   */
+  getContext() {
+    return this._context;
+  }
+
+  setEnabled(enabled) {
+    super.setEnabled(enabled);
+    if (this._enabled) {
+      this.canvas.setAttribute("class", "MinimalCanvas");
+    } else {
+      this.canvas.setAttribute("class", "MinimalCanvasDisabled");
+    }
+    return this;
+  }
+
+  setHeight(height) {
+    super.setHeight(height);
+    this.canvas.height = height;
+    return this;
+  }
+
+  setWidth(width) {
+    super.setWidth(width);
+    this.canvas.width = width;
+    return this;
+  }
 
   //////////////////////////////////
   // Getters/Setters
@@ -65,38 +91,7 @@ export class Canvas extends Component {
    * Returns the current 2d drawing context of the canvas (read only).
    */
   get context() {
-    return this._context;
-  }
-
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    super.enabled = enabled;
-    if (this._enabled) {
-      this.canvas.setAttribute("class", "MinimalCanvas");
-    } else {
-      this.canvas.setAttribute("class", "MinimalCanvasDisabled");
-    }
-  }
-
-  get height() {
-    return super.height;
-  }
-
-  set height(height) {
-    super.height = height;
-    this.canvas.height = height;
-  }
-
-  get width() {
-    return super.width;
-  }
-
-  set width(width) {
-    super.width = width;
-    this.canvas.width = width;
+    return this.getContext();
   }
 }
 

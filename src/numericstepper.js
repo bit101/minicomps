@@ -51,14 +51,14 @@ export class NumericStepper extends Component {
   _createChildren() {
     this._setWrapperClass("MinimalNumericStepper");
 
-    this.input = this._createInput(this.wrapper, "MinimalNumericStepperInput");
+    this.input = this._createInput(this._wrapper, "MinimalNumericStepperInput");
     this.input.value = this._value;
 
-    this.label = new Label(this.wrapper, 0, -15, this._text);
+    this.label = new Label(this._wrapper, 0, -15, this._text);
 
-    this.minus = new Button(this.wrapper, 60, 0, "-");
+    this.minus = new Button(this._wrapper, 60, 0, "-");
     this.minus.setSize(20, 20);
-    this.plus = new Button(this.wrapper, 80, 0, "+");
+    this.plus = new Button(this._wrapper, 80, 0, "+");
     this.plus.setSize(20, 20);
   }
 
@@ -81,7 +81,7 @@ export class NumericStepper extends Component {
     this._onMinusKeyUp = this._onMinusKeyUp.bind(this);
     this._onWheel = this._onWheel.bind(this);
 
-    this.wrapper.addEventListener("wheel", this._onWheel);
+    this._wrapper.addEventListener("wheel", this._onWheel);
 
     this.input.addEventListener("input", this._onInput);
     this.input.addEventListener("change", this._onInputChange);
@@ -348,9 +348,9 @@ export class NumericStepper extends Component {
       this.minus.enabled = this.enabled;
       this.label.enabled = enabled;
       if (this.enabled) {
-        this.wrapper.addEventListener("wheel", this._onWheel);
+        this._wrapper.addEventListener("wheel", this._onWheel);
       } else {
-        this.wrapper.removeEventListener("wheel", this._onWheel);
+        this._wrapper.removeEventListener("wheel", this._onWheel);
       }
     }
   }

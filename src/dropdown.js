@@ -47,15 +47,15 @@ export class Dropdown extends Component {
 
   _createChildren() {
     this._setWrapperClass("MinimalDropdown");
-    this.wrapper.tabIndex = 0;
+    this._wrapper.tabIndex = 0;
 
-    this.label = new Label(this.wrapper, 3, 3);
+    this.label = new Label(this._wrapper, 3, 3);
     this.label.autosize = false;
 
-    this.button = this._createDiv(this.wrapper, "MinimalDropdownButton");
+    this.button = this._createDiv(this._wrapper, "MinimalDropdownButton");
     this.button.textContent = "+";
 
-    this.dropdown = this._createDiv(this.wrapper, "MinimalDropdownPanel");
+    this.dropdown = this._createDiv(this._wrapper, "MinimalDropdownPanel");
   }
 
   _createItems() {
@@ -91,7 +91,7 @@ export class Dropdown extends Component {
     this._onItemClick = this._onItemClick.bind(this);
     this._onKeyPress = this._onKeyPress.bind(this);
 
-    this.wrapper.addEventListener("click", () => {
+    this._wrapper.addEventListener("click", () => {
       this._toggle();
     });
     for (let i = 0; i < this.itemElements.length; i++) {
@@ -127,7 +127,7 @@ export class Dropdown extends Component {
         index: this.index,
       },
     }));
-    this.wrapper.focus();
+    this._wrapper.focus();
   }
 
   _onKeyPress(event) {
@@ -140,7 +140,7 @@ export class Dropdown extends Component {
     } else if (event.keyCode === 40) {
       // down
       event.preventDefault();
-      if (this.shadowRoot.activeElement === this.wrapper ||
+      if (this.shadowRoot.activeElement === this._wrapper ||
           this.shadowRoot.activeElement === this.dropdown.lastChild) {
         this.dropdown.firstChild.focus();
       } else {
@@ -149,7 +149,7 @@ export class Dropdown extends Component {
     } else if (event.keyCode === 38) {
       // up
       event.preventDefault();
-      if (this.shadowRoot.activeElement === this.wrapper ||
+      if (this.shadowRoot.activeElement === this._wrapper ||
           this.shadowRoot.activeElement === this.dropdown.firstChild) {
         this.dropdown.lastChild.focus();
       } else {
@@ -281,13 +281,13 @@ export class Dropdown extends Component {
     }
     super.enabled = enabled;
     if (this.enabled) {
-      this.wrapper.addEventListener("click", this._toggle);
-      this.wrapper.setAttribute("class", "MinimalDropdown");
+      this._wrapper.addEventListener("click", this._toggle);
+      this._wrapper.setAttribute("class", "MinimalDropdown");
       this.button.setAttribute("class", "MinimalDropdownButton");
       this.tabIndex = 0;
     } else {
-      this.wrapper.removeEventListener("click", this._toggle);
-      this.wrapper.setAttribute("class", "MinimalDropdownDisabled");
+      this._wrapper.removeEventListener("click", this._toggle);
+      this._wrapper.setAttribute("class", "MinimalDropdownDisabled");
       this.button.setAttribute("class", "MinimalDropdownButtonDisabled");
       this.tabIndex = -1;
       this.close();

@@ -39,7 +39,7 @@ export class TextBox extends Component {
 
   _createChildren() {
     this._setWrapperClass("MinimalTextBox");
-    this.wrapper.textContent = this._text;
+    this._wrapper.textContent = this._text;
   }
 
   _createStyle() {
@@ -132,7 +132,7 @@ export class TextBox extends Component {
 
   set align(align) {
     this._align = align;
-    this.wrapper.style.textAlign = align;
+    this._wrapper.style.textAlign = align;
   }
 
   /**
@@ -145,9 +145,9 @@ export class TextBox extends Component {
   set bold(bold) {
     this._bold = bold;
     if (this._bold) {
-      this.wrapper.style.fontWeight = "bold";
+      this._wrapper.style.fontWeight = "bold";
     } else {
-      this.wrapper.style.fontWeight = "normal";
+      this._wrapper.style.fontWeight = "normal";
     }
   }
 
@@ -160,7 +160,7 @@ export class TextBox extends Component {
 
   set color(color) {
     this._color = color;
-    this.wrapper.style.color = color;
+    this._wrapper.style.color = color;
   }
 
   get enabled() {
@@ -185,7 +185,7 @@ export class TextBox extends Component {
 
   set fontSize(fontSize) {
     this._fontSize = fontSize;
-    this.wrapper.style.fontSize = fontSize + "px";
+    this._wrapper.style.fontSize = fontSize + "px";
   }
 
   /**
@@ -198,9 +198,9 @@ export class TextBox extends Component {
   set html(html) {
     this._html = html;
     if (this._html) {
-      this.wrapper.innerHTML = this._text;
+      this._wrapper.innerHTML = this._text;
     } else {
-      this.wrapper.textContent = this._text;
+      this._wrapper.textContent = this._text;
     }
   }
 
@@ -214,9 +214,9 @@ export class TextBox extends Component {
   set italic(italic) {
     this._italic = italic;
     if (this._italic) {
-      this.wrapper.style.fontStyle = "italic";
+      this._wrapper.style.fontStyle = "italic";
     } else {
-      this.wrapper.style.fontStyle = "normal";
+      this._wrapper.style.fontStyle = "normal";
     }
   }
 
@@ -230,9 +230,9 @@ export class TextBox extends Component {
   set text(text) {
     this._text = text;
     if (this._html) {
-      this.wrapper.innerHTML = this._text;
+      this._wrapper.innerHTML = this._text;
     } else {
-      this.wrapper.textContent = this._text;
+      this._wrapper.textContent = this._text;
     }
   }
 }

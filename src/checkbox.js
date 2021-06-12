@@ -16,13 +16,13 @@ export class Checkbox extends Component {
    * @param {HTMLElement} parent - The element to add this checkbox to.
    * @param {number} x - The x position of the checkbox.
    * @param {number} y - The y position of the checkbox.
-   * @param {string} text - The text label of the checkbox.
+   * @param {string} label - The label label of the checkbox.
    * @param {boolean} checked - The initial checked state of the checkbox.
    * @param {function} defaultHandler - A function that will handle the "click" event.
    */
-  constructor(parent, x, y, text, checked, defaultHandler) {
+  constructor(parent, x, y, label, checked, defaultHandler) {
     super(parent, x, y);
-    this._text = text;
+    this._label = label;
 
     this._createChildren();
     this._createStyle();
@@ -41,9 +41,9 @@ export class Checkbox extends Component {
 
   _createChildren() {
     this._setWrapperClass("MinimalCheckbox");
-    this.wrapper.tabIndex = 0;
-    this.check = this._createDiv(this.wrapper, "MinimalCheckboxCheck");
-    this.label = new Label(this.wrapper, 15, 0, this.text);
+    this._wrapper.tabIndex = 0;
+    this.check = this._createDiv(this._wrapper, "MinimalCheckboxCheck");
+    this._textLabel = new Label(this._wrapper, 15, 0, this._label);
   }
 
   _createStyle() {
@@ -55,8 +55,8 @@ export class Checkbox extends Component {
   _createListeners() {
     this._onClick = this._onClick.bind(this);
     this._onKeyPress = this._onKeyPress.bind(this);
-    this.wrapper.addEventListener("click", this._onClick);
-    this.wrapper.addEventListener("keypress", this._onKeyPress);
+    this._wrapper.addEventListener("click", this._onClick);
+    this._wrapper.addEventListener("keypress", this._onKeyPress);
   }
 
   //////////////////////////////////
@@ -73,12 +73,12 @@ export class Checkbox extends Component {
 
   _onKeyPress(event) {
     if (event.keyCode === 13 && this.enabled) {
-      this.wrapper.click();
+      this._wrapper.click();
     }
   }
 
   //////////////////////////////////
-  // General
+  // Private
   //////////////////////////////////
 
   _updateCheckStyle() {
@@ -98,8 +98,12 @@ export class Checkbox extends Component {
   }
 
   _updateWidth() {
-    this.style.width = this.label.x + this.label.width + "px";
+    this.style.width = this._textLabel.x + this._textLabel.width + "px";
   }
+
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
 
   /**
    * Adds a handler function for the "click" event on this checkbox.
@@ -125,22 +129,72 @@ export class Checkbox extends Component {
   }
 
   /**
+   * Gets whether or not this checkbox is checked.
+   * @returns Whether or not this checkbox is checked.
+   */
+  getChecked() {
+    return this._checked;
+  }
+
+  /** Gets the label on this checkbox.
+   * @returns The text of the label of this checkbox.
+   */
+  getLabel() {
+    return this._label;
+  }
+
+  getWidth() {
+    return this._textLabel.x + this._textLabel.width;
+  }
+
+  /**
    * Sets the checked state of this checkbox.
    * @params {boolean} checked - Whether or not this checkbox will be checked.
    * @returns This instance, suitable for chaining.
    */
   setChecked(checked) {
-    this.checked = checked;
+    this._checked = checked;
+    this._updateCheckStyle();
+    return this;
+  }
+
+  setEnabled(enabled) {
+    if (this.enabled !== enabled) {
+      super.setEnabled(enabled);
+      this._updateCheckStyle();
+      this._textLabel.enabled = enabled;
+      if (this.enabled) {
+        this._wrapper.tabIndex = 0;
+      } else {
+        this._wrapper.tabIndex = -1;
+      }
+    }
+    return this;
+  }
+
+  setHeight(height) {
+    super.setHeight(height);
+    this._textLabel.height = height;
+    this.check.style.top = Math.round((this.height - 10) / 2) + "px";
     return this;
   }
 
   /**
-   * Sets the text of this checkbox.
-   * @param {string} text - The text to set on this checkbox.
+   * Sets the label of this checkbox.
+   * @param {string} label - The label to set on this checkbox.
    * @returns this instance, suitable for chaining.
    */
-  setText(text) {
-    this.text = text;
+  setLabel(label) {
+    this._label = label;
+    this._textLabel.text = label;
+    this._updateWidth();
+    return this;
+  }
+
+  /**
+   * Sets the width of this checkbox. In fact, setting the width does nothing because it is automatically determined by the width of the label.
+   */
+  setWidth() {
     return this;
   }
 
@@ -149,7 +203,7 @@ export class Checkbox extends Component {
    * @returns This instance, suitable for chaining.
    */
   toggle() {
-    this.checked = !this.checked;
+    this.setChecked(!this._checked);
     return this;
   }
 
@@ -162,66 +216,20 @@ export class Checkbox extends Component {
    * Sets and gets the checked state of the checkbox.
    */
   get checked() {
-    return this._checked;
+    return this.getChecked();
   }
-
   set checked(checked) {
-    this._checked = checked;
-    this._updateCheckStyle();
-  }
-
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    if (this.enabled !== enabled) {
-      super.enabled = enabled;
-      this._updateCheckStyle();
-      this.label.enabled = enabled;
-      if (this.enabled) {
-        this.wrapper.tabIndex = 0;
-      } else {
-        this.wrapper.tabIndex = -1;
-      }
-    }
+    this.setChecked(checked);
   }
 
   /**
-   * Gets and sets the height of this component.
+   * Sets and gets the label shown in the button's label.
    */
-  get height() {
-    return super.height;
+  get label() {
+    return this.getLabel();
   }
-
-  set height(h) {
-    super.height = h;
-    this.label.height = h;
-    this.check.style.top = Math.round((this.height - 10) / 2) + "px";
-  }
-
-  /**
-   * Sets and gets the text shown in the button's label.
-   */
-  get text() {
-    return this._text;
-  }
-
-  set text(text) {
-    this._text = text;
-    this.label.text = text;
-    this._updateWidth();
-  }
-
-  /**
-   * Gets the width of this checkbox. Setting the width does nothing because it is automatically determined by the width of the label.
-   */
-  get width() {
-    return this.label.x + this.label.width;
-  }
-
-  set width(w) {
-    w = w; // noop
+  set label(label) {
+    this.setLabel(label);
   }
 }
 

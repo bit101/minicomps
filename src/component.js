@@ -41,8 +41,8 @@ export class Component extends HTMLElement {
   }
 
   _createWrapper() {
-    this.wrapper = this._createDiv(null, "MinimalWrapper");
-    this.shadowRoot.appendChild(this.wrapper);
+    this._wrapper = this._createDiv(null, "MinimalWrapper");
+    this.shadowRoot.appendChild(this._wrapper);
     this.shadowRoot.appendChild(document.createElement("slot"));
   }
 
@@ -53,11 +53,55 @@ export class Component extends HTMLElement {
   }
 
   //////////////////////////////////
-  // General
+  // Private
   //////////////////////////////////
 
   _setWrapperClass(className) {
-    this.wrapper.setAttribute("class", className);
+    this._wrapper.setAttribute("class", className);
+  }
+
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
+
+  /**
+   * Gets whether the component is enabled.
+   * @returns Whether or not the component is enabled.
+   */
+  getEnabled() {
+    return this._enabled;
+  }
+
+  /**
+   * Gets the height of the component.
+   * @returns The height of the component.
+   */
+  getHeight() {
+    return this._height;
+  }
+
+  /**
+   * Gets the width of the component.
+   * @returns The width of the component.
+   */
+  getWidth() {
+    return this._width;
+  }
+
+  /**
+   * Gets the x position of the component.
+   * @returns The x position of the component.
+   */
+  getX() {
+    return this._x;
+  }
+
+  /**
+   * Gets the y position of the component.
+   * @returns The y position of the component.
+   */
+  getY() {
+    return this._y;
   }
 
   /**
@@ -93,24 +137,12 @@ export class Component extends HTMLElement {
   }
 
   /**
-   * Sizes the component.
-   * @param {number} w - The new width of the component.
-   * @param {number} h - The new height of the component.
-   * @returns This instance, suitable for chaining.
-   */
-  setSize(w, h) {
-    this.width = w;
-    this.height = h;
-    return this;
-  }
-
-  /**
    * Sets the enabled state of this component.
    * @param {boolean} enabled - Whether or not the component will be enabled.
    * @returns This instance, suitable for chaining.
    */
   setEnabled(enabled) {
-    this.enabled = enabled;
+    this._enabled = enabled;
     return this;
   }
 
@@ -120,7 +152,20 @@ export class Component extends HTMLElement {
    * @returns This instance, suitable for chaining.
    */
   setHeight(h) {
-    this.height = h;
+    this._height = h;
+    this.style.height = h + "px";
+    return this;
+  }
+
+  /**
+   * Sizes the component.
+   * @param {number} w - The new width of the component.
+   * @param {number} h - The new height of the component.
+   * @returns This instance, suitable for chaining.
+   */
+  setSize(w, h) {
+    this.setWidth(w);
+    this.setHeight(h);
     return this;
   }
 
@@ -130,7 +175,8 @@ export class Component extends HTMLElement {
    * @returns This instance, suitable for chaining.
    */
   setWidth(w) {
-    this.width = w;
+    this._width = w;
+    this.style.width = w + "px";
     return this;
   }
 
@@ -140,7 +186,8 @@ export class Component extends HTMLElement {
    * @returns This instance, suitable for chaining.
    */
   setX(x) {
-    this.x = x;
+    this._x = x;
+    this.style.left = x + "px";
     return this;
   }
 
@@ -150,7 +197,8 @@ export class Component extends HTMLElement {
    * @returns this instance, suitable for chaining.
    */
   setY(y) {
-    this.y = y;
+    this._y = y;
+    this.style.top = y + "px";
     return this;
   }
 
@@ -163,59 +211,50 @@ export class Component extends HTMLElement {
    * Sets and gets whether or not this component is enabled. Non-enabled components will be faded out and not respond to events.
    */
   get enabled() {
-    return this._enabled;
+    return this.getEnabled();
   }
-
   set enabled(enabled) {
-    this._enabled = enabled;
+    this.setEnabled(enabled);
   }
 
   /**
    * Sets and gets the height of this component.
    */
   get height() {
-    return this._height;
+    return this.getHeight();
   }
-
   set height(h) {
-    this._height = h;
-    this.style.height = h + "px";
+    this.setHeight(h);
   }
 
   /**
    * Sets and gets the width of this component.
    */
   get width() {
-    return this._width;
+    return this.getWidth();
   }
-
   set width(w) {
-    this._width = w;
-    this.style.width = w + "px";
+    this.setWidth(w);
   }
 
   /**
    * Sets and gets the x position of this component.
    */
   get x() {
-    return this._x;
+    return this.getX();
   }
-
   set x(x) {
-    this._x = x;
-    this.style.left = x + "px";
+    this.setX(x);
   }
 
   /**
    * Sets and gets the y position of this component.
    */
   get y() {
-    return this._y;
+    return this.getY();
   }
-
   set y(y) {
-    this._y = y;
-    this.style.top = y + "px";
+    this.setY(y);
   }
 }
 

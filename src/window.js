@@ -43,11 +43,11 @@ export class Window extends Component {
 
   _createChildren() {
     this._setWrapperClass("MinimalWindow");
-    this.titleBar = this._createDiv(this.wrapper, "MinimalWindowTitleBar");
+    this.titleBar = this._createDiv(this._wrapper, "MinimalWindowTitleBar");
     this.label = new Label(this.titleBar, 5, 0, this._text);
     this.label.height = 30;
     this.button = this._createDiv(this.titleBar, "MinimalWindowButton");
-    this.content = this._createDiv(this.wrapper, "MinimalWindowContent");
+    this.content = this._createDiv(this._wrapper, "MinimalWindowContent");
     this.content.appendChild(document.createElement("slot"));
   }
 
@@ -58,8 +58,8 @@ export class Window extends Component {
   }
 
   _createWrapper() {
-    this.wrapper = this._createDiv(null, "MinimalWrapper");
-    this.shadowRoot.appendChild(this.wrapper);
+    this._wrapper = this._createDiv(null, "MinimalWrapper");
+    this.shadowRoot.appendChild(this._wrapper);
   }
 
   _createListeners() {
@@ -204,7 +204,7 @@ export class Window extends Component {
       this._onMinimize();
       this.minimizable = this.enabledMinimizable;
       this.draggable = this.enabledDraggable;
-      this.wrapper.setAttribute("class", "MinimalWindow");
+      this._wrapper.setAttribute("class", "MinimalWindow");
     } else {
       this.minimized = false;
       this._onMinimize();
@@ -212,7 +212,7 @@ export class Window extends Component {
       this.enabledDraggable = this.draggable;
       this.minimizable = false;
       this.draggable = false;
-      this.wrapper.setAttribute("class", "MinimalWindowDisabled");
+      this._wrapper.setAttribute("class", "MinimalWindowDisabled");
     }
   }
   /**

@@ -44,7 +44,7 @@ export class VSlider extends HSlider {
     let mouseY;
     if (event.changedTouches) {
       event.preventDefault();
-      this.wrapper.focus();
+      this._wrapper.focus();
       mouseY = event.changedTouches[0].clientY;
     } else {
       mouseY = event.clientY;
@@ -130,6 +130,14 @@ export class VSlider extends HSlider {
     this._updateValueLabelPosition();
   }
 
+  setHeight(height) {
+    super.setHeight(height);
+    this._updateLabelPosition();
+    this._updateValueLabelPosition();
+    this._updateHandlePosition();
+    return this;
+  }
+
   /**
    * Sets whether the text label and value label will be swapped. If true, the text label will be on the bottom and the value label will be on the top.
    * @param {boolean} swapped - Whether the labels will be swapped.
@@ -137,6 +145,13 @@ export class VSlider extends HSlider {
    */
   setLabelsSwapped(swapped) {
     this.labelsSwapped = swapped;
+    return this;
+  }
+
+  setWidth(width) {
+    super.setWidth(width);
+    this._updateLabelPosition();
+    this._updateHandlePosition();
     return this;
   }
 
@@ -160,19 +175,6 @@ export class VSlider extends HSlider {
   }
 
   /**
-   * Gets and sets the height of this component.
-   */
-  get height() {
-    return super.height;
-  }
-
-  set height(height) {
-    super.height = height;
-    this._updateLabelPosition();
-    this._updateHandlePosition();
-  }
-
-  /**
    * Gets and sets whether the text label and value label will be swapped. If true, the text label will be on the bottom and the value label will be on the top.
    */
   get labelsSwapped() {
@@ -183,19 +185,6 @@ export class VSlider extends HSlider {
     this._labelsSwapped = swap;
     this._updateLabelPosition();
     this._updateValueLabelPosition();
-  }
-
-  /**
-   * Gets and sets the width of this component.
-   */
-  get width() {
-    return super.width;
-  }
-
-  set width(width) {
-    super.width = width;
-    this._updateLabelPosition();
-    this._updateHandlePosition();
   }
 }
 

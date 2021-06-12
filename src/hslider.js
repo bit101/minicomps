@@ -49,11 +49,11 @@ export class HSlider extends Component {
   // Core
   //////////////////////////////////
   _createChildren() {
-    this.wrapper.tabIndex = 0;
+    this._wrapper.tabIndex = 0;
     this._setWrapperClass("MinimalSlider");
-    this.handle = this._createDiv(this.wrapper, "MinimalSliderHandle");
-    this.label = new Label(this.wrapper, 0, 0, this._text);
-    this.valueLabel = new Label(this.wrapper, 0, 0, this._formatValue());
+    this.handle = this._createDiv(this._wrapper, "MinimalSliderHandle");
+    this.label = new Label(this._wrapper, 0, 0, this._text);
+    this.valueLabel = new Label(this._wrapper, 0, 0, this._formatValue());
   }
 
   _createStyle() {
@@ -69,10 +69,10 @@ export class HSlider extends Component {
     this._onMouseUp = this._onMouseUp.bind(this);
     this._onKeyDown = this._onKeyDown.bind(this);
     this._onWheel = this._onWheel.bind(this);
-    this.wrapper.addEventListener("wheel", this._onWheel);
-    this.wrapper.addEventListener("mousedown", this._onMouseDown);
-    this.wrapper.addEventListener("touchstart", this._onMouseDown);
-    this.wrapper.addEventListener("keydown", this._onKeyDown);
+    this._wrapper.addEventListener("wheel", this._onWheel);
+    this._wrapper.addEventListener("mousedown", this._onMouseDown);
+    this._wrapper.addEventListener("touchstart", this._onMouseDown);
+    this._wrapper.addEventListener("keydown", this._onKeyDown);
   }
 
   //////////////////////////////////
@@ -82,7 +82,7 @@ export class HSlider extends Component {
     let mouseX;
     if (event.changedTouches) {
       event.preventDefault();
-      this.wrapper.focus();
+      this._wrapper.focus();
       mouseX = event.changedTouches[0].clientX;
     } else {
       mouseX = event.clientX;
@@ -452,17 +452,17 @@ export class HSlider extends Component {
       super.enabled = enabled;
       this._updateEnabledStyle();
       if (this.enabled) {
-        this.wrapper.tabIndex = 0;
-        this.wrapper.addEventListener("wheel", this._onWheel);
-        this.wrapper.addEventListener("mousedown", this._onMouseDown);
-        this.wrapper.addEventListener("touchstart", this._onMouseDown);
-        this.wrapper.addEventListener("keydown", this._onKeyDown);
+        this._wrapper.tabIndex = 0;
+        this._wrapper.addEventListener("wheel", this._onWheel);
+        this._wrapper.addEventListener("mousedown", this._onMouseDown);
+        this._wrapper.addEventListener("touchstart", this._onMouseDown);
+        this._wrapper.addEventListener("keydown", this._onKeyDown);
       } else {
-        this.wrapper.tabIndex = -1;
-        this.wrapper.removeEventListener("wheel", this._onWheel);
-        this.wrapper.removeEventListener("mousedown", this._onMouseDown);
-        this.wrapper.removeEventListener("touchstart", this._onMouseDown);
-        this.wrapper.removeEventListener("keydown", this._onKeyDown);
+        this._wrapper.tabIndex = -1;
+        this._wrapper.removeEventListener("wheel", this._onWheel);
+        this._wrapper.removeEventListener("mousedown", this._onMouseDown);
+        this._wrapper.removeEventListener("touchstart", this._onMouseDown);
+        this._wrapper.removeEventListener("keydown", this._onKeyDown);
         document.removeEventListener("mousemove", this._onMouseMove);
         document.removeEventListener("touchmove", this._onMouseMove);
         document.removeEventListener("mouseup", this._onMouseUp);

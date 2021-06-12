@@ -36,7 +36,7 @@ export class Label extends Component {
     // so we put it on document.body, get width
     // then remove it and add it to parent.
     document.body.appendChild(this);
-    this._width = this.wrapper.offsetWidth;
+    this._width = this._wrapper.offsetWidth;
     this.text = text;
     this.height = Defaults.label.fontSize + 2;
     this._addToParent();
@@ -48,7 +48,7 @@ export class Label extends Component {
 
   _createChildren() {
     this._setWrapperClass("MinimalLabel");
-    this.wrapper.textContent = this._text;
+    this._wrapper.textContent = this._text;
   }
 
   _createStyle() {
@@ -141,7 +141,7 @@ export class Label extends Component {
 
   set align(align) {
     this._align = align;
-    this.wrapper.style.textAlign = align;
+    this._wrapper.style.textAlign = align;
   }
 
   /**
@@ -154,11 +154,11 @@ export class Label extends Component {
   set autosize(autosize) {
     this._autosize = autosize;
     if (this._autosize) {
-      this.wrapper.style.width = "auto";
-      this._width = this.wrapper.offsetWidth;
+      this._wrapper.style.width = "auto";
+      this._width = this._wrapper.offsetWidth;
     } else {
-      this._width = this.wrapper.offsetWidth;
-      this.wrapper.style.width = this._width + "px";
+      this._width = this._wrapper.offsetWidth;
+      this._wrapper.style.width = this._width + "px";
     }
   }
 
@@ -172,9 +172,9 @@ export class Label extends Component {
   set bold(bold) {
     this._bold = bold;
     if (this._bold) {
-      this.wrapper.style.fontWeight = "bold";
+      this._wrapper.style.fontWeight = "bold";
     } else {
-      this.wrapper.style.fontWeight = "normal";
+      this._wrapper.style.fontWeight = "normal";
     }
   }
 
@@ -187,7 +187,7 @@ export class Label extends Component {
 
   set color(color) {
     this._color = color;
-    this.wrapper.style.color = color;
+    this._wrapper.style.color = color;
   }
 
   get enabled() {
@@ -212,7 +212,7 @@ export class Label extends Component {
 
   set fontSize(fontSize) {
     this._fontSize = fontSize;
-    this.wrapper.style.fontSize = fontSize + "px";
+    this._wrapper.style.fontSize = fontSize + "px";
   }
 
   /**
@@ -224,7 +224,7 @@ export class Label extends Component {
 
   set height(height) {
     super.height = height;
-    this.wrapper.style.lineHeight = height + "px";
+    this._wrapper.style.lineHeight = height + "px";
   }
 
   /**
@@ -237,9 +237,9 @@ export class Label extends Component {
   set italic(italic) {
     this._italic = italic;
     if (this._italic) {
-      this.wrapper.style.fontStyle = "italic";
+      this._wrapper.style.fontStyle = "italic";
     } else {
-      this.wrapper.style.fontStyle = "normal";
+      this._wrapper.style.fontStyle = "normal";
     }
   }
 
@@ -252,9 +252,9 @@ export class Label extends Component {
 
   set text(text) {
     this._text = text;
-    this.wrapper.textContent = text;
+    this._wrapper.textContent = text;
     if (this._autosize) {
-      super.width = this.wrapper.offsetWidth;
+      super.width = this._wrapper.offsetWidth;
     }
   }
 
@@ -268,7 +268,7 @@ export class Label extends Component {
   set width(w) {
     if (!this.autosize) {
       this._width = w;
-      this.wrapper.style.width = w + "px";
+      this._wrapper.style.width = w + "px";
     }
   }
 }

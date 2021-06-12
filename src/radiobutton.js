@@ -52,9 +52,9 @@ export class RadioButton extends Component {
 
   _createChildren() {
     this._setWrapperClass("MinimalRadioButton");
-    this.wrapper.tabIndex = 0;
-    this.check = this._createDiv(this.wrapper, "MinimalRadioButtonCheck");
-    this.label = new Label(this.wrapper, 15, 0, this.text);
+    this._wrapper.tabIndex = 0;
+    this.check = this._createDiv(this._wrapper, "MinimalRadioButtonCheck");
+    this.label = new Label(this._wrapper, 15, 0, this.text);
   }
 
   _createStyle() {
@@ -66,8 +66,8 @@ export class RadioButton extends Component {
   _createListeners() {
     this._onClick = this._onClick.bind(this);
     this._onKeyPress = this._onKeyPress.bind(this);
-    this.wrapper.addEventListener("click", this._onClick);
-    this.wrapper.addEventListener("keydown", this._onKeyPress);
+    this._wrapper.addEventListener("click", this._onClick);
+    this._wrapper.addEventListener("keydown", this._onKeyPress);
   }
 
   //////////////////////////////////
@@ -85,7 +85,7 @@ export class RadioButton extends Component {
   _onKeyPress(event) {
     if (event.keyCode === 13 && this.enabled) {
       // enter
-      this.wrapper.click();
+      this._wrapper.click();
     } else if (event.keyCode === 40) {
       // down
       event.preventDefault();
@@ -103,7 +103,7 @@ export class RadioButton extends Component {
 
   focus() {
     if (this.enabled) {
-      this.wrapper.focus();
+      this._wrapper.focus();
     }
   }
 
@@ -214,9 +214,9 @@ export class RadioButton extends Component {
       this._updateCheckStyle();
       this.label.enabled = enabled;
       if (this.enabled) {
-        this.wrapper.tabIndex = 0;
+        this._wrapper.tabIndex = 0;
       } else {
-        this.wrapper.tabIndex = -1;
+        this._wrapper.tabIndex = -1;
       }
     }
   }

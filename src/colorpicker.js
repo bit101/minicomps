@@ -18,15 +18,15 @@ export class ColorPicker extends Component {
    * @param {HTMLElement} parent - The element to add this color picker to.
    * @param {number} x - The x position of the color picker. Default 0.
    * @param {number} y - The y position of the color picker. Default 0.
-   * @param {string} text - The text shown in the text label of the color picker. Default empty string.
+   * @param {string} label - The text shown in the text label of the color picker. Default empty string.
    * @param {string} color - The initial color value of the color picker. Default #f00.
    * @param {function} defaultHandler - A function that will handle the "change" event.
    */
-  constructor(parent, x, y, text, color, defaultHandler) {
+  constructor(parent, x, y, label, color, defaultHandler) {
     super(parent, x, y);
     color = color || "#f00";
-    this._text = text || "";
-    this._textPosition = Defaults.colorpicker.textPosition;
+    this._label = label || "";
+    this._labelPosition = Defaults.colorpicker.labelPosition;
     this._color = this._correctColor(color);
     this._color = this._cropColor(color);
     this._sliderPosition = "bottom";
@@ -49,19 +49,19 @@ export class ColorPicker extends Component {
   _createChildren() {
     this._setWrapperClass("MinimalColorPicker");
 
-    this.input = this._createInput(this.wrapper, "MinimalColorPickerInput");
-    this.input.maxLength = 7;
-    this.input.value = this._color;
+    this._input = this._createInput(this._wrapper, "MinimalColorPickerInput");
+    this._input.maxLength = 7;
+    this._input.value = this._color;
 
-    this.label = new Label(this.wrapper, 0, -15, this._text);
+    this._textLabel = new Label(this._wrapper, 0, -15, this._label);
 
-    this.sliderContainer = this._createDiv(this.wrapper, "MinimalColorPickerSliders");
-    this.redSlider = new VSlider(this.sliderContainer, 12, 20, "R", this.red, 0, 255).setHeight(100);
-    this.greenSlider = new VSlider(this.sliderContainer, 42, 20, "G", this.green, 0, 255).setHeight(100);
-    this.blueSlider = new VSlider(this.sliderContainer, 72, 20, "B", this.blue, 0, 255).setHeight(100);
+    this._sliderContainer = this._createDiv(this._wrapper, "MinimalColorPickerSliders");
+    this._redSlider = new VSlider(this._sliderContainer, 12, 20, "R", this.red, 0, 255).setHeight(100);
+    this._greenSlider = new VSlider(this._sliderContainer, 42, 20, "G", this.green, 0, 255).setHeight(100);
+    this._blueSlider = new VSlider(this._sliderContainer, 72, 20, "B", this.blue, 0, 255).setHeight(100);
 
-    this.preview = this._createDiv(this.wrapper, "MinimalColorPickerPreview");
-    this.preview.style.backgroundColor = this.color;
+    this._preview = this._createDiv(this._wrapper, "MinimalColorPickerPreview");
+    this._preview.style.backgroundColor = this.color;
   }
 
   _createStyle() {
@@ -76,11 +76,11 @@ export class ColorPicker extends Component {
     this._updateFromSliders = this._updateFromSliders.bind(this);
     this._onKeyPress = this._onKeyPress.bind(this);
 
-    this.redSlider.addHandler(this._updateFromSliders);
-    this.greenSlider.addHandler(this._updateFromSliders);
-    this.blueSlider.addHandler(this._updateFromSliders);
-    this.input.addEventListener("input", this._onInput);
-    this.input.addEventListener("focus", this._onFocus);
+    this._redSlider.addHandler(this._updateFromSliders);
+    this._greenSlider.addHandler(this._updateFromSliders);
+    this._blueSlider.addHandler(this._updateFromSliders);
+    this._input.addEventListener("input", this._onInput);
+    this._input.addEventListener("focus", this._onFocus);
     this.addEventListener("keydown", this._onKeyPress);
     this.addEventListener("blur", () => this.showSliders(false));
   }
@@ -90,11 +90,11 @@ export class ColorPicker extends Component {
   //////////////////////////////////
 
   _onInput() {
-    const color = this._correctColor(this.input.value);
-    this.input.value = color;
+    const color = this._correctColor(this._input.value);
+    this._input.value = color;
     if ((color.length === 4 || color.length === 7) && this.color !== color) {
       this._color = color;
-      this.preview.style.backgroundColor = this.color;
+      this._preview.style.backgroundColor = this.color;
       this._updateSliders();
       this.dispatchEvent(new CustomEvent("change", { detail: this.color }));
     }
@@ -105,9 +105,9 @@ export class ColorPicker extends Component {
   }
 
   _updateFromSliders() {
-    const red = this.redSlider.value;
-    const green = this.greenSlider.value;
-    const blue = this.blueSlider.value;
+    const red = this._redSlider.value;
+    const green = this._greenSlider.value;
+    const blue = this._blueSlider.value;
     this.setRGB(red, green, blue);
     this.dispatchEvent(new CustomEvent("change", { detail: this.color }));
   }
@@ -120,7 +120,7 @@ export class ColorPicker extends Component {
   }
 
   //////////////////////////////////
-  // General
+  // Private
   //////////////////////////////////
 
   _correctColor(color) {
@@ -136,51 +136,39 @@ export class ColorPicker extends Component {
   }
 
   _updateLabel() {
-    if (this._textPosition === "left") {
-      this.label.x = -this.label.width - 5;
-      this.label.y = (this.height - this.label.height) / 2;
-    } else if (this._textPosition === "right") {
-      this.label.x = this.width + 5;
-      this.label.y = (this.height - this.label.height) / 2;
-    } else if (this._textPosition === "top") {
-      this.label.x = 0;
-      this.label.y = -this.label.height - 5;
+    if (this._labelPosition === "left") {
+      this._textLabel.x = -this._textLabel.width - 5;
+      this._textLabel.y = (this.height - this._textLabel.height) / 2;
+    } else if (this._labelPosition === "right") {
+      this._textLabel.x = this.width + 5;
+      this._textLabel.y = (this.height - this._textLabel.height) / 2;
+    } else if (this._labelPosition === "top") {
+      this._textLabel.x = 0;
+      this._textLabel.y = -this._textLabel.height - 5;
     } else {
-      this.label.x = 0;
-      this.label.y = this.height + 5;
+      this._textLabel.x = 0;
+      this._textLabel.y = this.height + 5;
     }
   }
 
   _updateSliders() {
-    this.redSlider.value = this.red;
-    this.greenSlider.value = this.green;
-    this.blueSlider.value = this.blue;
+    this._redSlider.value = this.red;
+    this._greenSlider.value = this.green;
+    this._blueSlider.value = this.blue;
   }
 
   _updateSliderPosition() {
     if (this._sliderPosition === "bottom") {
-      this.sliderContainer.style.top = "25px";
+      this._sliderContainer.style.top = "25px";
     } else if (this._sliderPosition === "top") {
-      this.sliderContainer.style.top = "-155px";
+      this._sliderContainer.style.top = "-155px";
     }
   }
 
-  /**
-   * Programatically show or hide the slider container for setting rgb values visually.
-   * @param {boolean} show - Whether to show or hide the sliders.
-   * @returns This instance, suitable for chaining.
-   */
-  showSliders(show) {
-    if (show && this._useSliders) {
-      this.initialZ = this.style.zIndex;
-      this.style.zIndex = Style.popupZIndex;
-      this.sliderContainer.style.display = "block";
-    } else {
-      this.style.zIndex = this.initialZ;
-      this.sliderContainer.style.display = "none";
-    }
-    return this;
-  }
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
+
   /**
    * Adds a handler function for the "change" event on this color picker.
    * @param {function} handler - A function that will handle the "change" event.
@@ -205,12 +193,167 @@ export class ColorPicker extends Component {
   }
 
   /**
-   * Sets the color of this component.
+   * Gets the blue channel of the current color value as a numerical value from 0 to 255.
+   */
+  getBlue() {
+    return this.getNumber() & 255;
+  }
+
+  /**
+   * @returns the current color.
+   */
+  getColor() {
+    return this._color;
+  }
+
+  /**
+   * Gets the green channel of the current color value as a numerical value from 0 to 255.
+   */
+  getGreen() {
+    return this.getNumber() >> 8 & 255;
+  }
+
+  /**
+   * @returns the current label text.
+   */
+  getLabel() {
+    return this._label;
+  }
+
+  /**
+   * Gets the current label position.
+   * @returns The position of the label.
+   */
+  getLabelPosition() {
+    return this._labelPosition;
+  }
+
+  /**
+   * Gets the current value of this component as a single 24-bit number from 0 to 16777215 (0x000000 to 0xffffff).
+   * @returns {number} The numeric representation of this color picker's color.
+   */
+  getNumber() {
+    const c = this.color.substring(1);
+    if (c.length === 3) {
+      let r = c.charAt(0);
+      let g = c.charAt(1);
+      let b = c.charAt(2);
+      r += r;
+      g += g;
+      b += b;
+      return parseInt(r + g + b, 16);
+    }
+    return parseInt(c, 16);
+  }
+
+  /**
+   * Gets the red channel of the current color value as a numerical value from 0 to 255.
+   */
+  getRed() {
+    return this.getNumber() >> 16;
+  }
+
+  /**
+   * @returns the position of the sliders.
+   */
+  getSliderPosition() {
+    return this._sliderPosition;
+  }
+
+  /**
+   * @returns Whether or not the color picker is set to use sliders.
+  getUseSliders() {
+    return this._useSliders;
+  }
+
+  /**
+   * Sets the color value of this color picker. Valid inputs are three or six character strings containing hexadecimal digits (0-9 and upper or lower case A-F), optionally preceded by a "#" character.
    * @param {string} color - The color to set.
    * @returns This instance, suitable for chaining.
+   * @example
+   * colorpicker.setColor("#f9c");
+   * colorpicker.setColor("#F9C");
+   * colorpicker.setColor("f9c");
+   * colorpicker.setColor("F9C");
+   * colorpicker.setColor("#ff99cc");
+   * colorpicker.setColor("#FF99CC");
+   * colorpicker.setColor("ff99cc");
+   * colorpicker.setColor("FF99CC");
    */
   setColor(color) {
-    this.color = color;
+    color = this._correctColor(color);
+    color = this._cropColor(color);
+    this._color = color;
+    this._input.value = color;
+    this._preview.style.backgroundColor = color;
+    this._updateSliders();
+    return this;
+  }
+
+  setEnabled(enabled) {
+    if (this.enabled !== enabled) {
+      super.setEnabled(enabled);
+      this._textLabel.enabled = enabled;
+      this._input.disabled = !this.enabled;
+      if (this.enabled) {
+        this._preview.setAttribute("class", "MinimalColorPickerPreview");
+        this._input.addEventListener("input", this._onInput);
+      } else {
+        this._preview.setAttribute("class", "MinimalColorPickerPreviewDisabled");
+        this._input.removeEventListener("input", this._onInput);
+      }
+    }
+  }
+
+  /**
+   * Sets the height of this component. In reality, this component is fixed size, so setting height or width has no effect.
+   */
+  setHeight() {
+    return this;
+  }
+
+  /**
+   * Sets the label of this color picker.
+   * @param {string} label - The label to set on this color picker.
+   * @returns this instance, suitable for chaining.
+   */
+  setLabel(label) {
+    this._label = label;
+    this._textLabel.text = label;
+    this._updateLabel();
+    return this;
+  }
+
+  /**
+   * Sets the position of the text label.
+   * @param {string} position - The position to place the text label: "top" (default), "left" or "bottom".
+   * @returns this instance, suitable for chaining.
+   */
+  setLabelPosition(position) {
+    this._labelPosition = position;
+    this._updateLabel();
+    return this;
+  }
+
+  /**
+   * Sets the color value using a single 24-bit number.
+   * @param {number} num - The number to parse into a color value. This would usually be in decimal (e.g. 16777215) or hexadecimal (e.g. 0xffffff).
+   * @returns This instance, suitable for chaining.
+   */
+  setNumber(num) {
+    const red = num >> 16;
+    const green = num >> 8 & 255;
+    const blue = num & 255;
+    this.setRGB(red, green, blue);
+    return this;
+  }
+
+  /**
+   * Sets the color value to a random RGB value.
+   * @returns This instance, suitable for chaining.
+   */
+  setRandom() {
+    this.setNumber(Math.random() * 0xffffff);
     return this;
   }
 
@@ -244,73 +387,14 @@ export class ColorPicker extends Component {
   }
 
   /**
-   * Sets the color value using a single 24-bit number.
-   * @param {number} num - The number to parse into a color value. This would usually be in decimal (e.g. 16777215) or hexadecimal (e.g. 0xffffff).
-   * @returns This instance, suitable for chaining.
-   */
-  setNumber(num) {
-    const red = num >> 16;
-    const green = num >> 8 & 255;
-    const blue = num & 255;
-    this.setRGB(red, green, blue);
-    return this;
-  }
-
-  /**
-   * Sets the color value to a random RGB value.
-   * @returns This instance, suitable for chaining.
-   */
-  setRandom() {
-    this.setNumber(Math.random() * 0xffffff);
-    return this;
-  }
-
-  /**
    * Gets and sets the position of the slider popup.
    * @param {string} position - The position where the popup will open. Valid values are "bottom" (default) and "top".
    * @returns This instance, suitable for chaining.
    */
   setSliderPosition(position) {
-    this.sliderPosition = position;
+    this._sliderPosition = position;
+    this._updateSliderPosition();
     return this;
-  }
-
-  /**
-   * Sets the text of this color picker.
-   * @param {string} text - The text to set on this color picker.
-   * @returns this instance, suitable for chaining.
-   */
-  setText(text) {
-    this.text = text;
-    return this;
-  }
-
-  /**
-   * Sets the text position of the text label.
-   * @param {string} position - The position to place the text lable: "top" (default), "left" or "bottom".
-   * @returns this instance, suitable for chaining.
-   */
-  setTextPosition(position) {
-    this.textPosition = position;
-    return this;
-  }
-
-  /**
-   * Gets the current value of this component as a single 24-bit number from 0 to 16777215 (0x000000 to 0xffffff).
-   * @returns {number} The numeric representation of this color picker's color.
-   */
-  getNumber() {
-    const c = this.color.substring(1);
-    if (c.length === 3) {
-      let r = c.charAt(0);
-      let g = c.charAt(1);
-      let b = c.charAt(2);
-      r += r;
-      g += g;
-      b += b;
-      return parseInt(r + g + b, 16);
-    }
-    return parseInt(c, 16);
   }
 
   /**
@@ -319,7 +403,31 @@ export class ColorPicker extends Component {
    * @returns This instance, suitable for chaining.
    */
   setUseSliders(useSliders) {
-    this.useSliders = useSliders;
+    this._useSliders = useSliders;
+    return this;
+  }
+
+  /**
+   * Sets the width of this component. In reality, this component is fixed size, so setting height or width has no effect.
+   */
+  setWidth() {
+    return this;
+  }
+
+  /**
+   * Programatically show or hide the slider container for setting rgb values visually.
+   * @param {boolean} show - Whether to show or hide the sliders.
+   * @returns This instance, suitable for chaining.
+   */
+  showSliders(show) {
+    if (show && this._useSliders) {
+      this.initialZ = this.style.zIndex;
+      this.style.zIndex = Style.popupZIndex;
+      this._sliderContainer.style.display = "block";
+    } else {
+      this.style.zIndex = this.initialZ;
+      this._sliderContainer.style.display = "none";
+    }
     return this;
   }
 
@@ -332,40 +440,21 @@ export class ColorPicker extends Component {
    * Gets the red channel of the current color value as a numerical value from 0 to 255.
    */
   get red() {
-    return this.getNumber() >> 16;
+    return this.getRed();
   }
 
   /**
    * Gets the green channel of the current color value as a numerical value from 0 to 255.
    */
   get green() {
-    return this.getNumber() >> 8 & 255;
+    return this.getGreen();
   }
 
   /**
    * Gets the blue channel of the current color value as a numerical value from 0 to 255.
    */
   get blue() {
-    return this.getNumber() & 255;
-  }
-
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    if (this.enabled !== enabled) {
-      super.enabled = enabled;
-      this.label.enabled = enabled;
-      this.input.disabled = !this.enabled;
-      if (this.enabled) {
-        this.preview.setAttribute("class", "MinimalColorPickerPreview");
-        this.input.addEventListener("input", this._onInput);
-      } else {
-        this.preview.setAttribute("class", "MinimalColorPickerPreviewDisabled");
-        this.input.removeEventListener("input", this._onInput);
-      }
-    }
+    return this.getBlue();
   }
 
   /**
@@ -381,88 +470,50 @@ export class ColorPicker extends Component {
    * colorpicker.color = "FF99CC";
    */
   get color() {
-    return this._color;
+    return this.getColor();
   }
-
   set color(color) {
-    color = this._correctColor(color);
-    color = this._cropColor(color);
-    this._color = color;
-    this.input.value = color;
-    this.preview.style.backgroundColor = color;
-    this._updateSliders();
+    this.setColor(color);
   }
 
   /**
-   * Sets and gets the height of this component. In reality, this component is fixed size, so setting height or width has no effect.
+   * Gets and sets the text of the color picker's label.
    */
-  get height() {
-    return super.height;
+  get label() {
+    return this.getLabel();
+  }
+  set label(label) {
+    this.setLabel(label);
   }
 
-  set height(h) {
-    // noop
-    h = h;
+  /**
+   * Gets and sets the position of the text label displayed on the color picker. Valid values are "top" (default), "left", "right" and "bottom".
+   */
+  get labelPosition() {
+    return this.getLabelPosition();
+  }
+  set labelPosition(pos) {
+    this.setLabelPosition(pos);
   }
 
   /**
    * Gets and sets the position of the slider popup. Valid values are "bottom" (default) and "top".
    */
   get sliderPosition() {
-    return this._sliderPosition;
+    return this.getSliderPosition();
   }
-
   set sliderPosition(pos) {
-    this._sliderPosition = pos;
-    this._updateSliderPosition();
-  }
-
-  /**
-   * Gets and sets the text of the color picker's text label.
-   */
-  get text() {
-    return this._text;
-  }
-
-  set text(text) {
-    this._text = text;
-    this.label.text = text;
-    this._updateLabel();
+    this.setSliderPosition(pos);
   }
 
   /**
    * Gets and sets whether clicking into the input area will open up a pane with sliders for setting colors visually.
    */
   get useSliders() {
-    return this._useSliders;
+    return this.getUseSliders();
   }
-
   set useSliders(useSliders) {
-    this._useSliders = useSliders;
-  }
-
-  /**
-   * Gets and sets the position of the text label displayed on the color picker. Valid values are "top" (default), "left", "right" and "bottom".
-   */
-  get textPosition() {
-    return this._textPosition;
-  }
-
-  set textPosition(pos) {
-    this._textPosition = pos;
-    this._updateLabel();
-  }
-
-  /**
-   * Sets and gets the width of this component. In reality, this component is fixed size, so setting height or width has no effect.
-   */
-  get width() {
-    return super.width;
-  }
-
-  set width(w) {
-    // noop
-    w = w;
+    this.setUseSliders(useSliders);
   }
 }
 

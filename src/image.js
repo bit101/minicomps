@@ -36,7 +36,7 @@ export class Image extends Component {
   //////////////////////////////////
 
   _createChildren() {
-    this.image = this._createElement(this.wrapper, "img", "MinimalImage");
+    this.image = this._createElement(this._wrapper, "img", "MinimalImage");
   }
 
   _createStyle() {

@@ -36,7 +36,7 @@ export class PlayButton extends Component {
   //////////////////////////////////
 
   _createChildren() {
-    this.wrapper.tabIndex = 0;
+    this._wrapper.tabIndex = 0;
     this._setWrapperClass("MinimalPlayButton");
     this._createPlayIcon();
     this._createPauseIcon();
@@ -51,7 +51,7 @@ export class PlayButton extends Component {
     const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
     arrow.setAttribute("points", "2, 0, 12, 6, 2, 12");
     this.playIcon.appendChild(arrow);
-    this.wrapper.appendChild(this.playIcon);
+    this._wrapper.appendChild(this.playIcon);
   }
 
   _createPauseIcon() {
@@ -68,7 +68,7 @@ export class PlayButton extends Component {
     bar2.setAttribute("points", "7, 0, 11, 0, 11, 12, 7, 12");
     this.pauseIcon.appendChild(bar2);
 
-    this.wrapper.appendChild(this.pauseIcon);
+    this._wrapper.appendChild(this.pauseIcon);
   }
 
   _createStyle() {
@@ -80,8 +80,8 @@ export class PlayButton extends Component {
   _createListeners() {
     this._onClick = this._onClick.bind(this);
     this._onKeyUp = this._onKeyUp.bind(this);
-    this.wrapper.addEventListener("click", this._onClick);
-    this.wrapper.addEventListener("keyup", this._onKeyUp);
+    this._wrapper.addEventListener("click", this._onClick);
+    this._wrapper.addEventListener("keyup", this._onKeyUp);
   }
 
   //////////////////////////////////
@@ -99,7 +99,7 @@ export class PlayButton extends Component {
 
   _onKeyUp(event) {
     if (event.keyCode === 13 && this.enabled) {
-      this.wrapper.click();
+      this._wrapper.click();
     }
   }
 
@@ -162,11 +162,11 @@ export class PlayButton extends Component {
   set enabled(enabled) {
     super.enabled = enabled;
     if (this.enabled) {
-      this.wrapper.setAttribute("class", "MinimalPlayButton");
-      this.wrapper.tabIndex = 0;
+      this._wrapper.setAttribute("class", "MinimalPlayButton");
+      this._wrapper.tabIndex = 0;
     } else {
-      this.wrapper.setAttribute("class", "MinimalPlayButtonDisabled");
-      this.wrapper.tabIndex = -1;
+      this._wrapper.setAttribute("class", "MinimalPlayButtonDisabled");
+      this._wrapper.tabIndex = -1;
     }
   }
 

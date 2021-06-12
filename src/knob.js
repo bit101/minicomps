@@ -51,11 +51,11 @@ export class Knob extends Component {
 
   _createChildren() {
     this._setWrapperClass("MinimalKnob");
-    this.handle = this._createDiv(this.wrapper, "MinimalKnobHandle");
-    this.wrapper.tabIndex = 0;
+    this.handle = this._createDiv(this._wrapper, "MinimalKnobHandle");
+    this._wrapper.tabIndex = 0;
     this.zero = this._createDiv(this.handle, "MinimalKnobZero");
-    this.label = new Label(this.wrapper, 0, 0, this._text);
-    this.valueLabel = new Label(this.wrapper, 0, 0, this._roundValue(this._value));
+    this.label = new Label(this._wrapper, 0, 0, this._text);
+    this.valueLabel = new Label(this._wrapper, 0, 0, this._roundValue(this._value));
   }
 
   _createStyle() {
@@ -71,9 +71,9 @@ export class Knob extends Component {
     this._onKeyDown = this._onKeyDown.bind(this);
     this._onWheel = this._onWheel.bind(this);
     this.handle.addEventListener("wheel", this._onWheel);
-    this.wrapper.addEventListener("mousedown", this._onMouseDown);
-    this.wrapper.addEventListener("touchstart", this._onMouseDown);
-    this.wrapper.addEventListener("keydown", this._onKeyDown);
+    this._wrapper.addEventListener("mousedown", this._onMouseDown);
+    this._wrapper.addEventListener("touchstart", this._onMouseDown);
+    this._wrapper.addEventListener("keydown", this._onKeyDown);
   }
 
   //////////////////////////////////
@@ -82,7 +82,7 @@ export class Knob extends Component {
 
   _onMouseDown(event) {
     event.preventDefault();
-    this.wrapper.focus();
+    this._wrapper.focus();
     if (event.changedTouches) {
       this.startY = event.changedTouches[0].clientY;
     } else {
@@ -215,9 +215,9 @@ export class Knob extends Component {
     this.label.enabled = this.enabled;
     this.valueLabel.enabled = this.enabled;
     if (this.enabled) {
-      this.wrapper.setAttribute("class", "MinimalKnob");
+      this._wrapper.setAttribute("class", "MinimalKnob");
     } else {
-      this.wrapper.setAttribute("class", "MinimalKnobDisabled");
+      this._wrapper.setAttribute("class", "MinimalKnobDisabled");
     }
   }
 
@@ -387,17 +387,17 @@ export class Knob extends Component {
       super.enabled = enabled;
       this._updateEnabledStyle();
       if (this.enabled) {
-        this.wrapper.tabIndex = 0;
+        this._wrapper.tabIndex = 0;
         this.handle.addEventListener("wheel", this._onWheel);
-        this.wrapper.addEventListener("mousedown", this._onMouseDown);
-        this.wrapper.addEventListener("touchstart", this._onMouseDown);
-        this.wrapper.addEventListener("keydown", this._onKeyDown);
+        this._wrapper.addEventListener("mousedown", this._onMouseDown);
+        this._wrapper.addEventListener("touchstart", this._onMouseDown);
+        this._wrapper.addEventListener("keydown", this._onKeyDown);
       } else {
-        this.wrapper.tabIndex = -1;
+        this._wrapper.tabIndex = -1;
         this.handle.removeEventListener("wheel", this._onWheel);
-        this.wrapper.removeEventListener("mousedown", this._onMouseDown);
-        this.wrapper.removeEventListener("touchstart", this._onMouseDown);
-        this.wrapper.removeEventListener("keydown", this._onKeyDown);
+        this._wrapper.removeEventListener("mousedown", this._onMouseDown);
+        this._wrapper.removeEventListener("touchstart", this._onMouseDown);
+        this._wrapper.removeEventListener("keydown", this._onKeyDown);
         document.removeEventListener("mousemove", this._onMouseMove);
         document.removeEventListener("touchmove", this._onMouseMove);
         document.removeEventListener("mouseup", this._onMouseUp);

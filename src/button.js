@@ -17,12 +17,12 @@ export class Button extends Component {
    * @param {HTMLElement} parent - The element to add this button to.
    * @param {number} x - The x position of the button. Default 0.
    * @param {number} y - The y position of the button. Default 0.
-   * @param {string} text - The text label of the button. Default empty string.
+   * @param {string} label - The text label of the button. Default empty string.
    * @param {function} defaultHandler - A function that will handle the "click" event.
    */
-  constructor(parent, x, y, text, defaultHandler) {
+  constructor(parent, x, y, label, defaultHandler) {
     super(parent, x, y);
-    this._text = text || "";
+    this._label = label || "";
 
     this._createChildren();
     this._createStyle();
@@ -38,11 +38,11 @@ export class Button extends Component {
   //////////////////////////////////
 
   _createChildren() {
-    this.wrapper.tabIndex = 0;
+    this._wrapper.tabIndex = 0;
     this._setWrapperClass("MinimalButton");
-    this.label = new Label(this.wrapper, 0, 0, this._text);
-    this.label.autosize = false;
-    this.label.align = "center";
+    this._textLabel = new Label(this._wrapper, 0, 0, this._label);
+    this._textLabel.autosize = false;
+    this._textLabel.align = "center";
   }
 
   _createStyle() {
@@ -54,8 +54,8 @@ export class Button extends Component {
   _createListeners() {
     this._onClick = this._onClick.bind(this);
     this._onKeyUp = this._onKeyUp.bind(this);
-    this.wrapper.addEventListener("click", this._onClick);
-    this.wrapper.addEventListener("keyup", this._onKeyUp);
+    this._wrapper.addEventListener("click", this._onClick);
+    this._wrapper.addEventListener("keyup", this._onKeyUp);
   }
 
   //////////////////////////////////
@@ -71,7 +71,7 @@ export class Button extends Component {
 
   _onKeyUp(event) {
     if (event.keyCode === 13 && this.enabled) {
-      this.wrapper.click();
+      this._wrapper.click();
     }
   }
 
@@ -90,13 +90,44 @@ export class Button extends Component {
   }
 
   /**
-   * Sets the text of this button.
-   * @param {string} text - The text to set on this button.
+   * Gets the label of this button.
+   * @returns The text of the label.
+   */
+  getLabel() {
+    return this._label;
+  }
+
+  setEnabled(enabled) {
+    super.setEnabled(enabled);
+    this._textLabel.enabled = enabled;
+    if (this.enabled) {
+      this._wrapper.setAttribute("class", "MinimalButton");
+      this._wrapper.tabIndex = 0;
+    } else {
+      this._wrapper.setAttribute("class", "MinimalButtonDisabled");
+      this._wrapper.tabIndex = -1;
+    }
+  }
+
+  setHeight(height) {
+    super.setHeight(height);
+    this._textLabel.height = height;
+  }
+
+  /**
+   * Sets the label of this button.
+   * @param {string} label - The label to set on this button.
    * @returns this instance, suitable for chaining.
    */
-  setText(text) {
-    this.text = text;
+  setLabel(label) {
+    this._label = label;
+    this._textLabel.text = label;
     return this;
+  }
+
+  setWidth(width) {
+    super.setWidth(width);
+    this._textLabel.width = width;
   }
 
   //////////////////////////////////
@@ -104,50 +135,14 @@ export class Button extends Component {
   // alphabetical. getter first.
   //////////////////////////////////
 
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    super.enabled = enabled;
-    this.label.enabled = enabled;
-    if (this.enabled) {
-      this.wrapper.setAttribute("class", "MinimalButton");
-      this.wrapper.tabIndex = 0;
-    } else {
-      this.wrapper.setAttribute("class", "MinimalButtonDisabled");
-      this.wrapper.tabIndex = -1;
-    }
-  }
-
-  get height() {
-    return super.height;
-  }
-
-  set height(height) {
-    super.height = height;
-    this.label.height = height;
-  }
-
   /**
    * Sets and gets the text shown in the button's label.
    */
-  get text() {
-    return this._text;
+  get label() {
+    return this.getLabel();
   }
-
-  set text(text) {
-    this._text = text;
-    this.label.text = text;
-  }
-
-  get width() {
-    return super.width;
-  }
-
-  set width(width) {
-    super.width = width;
-    this.label.width = width;
+  set label(label) {
+    this.setLabel(label);
   }
 }
 

@@ -45,7 +45,7 @@ export class LED extends Component {
   //////////////////////////////////
 
   _createChildren() {
-    this.label = new Label(this.wrapper, 0, -15, this._text);
+    this.label = new Label(this._wrapper, 0, -15, this._text);
   }
 
   _createStyle() {
@@ -64,9 +64,9 @@ export class LED extends Component {
 
   _updateLED() {
     if (this.lit) {
-      this.wrapper.style.background = `radial-gradient(circle at 60% 37%, #fff, ${this.color} 50%, #444 100%)`;
+      this._wrapper.style.background = `radial-gradient(circle at 60% 37%, #fff, ${this.color} 50%, #444 100%)`;
     } else {
-      this.wrapper.style.background = "radial-gradient(circle at 60% 37%, #fff, #999 50%)";
+      this._wrapper.style.background = "radial-gradient(circle at 60% 37%, #fff, #999 50%)";
     }
   }
 
@@ -198,10 +198,10 @@ export class LED extends Component {
     super.enabled = enabled;
     this.label.enabled = enabled;
     if (this._enabled) {
-      this.wrapper.setAttribute("class", "MinimalLED");
+      this._wrapper.setAttribute("class", "MinimalLED");
     } else {
       this.stop();
-      this.wrapper.setAttribute("class", "MinimalLEDDisabled");
+      this._wrapper.setAttribute("class", "MinimalLEDDisabled");
     }
   }
 
