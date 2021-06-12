@@ -26,16 +26,6 @@ export class NumericStepper extends Component {
    */
   constructor(parent, x, y, text, value, min, max, defaultHandler) {
     super(parent, x, y);
-    if (typeof(arguments[3]) !== "string") {
-      // don't break the original signature, which was:
-      // new NumericStepper(parent, x, y, value, min, max, defaultHandler);
-      text = "";
-      value = arguments[3];
-      min = arguments[4];
-      max = arguments[5];
-      defaultHandler = arguments[6];
-    }
-
     this._text = text || "";
     this._textPosition = Defaults.numericstepper.textPosition;
 

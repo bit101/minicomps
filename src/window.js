@@ -22,15 +22,6 @@ export class Window extends Component {
    */
   constructor(parent, x, y, w, h, text) {
     super(parent, x, y);
-    // don't break where text is second param - original signature.
-    if (typeof arguments[1] === "string") {
-      text = arguments[1];
-      x = arguments[2];
-      y = arguments[3];
-      w = arguments[4];
-      h = arguments[5];
-      this.move(x, y);
-    }
     w = w || 400;
     h = h || 400;
     this._text = text;

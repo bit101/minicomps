@@ -24,13 +24,6 @@ export class ColorPicker extends Component {
    */
   constructor(parent, x, y, text, color, defaultHandler) {
     super(parent, x, y);
-    if (typeof(arguments[4]) !== "string") {
-      // don't break the original signature, which was:
-      // new ColorPicker(parent, x, y, color, defaultHandler);
-      text = "";
-      color = arguments[3];
-      defaultHandler = arguments[4];
-    }
     color = color || "#f00";
     this._text = text || "";
     this._textPosition = Defaults.colorpicker.textPosition;
