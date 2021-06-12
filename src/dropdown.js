@@ -228,6 +228,9 @@ export class Dropdown extends Component {
     return this;
   }
 
+  /**
+   * @returns the position of the dropdown.
+   */
   getDropDownPosition() {
     return this._dropdownPosition;
   }
