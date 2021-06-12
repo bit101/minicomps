@@ -111,8 +111,8 @@ export class Component extends HTMLElement {
    * @returns This instance, suitable for chaining.
    */
   move(x, y) {
-    this.x = x;
-    this.y = y;
+    this.setX(x);
+    this.setY(y);
     return this;
   }
 

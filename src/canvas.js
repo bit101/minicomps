@@ -38,8 +38,8 @@ export class Canvas extends Component {
   //////////////////////////////////
 
   _createChildren() {
-    this.canvas = this._createElement(this._wrapper, "canvas", "MinimalCanvas");
-    this._context = this.canvas.getContext("2d");
+    this._canvas = this._createElement(this._wrapper, "canvas", "MinimalCanvas");
+    this._context = this._canvas.getContext("2d");
   }
 
   _createStyle() {
@@ -63,22 +63,22 @@ export class Canvas extends Component {
   setEnabled(enabled) {
     super.setEnabled(enabled);
     if (this._enabled) {
-      this.canvas.setAttribute("class", "MinimalCanvas");
+      this._canvas.setAttribute("class", "MinimalCanvas");
     } else {
-      this.canvas.setAttribute("class", "MinimalCanvasDisabled");
+      this._canvas.setAttribute("class", "MinimalCanvasDisabled");
     }
     return this;
   }
 
   setHeight(height) {
     super.setHeight(height);
-    this.canvas.height = height;
+    this._canvas.height = height;
     return this;
   }
 
   setWidth(width) {
     super.setWidth(width);
-    this.canvas.width = width;
+    this._canvas.width = width;
     return this;
   }
 

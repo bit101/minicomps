@@ -56,12 +56,15 @@ export class ColorPicker extends Component {
     this._textLabel = new Label(this._wrapper, 0, -15, this._label);
 
     this._sliderContainer = this._createDiv(this._wrapper, "MinimalColorPickerSliders");
-    this._redSlider = new VSlider(this._sliderContainer, 12, 20, "R", this.red, 0, 255).setHeight(100);
-    this._greenSlider = new VSlider(this._sliderContainer, 42, 20, "G", this.green, 0, 255).setHeight(100);
-    this._blueSlider = new VSlider(this._sliderContainer, 72, 20, "B", this.blue, 0, 255).setHeight(100);
+    this._redSlider = new VSlider(this._sliderContainer, 12, 20, "R", this.getRed(), 0, 255)
+      .setHeight(100);
+    this._greenSlider = new VSlider(this._sliderContainer, 42, 20, "G", this.getGreen(), 0, 255)
+      .setHeight(100);
+    this._blueSlider = new VSlider(this._sliderContainer, 72, 20, "B", this.getBlue(), 0, 255)
+      .setHeight(100);
 
     this._preview = this._createDiv(this._wrapper, "MinimalColorPickerPreview");
-    this._preview.style.backgroundColor = this.color;
+    this._preview.style.backgroundColor = this._color;
   }
 
   _createStyle() {
@@ -92,11 +95,11 @@ export class ColorPicker extends Component {
   _onInput() {
     const color = this._correctColor(this._input.value);
     this._input.value = color;
-    if ((color.length === 4 || color.length === 7) && this.color !== color) {
+    if ((color.length === 4 || color.length === 7) && this._color !== color) {
       this._color = color;
-      this._preview.style.backgroundColor = this.color;
+      this._preview.style.backgroundColor = this._color;
       this._updateSliders();
-      this.dispatchEvent(new CustomEvent("change", { detail: this.color }));
+      this.dispatchEvent(new CustomEvent("change", { detail: this._color }));
     }
   }
 
@@ -109,7 +112,7 @@ export class ColorPicker extends Component {
     const green = this._greenSlider.value;
     const blue = this._blueSlider.value;
     this.setRGB(red, green, blue);
-    this.dispatchEvent(new CustomEvent("change", { detail: this.color }));
+    this.dispatchEvent(new CustomEvent("change", { detail: this._color }));
   }
 
   _onKeyPress(event) {
@@ -138,23 +141,23 @@ export class ColorPicker extends Component {
   _updateLabel() {
     if (this._labelPosition === "left") {
       this._textLabel.x = -this._textLabel.width - 5;
-      this._textLabel.y = (this.height - this._textLabel.height) / 2;
+      this._textLabel.y = (this._height - this._textLabel.height) / 2;
     } else if (this._labelPosition === "right") {
-      this._textLabel.x = this.width + 5;
-      this._textLabel.y = (this.height - this._textLabel.height) / 2;
+      this._textLabel.x = this._width + 5;
+      this._textLabel.y = (this._height - this._textLabel.height) / 2;
     } else if (this._labelPosition === "top") {
       this._textLabel.x = 0;
       this._textLabel.y = -this._textLabel.height - 5;
     } else {
       this._textLabel.x = 0;
-      this._textLabel.y = this.height + 5;
+      this._textLabel.y = this._height + 5;
     }
   }
 
   _updateSliders() {
-    this._redSlider.value = this.red;
-    this._greenSlider.value = this.green;
-    this._blueSlider.value = this.blue;
+    this._redSlider.value = this.getRed();
+    this._greenSlider.value = this.getGreen();
+    this._blueSlider.value = this.getBlue();
   }
 
   _updateSliderPosition() {
@@ -233,7 +236,7 @@ export class ColorPicker extends Component {
    * @returns {number} The numeric representation of this color picker's color.
    */
   getNumber() {
-    const c = this.color.substring(1);
+    const c = this._color.substring(1);
     if (c.length === 3) {
       let r = c.charAt(0);
       let g = c.charAt(1);
@@ -291,11 +294,11 @@ export class ColorPicker extends Component {
   }
 
   setEnabled(enabled) {
-    if (this.enabled !== enabled) {
+    if (this._enabled !== enabled) {
       super.setEnabled(enabled);
       this._textLabel.enabled = enabled;
-      this._input.disabled = !this.enabled;
-      if (this.enabled) {
+      this._input.disabled = !this._enabled;
+      if (this._enabled) {
         this._preview.setAttribute("class", "MinimalColorPickerPreview");
         this._input.addEventListener("input", this._onInput);
       } else {
@@ -421,11 +424,11 @@ export class ColorPicker extends Component {
    */
   showSliders(show) {
     if (show && this._useSliders) {
-      this.initialZ = this.style.zIndex;
+      this._initialZ = this.style.zIndex;
       this.style.zIndex = Style.popupZIndex;
       this._sliderContainer.style.display = "block";
     } else {
-      this.style.zIndex = this.initialZ;
+      this.style.zIndex = this._initialZ;
       this._sliderContainer.style.display = "none";
     }
     return this;

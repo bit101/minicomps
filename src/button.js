@@ -64,13 +64,13 @@ export class Button extends Component {
 
   _onClick(event) {
     event.stopPropagation();
-    if (this.enabled) {
+    if (this._enabled) {
       this.dispatchEvent(new Event("click"));
     }
   }
 
   _onKeyUp(event) {
-    if (event.keyCode === 13 && this.enabled) {
+    if (event.keyCode === 13 && this._enabled) {
       this._wrapper.click();
     }
   }
@@ -100,7 +100,7 @@ export class Button extends Component {
   setEnabled(enabled) {
     super.setEnabled(enabled);
     this._textLabel.enabled = enabled;
-    if (this.enabled) {
+    if (this._enabled) {
       this._wrapper.setAttribute("class", "MinimalButton");
       this._wrapper.tabIndex = 0;
     } else {

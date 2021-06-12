@@ -4,7 +4,7 @@ import { Style } from "./style.js";
 
 /**
  * Provides a dropdown list of items when clicked. One of those items can then be selected and be shown in the main component.
- * <div><img src="https://www.minicomps.org/images/dropdown.png"/></div>
+ * <div><img src="https://www.minimalcomps2.com/images/dropdown.png"/></div>
  * @example
  * const panel = new Panel(document.body, 20, 20, 200, 200);
  * const items = ["Item 1", "Item 2", "Item 3"];
@@ -23,9 +23,9 @@ export class Dropdown extends Component {
    */
   constructor(parent, x, y, items, index, defaultHandler) {
     super(parent, x, y);
-    this.items = items || [];
+    this._items = items || [];
     this._open = false;
-    this.itemElements = [];
+    this._itemElements = [];
     this._text = "";
     this._dropdownPosition = "bottom";
 
@@ -35,7 +35,7 @@ export class Dropdown extends Component {
 
     this.setSize(100, 20);
     this._createItems();
-    this.index = index;
+    this.setIndex(index);
     this._updateDropdownPosition();
     this.addEventListener("change", defaultHandler);
     this._addToParent();
@@ -49,34 +49,34 @@ export class Dropdown extends Component {
     this._setWrapperClass("MinimalDropdown");
     this._wrapper.tabIndex = 0;
 
-    this.label = new Label(this._wrapper, 3, 3);
-    this.label.autosize = false;
+    this._textLabel = new Label(this._wrapper, 3, 3);
+    this._textLabel.autosize = false;
 
-    this.button = this._createDiv(this._wrapper, "MinimalDropdownButton");
-    this.button.textContent = "+";
+    this._button = this._createDiv(this._wrapper, "MinimalDropdownButton");
+    this._button.textContent = "+";
 
-    this.dropdown = this._createDiv(this._wrapper, "MinimalDropdownPanel");
+    this._dropdown = this._createDiv(this._wrapper, "MinimalDropdownPanel");
   }
 
   _createItems() {
-    for (let i = 0; i < this.items.length; i++) {
+    for (let i = 0; i < this._items.length; i++) {
       this._createItem(i);
     }
   }
 
   _createItem(index) {
-    const item = this._createDiv(this.dropdown, "MinimalDropdownItem");
+    const item = this._createDiv(this._dropdown, "MinimalDropdownItem");
     item.setAttribute("data-index", index);
     item.addEventListener("click", this._onItemClick);
     item.tabIndex = 0;
 
-    const label = new Label(item, 3, 0, this.items[index]);
-    label.y = (this.height - label.height) / 2;
+    const label = new Label(item, 3, 0, this._items[index]);
+    label.y = (this._height - label.height) / 2;
     label.autosize = false;
 
     const itemObj = {item, label};
     this._updateItem(itemObj, index);
-    this.itemElements.push(itemObj);
+    this._itemElements.push(itemObj);
     return item;
   }
 
@@ -94,8 +94,8 @@ export class Dropdown extends Component {
     this._wrapper.addEventListener("click", () => {
       this._toggle();
     });
-    for (let i = 0; i < this.itemElements.length; i++) {
-      this.itemElements[i].addEventListener("click", this._onItemClick);
+    for (let i = 0; i < this._itemElements.length; i++) {
+      this._itemElements[i].addEventListener("click", this._onItemClick);
     }
     this.addEventListener("keydown", this._onKeyPress);
     this.addEventListener("blur", () => this.close());
@@ -108,30 +108,30 @@ export class Dropdown extends Component {
   _toggle() {
     this._open = !this._open;
     if (this._open) {
-      this.initialZ = this.style.zIndex;
+      this._initialZ = this.style.zIndex;
       this.style.zIndex = Style.popupZIndex;
-      this.dropdown.style.display = "block";
+      this._dropdown.style.display = "block";
     } else {
-      this.style.zIndex = this.initialZ;
-      this.dropdown.style.display = "none";
+      this.style.zIndex = this._initialZ;
+      this._dropdown.style.display = "none";
     }
   }
 
   _onItemClick(event) {
     event.stopPropagation();
-    this.index = event.currentTarget.getAttribute("data-index");
+    this.setIndex(event.currentTarget.getAttribute("data-index"));
     this._toggle();
     this.dispatchEvent(new CustomEvent("change", {
       detail: {
-        text: this.text,
-        index: this.index,
+        text: this._text,
+        index: this._index,
       },
     }));
     this._wrapper.focus();
   }
 
   _onKeyPress(event) {
-    if (event.keyCode === 13 && this.enabled) {
+    if (event.keyCode === 13 && this._enabled) {
       // enter
       this.shadowRoot.activeElement.click();
     } else if (event.keyCode === 27) {
@@ -141,8 +141,8 @@ export class Dropdown extends Component {
       // down
       event.preventDefault();
       if (this.shadowRoot.activeElement === this._wrapper ||
-          this.shadowRoot.activeElement === this.dropdown.lastChild) {
-        this.dropdown.firstChild.focus();
+          this.shadowRoot.activeElement === this._dropdown.lastChild) {
+        this._dropdown.firstChild.focus();
       } else {
         this.shadowRoot.activeElement.nextSibling.focus();
       }
@@ -150,8 +150,8 @@ export class Dropdown extends Component {
       // up
       event.preventDefault();
       if (this.shadowRoot.activeElement === this._wrapper ||
-          this.shadowRoot.activeElement === this.dropdown.firstChild) {
-        this.dropdown.lastChild.focus();
+          this.shadowRoot.activeElement === this._dropdown.firstChild) {
+        this._dropdown.lastChild.focus();
       } else {
         this.shadowRoot.activeElement.previousSibling.focus();
       }
@@ -159,37 +159,41 @@ export class Dropdown extends Component {
   }
 
   //////////////////////////////////
-  // General
+  // Private
   //////////////////////////////////
 
   _updateButton() {
-    this.button.style.left = this.width - this.height - 1 + "px";
-    this.button.style.width = this.height + "px";
-    this.button.style.height = this.height + "px";
-    this.button.style.lineHeight = this.height - 1 + "px";
+    this._button.style.left = this._width - this._height - 1 + "px";
+    this._button.style.width = this._height + "px";
+    this._button.style.height = this._height + "px";
+    this._button.style.lineHeight = this._height - 1 + "px";
   }
 
   _updateItem(itemObj, i) {
     const { item, label } = itemObj;
 
-    const h = this.height - 1;
+    const h = this._height - 1;
     item.style.top = i * h + "px";
-    item.style.width = this.width + "px";
-    item.style.height = this.height + "px";
-    label.y = (this.height - label.height) / 2;
-    label.width = this.width - 8;
+    item.style.width = this._width + "px";
+    item.style.height = this._height + "px";
+    label.y = (this._height - label.height) / 2;
+    label.width = this._width - 8;
   }
 
   _updateDropdownPosition() {
     if (this._dropdownPosition === "bottom") {
-      this.dropdown.style.top = this.height - 2 + "px";
+      this._dropdown.style.top = this._height - 2 + "px";
     } else if (this._dropdownPosition === "top") {
-      this.dropdown.style.top = -(this.height - 1) * this.items.length + "px";
+      this._dropdown.style.top = -(this._height - 1) * this._items.length + "px";
     }
-    this.dropdown.style.left = "-1px";
-    this.dropdown.style.width = this.width + "px";
-    this.dropdown.style.height = (this.height - 1) * this.items.length + "px";
+    this._dropdown.style.left = "-1px";
+    this._dropdown.style.width = this._width + "px";
+    this._dropdown.style.height = (this._height - 1) * this._items.length + "px";
   }
+
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
 
   /**
    * Adds a handler function for the "change" event on this dropdown.
@@ -224,6 +228,24 @@ export class Dropdown extends Component {
     return this;
   }
 
+  getDropDownPosition() {
+    return this._dropdownPosition;
+  }
+
+  /**
+   * @returns the currently selected index.
+   */
+  getIndex() {
+    return this._index;
+  }
+
+  /**
+   * @returns the text of the currently selected item in the dropdown (read only).
+   */
+  getText() {
+    return this._text;
+  }
+
   /**
    * Programatically opens the dropdown if it is closed.
    * @returns This instance, suitable for chaining.
@@ -240,17 +262,67 @@ export class Dropdown extends Component {
    * @returns This instance, suitable for chaining.
    */
   setDropdownPosition(position) {
-    this.dropdownPosition = position;
+    this._dropdownPosition = position;
+    this._updateDropdownPosition();
+    return this;
+  }
+
+  setEnabled(enabled) {
+    if (this._enabled === enabled) {
+      return this;
+    }
+    super.setEnabled(enabled);
+    if (this._enabled) {
+      this._wrapper.addEventListener("click", this._toggle);
+      this._wrapper.setAttribute("class", "MinimalDropdown");
+      this._button.setAttribute("class", "MinimalDropdownButton");
+      this.tabIndex = 0;
+    } else {
+      this._wrapper.removeEventListener("click", this._toggle);
+      this._wrapper.setAttribute("class", "MinimalDropdownDisabled");
+      this._button.setAttribute("class", "MinimalDropdownButtonDisabled");
+      this.tabIndex = -1;
+      this.close();
+    }
+    return this;
+  }
+
+  setHeight(height) {
+    super.setHeight(height);
+    this._textLabel.y = (this._height - this._textLabel.height) / 2;
+    this._textLabel.width = this._width - this._height;
+    this._updateButton();
+    this._itemElements.forEach((item, i) => this._updateItem(item, i));
+    this._updateDropdownPosition();
     return this;
   }
 
   /**
-   * Sets the selected index of this dropdown.
+   * Sets the selected index of this _dropdown.
    * @param {number} index - The index to set.
    * @returns This instance, suitable for chaining.
    */
   setIndex(index) {
-    this.index = index;
+    if (index < 0 || index >= this._items.length || index === null || index === undefined) {
+      this._index = -1;
+      this._text = "";
+      this._textLabel.text = "Choose...";
+    } else {
+      this._index = index;
+      this._text = this._items[this._index];
+      this._textLabel.text = this._text;
+    }
+    return this;
+  }
+
+  setWidth(width) {
+    super.setWidth(width);
+    this._textLabel.width = this._width - this._height;
+    this._dropdown.style.width = this._width + "px";
+    this._updateButton();
+    this._itemElements.forEach(item => {
+      this._updateItem(item);
+    });
     return this;
   }
 
@@ -263,88 +335,27 @@ export class Dropdown extends Component {
    * Gets and sets the position of the dropdown list. Valid values are "bottom" (default) and "top".
    */
   get dropdownPosition() {
-    return this._dropdownPosition;
+    return this.getDropDownPosition();
   }
-
   set dropdownPosition(pos) {
-    this._dropdownPosition = pos;
-    this._updateDropdownPosition();
-  }
-
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    if (this.enabled === enabled) {
-      return;
-    }
-    super.enabled = enabled;
-    if (this.enabled) {
-      this._wrapper.addEventListener("click", this._toggle);
-      this._wrapper.setAttribute("class", "MinimalDropdown");
-      this.button.setAttribute("class", "MinimalDropdownButton");
-      this.tabIndex = 0;
-    } else {
-      this._wrapper.removeEventListener("click", this._toggle);
-      this._wrapper.setAttribute("class", "MinimalDropdownDisabled");
-      this.button.setAttribute("class", "MinimalDropdownButtonDisabled");
-      this.tabIndex = -1;
-      this.close();
-    }
-  }
-
-  get height() {
-    return super.height;
-  }
-
-  set height(height) {
-    super.height = height;
-    this.label.y = (this.height - this.label.height) / 2;
-    this.label.width = this.width - this.height;
-    this._updateButton();
-    this.itemElements.forEach((item, i) => this._updateItem(item, i));
-    this._updateDropdownPosition();
+    this.setDropdownPosition(pos);
   }
 
   /**
    * Reading this property tells you the index of the currently selected item. Setting it caused the new index to be selected and the dropdown to display that item.
    */
   get index() {
-    return this._index;
+    return this.getIndex();
   }
-
   set index(index) {
-    if (index < 0 || index >= this.items.length || index === null || index === undefined) {
-      this._index = -1;
-      this._text = "";
-      this.label.text = "Choose...";
-    } else {
-      this._index = index;
-      this._text = this.items[this._index];
-      this.label.text = this._text;
-    }
+    this.setIndex(index);
   }
 
   /**
    * Get the text of the currently selected item in the dropdown (read only).
    */
   get text() {
-    return this._text;
-  }
-
-  get width() {
-    return super.width;
-  }
-
-  set width(width) {
-    super.width = width;
-    this.label.width = this.width - this.height;
-    this.dropdown.style.width = this.width + "px";
-    this._updateButton();
-    this.itemElements.forEach(item => {
-      this._updateItem(item);
-    });
+    return this.getText();
   }
 }
 

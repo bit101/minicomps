@@ -29,7 +29,7 @@ export class Checkbox extends Component {
     this._createListeners();
 
     this.setSize(100, 10);
-    this.checked = checked;
+    this.setChecked(checked);
     this.addEventListener("click", defaultHandler);
     this._addToParent();
     this._updateWidth();
@@ -42,7 +42,7 @@ export class Checkbox extends Component {
   _createChildren() {
     this._setWrapperClass("MinimalCheckbox");
     this._wrapper.tabIndex = 0;
-    this.check = this._createDiv(this._wrapper, "MinimalCheckboxCheck");
+    this._check = this._createDiv(this._wrapper, "MinimalCheckboxCheck");
     this._textLabel = new Label(this._wrapper, 15, 0, this._label);
   }
 
@@ -65,14 +65,14 @@ export class Checkbox extends Component {
 
   _onClick(event) {
     event.stopPropagation();
-    if (this.enabled) {
+    if (this._enabled) {
       this.toggle();
-      this.dispatchEvent(new CustomEvent("click", { detail: this.checked }));
+      this.dispatchEvent(new CustomEvent("click", { detail: this._checked }));
     }
   }
 
   _onKeyPress(event) {
-    if (event.keyCode === 13 && this.enabled) {
+    if (event.keyCode === 13 && this._enabled) {
       this._wrapper.click();
     }
   }
@@ -82,14 +82,14 @@ export class Checkbox extends Component {
   //////////////////////////////////
 
   _updateCheckStyle() {
-    let className = this.checked
+    let className = this._checked
       ? "MinimalCheckboxCheckChecked "
       : "MinimalCheckboxCheck ";
 
-    if (!this.enabled) {
+    if (!this._enabled) {
       className += "MinimalCheckboxCheckDisabled";
     }
-    this.check.setAttribute("class", className);
+    this._check.setAttribute("class", className);
     if (this.enabled) {
       this._setWrapperClass("MinimalCheckbox");
     } else {
@@ -159,11 +159,11 @@ export class Checkbox extends Component {
   }
 
   setEnabled(enabled) {
-    if (this.enabled !== enabled) {
+    if (this._enabled !== enabled) {
       super.setEnabled(enabled);
       this._updateCheckStyle();
       this._textLabel.enabled = enabled;
-      if (this.enabled) {
+      if (this._enabled) {
         this._wrapper.tabIndex = 0;
       } else {
         this._wrapper.tabIndex = -1;
@@ -175,7 +175,7 @@ export class Checkbox extends Component {
   setHeight(height) {
     super.setHeight(height);
     this._textLabel.height = height;
-    this.check.style.top = Math.round((this.height - 10) / 2) + "px";
+    this._check.style.top = Math.round((this._height - 10) / 2) + "px";
     return this;
   }
 
