@@ -16,14 +16,14 @@ export class VSlider extends HSlider {
    * @param {HTMLElement} parent - The element to add this slider to.
    * @param {number} x - The x position of the slider. Default 0.
    * @param {number} y - The y position of the slider. Default 0.
-   * @param {string} text - The text label of the slider. Default empty string.
+   * @param {string} label - The text label of the slider. Default empty string.
    * @param {number} value - The initial value of the slider. Default 0.
    * @param {number} min - The minimum value of the slider. Default 0.
    * @param {number} max - The maximum value of the slider. Default 100.
    * @param {function} defaultHandler - A function that will handle the "change" event.
    */
-  constructor(parent, x, y, text, value, min, max, defaultHandler) {
-    super(parent, x, y, text, value, min, max, defaultHandler);
+  constructor(parent, x, y, label, value, min, max, defaultHandler) {
+    super(parent, x, y, label, value, min, max, defaultHandler);
     this._labelsSwapped = false;
   }
   //////////////////////////////////
@@ -134,14 +134,24 @@ export class VSlider extends HSlider {
   // Public
   //////////////////////////////////
 
+  /**
+   * @returns the height of the handle.
+   */
   getHandleSize() {
     return this._handleSize;
   }
 
+  /**
+   * @returns whether or not the labels are swapped (value on top, label on bottom).
+   */
   getLabelsSwapped() {
     return this._labelsSwapped;
   }
 
+  /**
+   * Sets the height of the handle.
+   * @param {number} handleSize - The height of the handle.
+   */
   setHandleSize(handleSize) {
     this._handleSize = handleSize;
     this._handle.style.height = handleSize + "px";

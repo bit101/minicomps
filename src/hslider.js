@@ -17,13 +17,13 @@ export class HSlider extends Component {
    * @param {HTMLElement} parent - The element to add this slider to.
    * @param {number} x - The x position of the slider. Default 0.
    * @param {number} y - The y position of the slider. Default 0.
-   * @param {string} text - The text label of the slider. Default empty string.
+   * @param {string} label - The text label of the slider. Default empty string.
    * @param {number} value - The initial value of the slider. Default 0.
    * @param {number} min - The minimum value of the slider. Default 0.
    * @param {number} max - The maximum value of the slider. Default 100.
    * @param {function} defaultHandler - A function that will handle the "change" event.
    */
-  constructor(parent, x, y, text, value, min, max, defaultHandler) {
+  constructor(parent, x, y, label, value, min, max, defaultHandler) {
     super(parent, x, y);
     this._min = min || 0;
     this._max = max || 100;
@@ -31,7 +31,7 @@ export class HSlider extends Component {
     this._reversed = false;
     this._value = value || 0;
     this._showValue = true;
-    this._text = text || "";
+    this._label = label || "";
 
     this._createChildren();
     this._createStyle();
@@ -52,7 +52,7 @@ export class HSlider extends Component {
     this._wrapper.tabIndex = 0;
     this._setWrapperClass("MinimalSlider");
     this._handle = this._createDiv(this._wrapper, "MinimalSliderHandle");
-    this._textLabel = new Label(this._wrapper, 0, 0, this._text);
+    this._textLabel = new Label(this._wrapper, 0, 0, this._label);
     this._valueLabel = new Label(this._wrapper, 0, 0, this._formatValue());
   }
 
@@ -216,7 +216,7 @@ export class HSlider extends Component {
   _setDefaults() {
     this._handleSize = Defaults.hslider.handleSize;
     this._decimals = Defaults.hslider.decimals;
-    this._textPosition = Defaults.hslider.textPosition;
+    this._labelPosition = Defaults.hslider.labelPosition;
     this._valuePosition = Defaults.hslider.valuePosition;
   }
 
@@ -243,16 +243,16 @@ export class HSlider extends Component {
   }
 
   _updateLabelPosition() {
-    if (this._textPosition === "left") {
+    if (this._labelPosition === "left") {
       this._textLabel.x = -this._textLabel.width - 5;
       this._textLabel.y = (this._height - this._textLabel.height) / 2;
-    } else if (this._textPosition === "right") {
+    } else if (this._labelPosition === "right") {
       this._textLabel.x = this._width + 5;
       this._textLabel.y = (this._height - this._textLabel.height) / 2;
-    } else if (this._textPosition === "top") {
+    } else if (this._labelPosition === "top") {
       this._textLabel.x = 0;
       this._textLabel.y = -this._textLabel.height - 5;
-    } else if (this._textPosition === "bottom") {
+    } else if (this._labelPosition === "bottom") {
       this._textLabel.x = 0;
       this._textLabel.y = this._height + 5;
     }
@@ -314,42 +314,72 @@ export class HSlider extends Component {
     return this;
   }
 
+  /**
+   * @returns the number of decimals of precision will be used for the value.
+   */
   getDecimals() {
     return this._decimals;
   }
 
+  /**
+   * @returns the width of the slider handle.
+   */
   getHandlesSize() {
     return this._handleSize;
   }
 
+  /**
+   * @returns the maximum value of the slider.
+   */
   getMax() {
     return this._max;
   }
 
+  /**
+   * @returns the minimum value of the slider.
+   */
   getMin() {
     return this._min;
   }
 
+  /**
+   * @returns whether or not the slider is reversed (high value on left / bottom, low value on right / top).
+   */
   getReversed() {
     return this._reversed;
   }
 
+  /**
+   * @returns whether or not the value label will be shown.
+   */
   getShowValue() {
     return this._showValue;
   }
 
-  getText() {
-    return this._text;
+  /**
+   * @returns the text of the label.
+   */
+  getLabel() {
+    return this._label;
   }
 
-  getTextPosition() {
-    return this._textPosition;
+  /**
+   * @returns the position of the text label.
+   */
+  getLabelPosition() {
+    return this._labelPosition;
   }
 
+  /**
+   * @returns the current value of the slider.
+   */
   getValue() {
     return this._roundValue(this._value);
   }
 
+  /**
+   * @returns the position of the value label.
+   */
   getValuePosition() {
     return this._valuePosition;
   }
@@ -411,6 +441,35 @@ export class HSlider extends Component {
   }
 
   /**
+   * Sets the label of this slider.
+   * @param {string} label - The label to set on this slider.
+   * @returns this instance, suitable for chaining.
+   */
+  setLabel(label) {
+    this._label = label;
+    this._textLabel.text = label;
+    this._updateLabelPosition();
+    return this;
+  }
+
+  /**
+   * Sets the position of the text label.
+   * @param {string} position - The position to place the text lable: "top" (default), "right", "left" or "bottom".
+   * @returns this instance, suitable for chaining.
+   */
+  setLabelPosition(position) {
+    this._labelPosition = position;
+    this._updateLabelPosition();
+    if (position === "left" && this._valuePosition === "left") {
+      this._valuePosition = "right";
+    }
+    if (position === "right" && this._valuePosition === "right") {
+      this._valuePosition = "left";
+    }
+    return this;
+  }
+
+  /**
    * Sets the maximum value of this slider.
    * @param {number} max - The maximum value of this slider.
    * @returns This instance, suitable for chaining.
@@ -460,35 +519,6 @@ export class HSlider extends Component {
   }
 
   /**
-   * Sets the text of this slider.
-   * @param {string} text - The text to set on this slider.
-   * @returns this instance, suitable for chaining.
-   */
-  setText(text) {
-    this._text = text;
-    this._textLabel.text = text;
-    this._updateLabelPosition();
-    return this;
-  }
-
-  /**
-   * Sets the position of the text label.
-   * @param {string} position - The position to place the text lable: "top" (default), "right", "left" or "bottom".
-   * @returns this instance, suitable for chaining.
-   */
-  setTextPosition(position) {
-    this._textPosition = position;
-    this._updateLabelPosition();
-    if (position === "left" && this._valuePosition === "left") {
-      this._valuePosition = "right";
-    }
-    if (position === "right" && this._valuePosition === "right") {
-      this._valuePosition = "left";
-    }
-    return this;
-  }
-
-  /**
    * Sets the value of this slider.
    * @param {number} value - The value of this slider.
    * @returns This instance, suitable for chaining.
@@ -520,11 +550,11 @@ export class HSlider extends Component {
   setValuePosition(position) {
     this._valuePosition = position;
     this._updateValueLabelPosition();
-    if (position === "left" && this._textPosition === "left") {
-      this._textPosition = "right";
+    if (position === "left" && this._labelPosition === "left") {
+      this._labelPosition = "right";
     }
-    if (position === "right" && this._textPosition === "right") {
-      this._textPosition = "left";
+    if (position === "right" && this._labelPosition === "right") {
+      this._labelPosition = "left";
     }
     return this;
   }
@@ -560,6 +590,26 @@ export class HSlider extends Component {
   }
   set handleSize(handleSize) {
     this.setHandleSize(handleSize);
+  }
+
+  /**
+   * Gets and sets the text of the text label of the slider.
+   */
+  get label() {
+    return this.getLabel();
+  }
+  set label(label) {
+    this.setLabel(label);
+  }
+
+  /**
+   * Gets and sets the position of the text label displayed on the slider. Valid values are "top" (default), "right", "left" and "bottom". Not applicable to a VSlider.
+   */
+  get labelPosition() {
+    return this.getLabelPosition();
+  }
+  set labelPosition(position) {
+    this.setLabelPosition(position);
   }
 
   /**
@@ -600,26 +650,6 @@ export class HSlider extends Component {
   }
   set showValue(show) {
     this.setShowValue(show);
-  }
-
-  /**
-   * Gets and sets the text of the text label of the slider.
-   */
-  get text() {
-    return this.getText();
-  }
-  set text(text) {
-    this.setText(text);
-  }
-
-  /**
-   * Gets and sets the position of the text label displayed on the slider. Valid values are "top" (default), "right", "left" and "bottom". Not applicable to a VSlider.
-   */
-  get textPosition() {
-    return this.getTextPosition();
-  }
-  set textPosition(position) {
-    this.setTextPosition(position);
   }
 
   /**

@@ -32,7 +32,7 @@ export const Defaults = {
    */
   hslider: {
     decimals: 0,
-    textPosition: "top",
+    labelPosition: "top",
     valuePosition: "top",
     width: 150,
     height: 15,
