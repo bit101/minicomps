@@ -34,7 +34,7 @@ export class VSlider extends HSlider {
     const style = document.createElement("style");
     style.textContent = Style.vslider;
     this.shadowRoot.append(style);
-    this.handleSize = Defaults.vslider.handleSize;
+    this.setHandleSize(Defaults.vslider.handleSize);
   }
 
   //////////////////////////////////
@@ -49,10 +49,10 @@ export class VSlider extends HSlider {
     } else {
       mouseY = event.clientY;
     }
-    this.offsetY = mouseY - this.getBoundingClientRect().top - this.handle.offsetTop;
-    if (this.offsetY < 0 || this.offsetY > this.handleSize) {
-      this.offsetY = this.handleSize / 2;
-      const y = mouseY - this.getBoundingClientRect().top - this.handleSize / 2;
+    this._offsetY = mouseY - this.getBoundingClientRect().top - this._handle.offsetTop;
+    if (this._offsetY < 0 || this._offsetY > this._handle) {
+      this._offsetY = this._handle / 2;
+      const y = mouseY - this.getBoundingClientRect().top - this._handle / 2;
       this._calculateValueFromPos(y);
     }
     document.addEventListener("mousemove", this._onMouseMove);
@@ -68,23 +68,23 @@ export class VSlider extends HSlider {
     } else {
       mouseY = event.clientY;
     }
-    const y = mouseY - this.getBoundingClientRect().top - this.offsetY;
+    const y = mouseY - this.getBoundingClientRect().top - this._offsetY;
     this._calculateValueFromPos(y);
   }
 
   //////////////////////////////////
-  // General
+  // Private
   //////////////////////////////////
 
   _calculateValueFromPos(y) {
-    let percent = 1 - y / (this.height - this.handleSize);
-    if (this.reversed) {
+    let percent = 1 - y / (this._height - this._handleSize);
+    if (this._reversed) {
       percent = 1 - percent;
     }
-    const value = this.min + (this.max - this.min) * percent;
-    if (value !== this.value) {
+    const value = this._min + (this._max - this._min) * percent;
+    if (value !== this._value) {
       this._updateValue(value);
-      this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+      this.dispatchEvent(new CustomEvent("change", { detail: this._value }));
     }
   }
 
@@ -94,30 +94,30 @@ export class VSlider extends HSlider {
   }
 
   _updateHandlePosition() {
-    let percent = (this.value - this.min) / (this.max - this.min);
-    if (this.reversed) {
+    let percent = (this._value - this._min) / (this._max - this._min);
+    if (this._reversed) {
       percent = 1 - percent;
     }
     percent = Math.max(0, percent);
     percent = Math.min(1, percent);
-    this.handle.style.top = this.height - this.handleSize - percent * (this.height - this._handleSize) + "px";
+    this._handle.style.top = this._height - this._handleSize - percent * (this._height - this._handleSize) + "px";
   }
 
   _updateLabelPosition() {
-    this.label.x = -(this.label.width - this.width) / 2;
+    this._textLabel.x = -(this._textLabel.width - this._width) / 2;
     if (this._labelsSwapped) {
-      this.label.y = this.height + 5;
+      this._textLabel.y = this._height + 5;
     } else {
-      this.label.y = -this.label.height - 5;
+      this._textLabel.y = -this._textLabel.height - 5;
     }
   }
 
   _updateValueLabelPosition() {
-    this.valueLabel.x = -(this.valueLabel.width - this.width) / 2;
+    this._valueLabel.x = -(this._valueLabel.width - this._width) / 2;
     if (this._labelsSwapped) {
-      this.valueLabel.y = -this.valueLabel.height - 5;
+      this._valueLabel.y = -this._valueLabel.height - 5;
     } else {
-      this.valueLabel.y = this.height + 5;
+      this._valueLabel.y = this._height + 5;
     }
   }
 
@@ -128,6 +128,25 @@ export class VSlider extends HSlider {
   _updateValue(value) {
     super._updateValue(value);
     this._updateValueLabelPosition();
+  }
+
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
+
+  getHandleSize() {
+    return this._handleSize;
+  }
+
+  getLabelsSwapped() {
+    return this._labelsSwapped;
+  }
+
+  setHandleSize(handleSize) {
+    this._handleSize = handleSize;
+    this._handle.style.height = handleSize + "px";
+    this._updateHandlePosition();
+    return this;
   }
 
   setHeight(height) {
@@ -144,7 +163,9 @@ export class VSlider extends HSlider {
    * @returns This instance, suitable for chaining.
    */
   setLabelsSwapped(swapped) {
-    this.labelsSwapped = swapped;
+    this._labelsSwapped = swapped;
+    this._updateLabelPosition();
+    this._updateValueLabelPosition();
     return this;
   }
 
@@ -165,26 +186,20 @@ export class VSlider extends HSlider {
    * <div><img src="https://www.minicomps.org/images/vsliderhandlesize.png"/></div>
    */
   get handleSize() {
-    return this._handleSize;
+    return this.getHandleSize();
   }
-
   set handleSize(handleSize) {
-    this._handleSize = handleSize;
-    this.handle.style.height = handleSize + "px";
-    this._updateHandlePosition();
+    this.setHandleSize(handleSize);
   }
 
   /**
    * Gets and sets whether the text label and value label will be swapped. If true, the text label will be on the bottom and the value label will be on the top.
    */
   get labelsSwapped() {
-    return this._labelsSwapped;
+    return this.getLabelsSwapped();
   }
-
   set labelsSwapped(swap) {
-    this._labelsSwapped = swap;
-    this._updateLabelPosition();
-    this._updateValueLabelPosition();
+    this.setLabelsSwapped(swap);
   }
 }
 

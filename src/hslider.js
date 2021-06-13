@@ -51,16 +51,16 @@ export class HSlider extends Component {
   _createChildren() {
     this._wrapper.tabIndex = 0;
     this._setWrapperClass("MinimalSlider");
-    this.handle = this._createDiv(this._wrapper, "MinimalSliderHandle");
-    this.label = new Label(this._wrapper, 0, 0, this._text);
-    this.valueLabel = new Label(this._wrapper, 0, 0, this._formatValue());
+    this._handle = this._createDiv(this._wrapper, "MinimalSliderHandle");
+    this._textLabel = new Label(this._wrapper, 0, 0, this._text);
+    this._valueLabel = new Label(this._wrapper, 0, 0, this._formatValue());
   }
 
   _createStyle() {
     const style = document.createElement("style");
     style.textContent = Style.hslider;
     this.shadowRoot.append(style);
-    this.handleSize = Defaults.hslider.handleSize;
+    this.setHandleSize(Defaults.hslider.handleSize);
   }
 
   _createListeners() {
@@ -87,10 +87,10 @@ export class HSlider extends Component {
     } else {
       mouseX = event.clientX;
     }
-    this.offsetX = mouseX - this.getBoundingClientRect().left - this.handle.offsetLeft;
-    if (this.offsetX < 0 || this.offsetX > this.handleSize) {
-      this.offsetX = this.handleSize / 2;
-      const x = mouseX - this.getBoundingClientRect().left - this.handleSize / 2;
+    this._offsetX = mouseX - this.getBoundingClientRect().left - this._handle.offsetLeft;
+    if (this._offsetX < 0 || this._offsetX > this._handleSize) {
+      this._offsetX = this._handleSize / 2;
+      const x = mouseX - this.getBoundingClientRect().left - this._handleSize / 2;
       this._calculateValueFromPos(x);
     }
     document.addEventListener("mousemove", this._onMouseMove);
@@ -106,7 +106,7 @@ export class HSlider extends Component {
     } else {
       mouseX = event.clientX;
     }
-    const x = mouseX - this.getBoundingClientRect().left - this.offsetX;
+    const x = mouseX - this.getBoundingClientRect().left - this._offsetX;
     this._calculateValueFromPos(x);
   }
 
@@ -119,10 +119,10 @@ export class HSlider extends Component {
 
   _onKeyDown(event) {
     let inc = 1 / Math.pow(10, this._decimals);
-    if (this.reversed) {
+    if (this._reversed) {
       inc = -inc;
     }
-    let value = this.value;
+    let value = this.getValue();
 
     switch (event.keyCode) {
     case 34: // pagedown
@@ -135,11 +135,11 @@ export class HSlider extends Component {
       break;
     case 36: // home
       event.preventDefault();
-      value = this.min;
+      value = this._min;
       break;
     case 35: // end
       event.preventDefault();
-      value = this.max;
+      value = this._max;
       break;
     case 37: // right
     case 40: // up
@@ -154,62 +154,62 @@ export class HSlider extends Component {
     default:
       break;
     }
-    if (value !== this.value) {
+    if (value !== this.getValue()) {
       this._updateValue(value);
-      this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+      this.dispatchEvent(new CustomEvent("change", { detail: this.getValue() }));
     }
   }
 
   _onWheel(event) {
     event.preventDefault();
     const inc = 1 / Math.pow(10, this._decimals);
-    let value = this.value;
+    let value = this.getValue();
     if (event.deltaY > 0) {
       value += inc;
     } else if (event.deltaY < 0) {
       value -= inc;
     }
-    if (value !== this.value) {
+    if (value !== this.getValue()) {
       this._updateValue(value);
-      this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+      this.dispatchEvent(new CustomEvent("change", { detail: this.getValue() }));
     }
   }
 
   //////////////////////////////////
-  // General
+  // Private
   //////////////////////////////////
 
   _calculateValueFromPos(x) {
-    let percent = x / (this.width - this.handleSize);
-    if (this.reversed) {
+    let percent = x / (this._width - this._handleSize);
+    if (this._reversed) {
       percent = 1 - percent;
     }
-    const value = this.min + (this.max - this.min) * percent;
-    if (value !== this.value) {
+    const value = this._min + (this._max - this._min) * percent;
+    if (value !== this.getValue()) {
       this._updateValue(value);
-      this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+      this.dispatchEvent(new CustomEvent("change", { detail: this.getValue() }));
     }
   }
 
   _formatValue() {
-    let valStr = this.value.toString();
-    if (this.decimals <= 0) {
+    let valStr = this.getValue().toString();
+    if (this._decimals <= 0) {
       return valStr;
     }
     if (valStr.indexOf(".") === -1) {
       valStr += ".";
     }
     const dec = valStr.split(".")[1].length;
-    for (let i = dec; i < this.decimals; i++) {
+    for (let i = dec; i < this._decimals; i++) {
       valStr += "0";
     }
     return valStr;
   }
 
   _roundValue(value) {
-    value = Math.min(value, this.max);
-    value = Math.max(value, this.min);
-    const mult = Math.pow(10, this.decimals);
+    value = Math.min(value, this._max);
+    value = Math.max(value, this._min);
+    const mult = Math.pow(10, this._decimals);
     return Math.round(value * mult) / mult;
   }
 
@@ -221,56 +221,56 @@ export class HSlider extends Component {
   }
 
   _updateHandlePosition() {
-    let percent = (this.value - this.min) / (this.max - this.min);
-    if (this.reversed) {
+    let percent = (this.getValue() - this._min) / (this._max - this._min);
+    if (this._reversed) {
       percent = 1 - percent;
     }
     percent = Math.max(0, percent);
     percent = Math.min(1, percent);
-    this.handle.style.left = percent * (this.width - this._handleSize) + "px";
+    this._handle.style.left = percent * (this._width - this._handleSize) + "px";
   }
 
   _updateEnabledStyle() {
-    this.label.enabled = this.enabled;
-    this.valueLabel.enabled = this.enabled;
-    if (this.enabled) {
+    this._textLabel.enabled = this._enabled;
+    this._valueLabel.enabled = this._enabled;
+    if (this._enabled) {
       this._setWrapperClass("MinimalSlider");
-      this.handle.setAttribute("class", "MinimalSliderHandle");
+      this._handle.setAttribute("class", "MinimalSliderHandle");
     } else {
       this._setWrapperClass("MinimalSliderDisabled");
-      this.handle.setAttribute("class", "MinimalSliderHandleDisabled");
+      this._handle.setAttribute("class", "MinimalSliderHandleDisabled");
     }
   }
 
   _updateLabelPosition() {
     if (this._textPosition === "left") {
-      this.label.x = -this.label.width - 5;
-      this.label.y = (this.height - this.label.height) / 2;
+      this._textLabel.x = -this._textLabel.width - 5;
+      this._textLabel.y = (this._height - this._textLabel.height) / 2;
     } else if (this._textPosition === "right") {
-      this.label.x = this.width + 5;
-      this.label.y = (this.height - this.label.height) / 2;
+      this._textLabel.x = this._width + 5;
+      this._textLabel.y = (this._height - this._textLabel.height) / 2;
     } else if (this._textPosition === "top") {
-      this.label.x = 0;
-      this.label.y = -this.label.height - 5;
+      this._textLabel.x = 0;
+      this._textLabel.y = -this._textLabel.height - 5;
     } else if (this._textPosition === "bottom") {
-      this.label.x = 0;
-      this.label.y = this.height + 5;
+      this._textLabel.x = 0;
+      this._textLabel.y = this._height + 5;
     }
   }
 
   _updateValueLabelPosition() {
     if (this._valuePosition === "left") {
-      this.valueLabel.x = -this.valueLabel.width - 5;
-      this.valueLabel.y = (this.height - this.valueLabel.height) / 2;
+      this._valueLabel.x = -this._valueLabel.width - 5;
+      this._valueLabel.y = (this._height - this._valueLabel.height) / 2;
     } else if (this._valuePosition === "right") {
-      this.valueLabel.x = this.width + 5;
-      this.valueLabel.y = (this.height - this.valueLabel.height) / 2;
+      this._valueLabel.x = this._width + 5;
+      this._valueLabel.y = (this._height - this._valueLabel.height) / 2;
     } else if (this._valuePosition === "top") {
-      this.valueLabel.x = this.width - this.valueLabel.width;
-      this.valueLabel.y = -this.valueLabel.height - 5;
+      this._valueLabel.x = this._width - this._valueLabel.width;
+      this._valueLabel.y = -this._valueLabel.height - 5;
     } else if (this._valuePosition === "bottom") {
-      this.valueLabel.x = this.width - this.valueLabel.width;
-      this.valueLabel.y = this.height + 5;
+      this._valueLabel.x = this._width - this._valueLabel.width;
+      this._valueLabel.y = this._height + 5;
     }
   }
 
@@ -282,10 +282,14 @@ export class HSlider extends Component {
     if (this._value !== value) {
       this._value = value;
       this._updateHandlePosition();
-      this.valueLabel.text = this._formatValue();
+      this._valueLabel.text = this._formatValue();
       this._updateValueLabelPosition();
     }
   }
+
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
 
   /**
    * Adds a handler function for the "change" event on this slider.
@@ -310,148 +314,64 @@ export class HSlider extends Component {
     return this;
   }
 
+  getDecimals() {
+    return this._decimals;
+  }
+
+  getHandlesSize() {
+    return this._handleSize;
+  }
+
+  getMax() {
+    return this._max;
+  }
+
+  getMin() {
+    return this._min;
+  }
+
+  getReversed() {
+    return this._reversed;
+  }
+
+  getShowValue() {
+    return this._showValue;
+  }
+
+  getText() {
+    return this._text;
+  }
+
+  getTextPosition() {
+    return this._textPosition;
+  }
+
+  getValue() {
+    return this._roundValue(this._value);
+  }
+
+  getValuePosition() {
+    return this._valuePosition;
+  }
+
   /**
    * Sets the number of decimals of precision to be used for the slider. This will effect what is shown in the value label as well as the value property of the slider. A decimals value of 0 will display integers only. Negative decimals will round to the nearest power of 10.
    * @param {number} decimals - The decimals of precision to use.
    * @returns This instance, suitable for chaining.
    */
   setDecimals(decimals) {
-    this.decimals = decimals;
-    return this;
-  }
-
-  /**
-   * Gets and sets the width of the draggable slider handle. If you make the slider thicker by changing its height, you may want to adjust the handle size as well. If handleSize is the same as the slider height, then the handle will be a square.
-   * @param {number} handleSize - The size of the handle.
-   * @returns This instance, suitable for chaining.
-   */
-  setHandleSize(handleSize) {
-    this.handleSize = handleSize;
-    return this;
-  }
-
-  /**
-   * Sets the maximum value of this slider.
-   * @param {number} max - The maximum value of this slider.
-   * @returns This instance, suitable for chaining.
-   */
-  setMax(max) {
-    this.max = max;
-    return this;
-  }
-
-  /**
-   * Sets the minimum value of this slider.
-   * @param {number} min - The minimum value of this slider.
-   * @returns This instance, suitable for chaining.
-   */
-  setMin(min) {
-    this.min = min;
-    return this;
-  }
-
-  /**
-   * Sets the value of this slider.
-   * @param {number} value - The value of this slider.
-   * @returns This instance, suitable for chaining.
-   */
-  setValue(value) {
-    this.value = value;
-    return this;
-  }
-
-  /**
-   * Sets the value, minimum and maximum of this slider.
-   * @param {number} value - The value of this slider.
-   * @param {number} min - The minimum value of this slider.
-   * @param {number} max - The maximum value of this slider.
-   * @returns This instance, suitable for chaining.
-   */
-  setValueMinMax(value, min, max) {
-    this.min = min;
-    this.max = max;
-    this.value = value;
-    return this;
-  }
-
-  /**
-   * Sets whether the slider is reversed. A reversed HSlider will show its maximum value on the left and minumum on the right. A reversed VSlider will show its maximum value on the bottom and minimum on the top.
-   * @param {boolean} reversed - Whether or not this slider will be reversed.
-   * @returns This instance, suitable for chaining.
-   */
-  setReversed(reversed) {
-    this.reversed = reversed;
-    return this;
-  }
-
-  /**
-   * Sets whether or not the value of this slider will be shown.
-   * @param {boolean} showValue - Whether or not the value will be shown.
-   * @returns This instance, suitable for chaining.
-   */
-  setShowValue(showValue) {
-    this.showValue = showValue;
-    return this;
-  }
-
-  /**
-   * Sets the text of this slider.
-   * @param {string} text - The text to set on this slider.
-   * @returns this instance, suitable for chaining.
-   */
-  setText(text) {
-    this.text = text;
-    return this;
-  }
-
-  /**
-   * Sets the position of the text label.
-   * @param {string} position - The position to place the text lable: "top" (default), "right", "left" or "bottom".
-   * @returns this instance, suitable for chaining.
-   */
-  setTextPosition(position) {
-    this.textPosition = position;
-    return this;
-  }
-
-  /**
-   * Sets the position of the value label.
-   * @param {string} position - The position to place the value lable: "top" (default), "right", left" or "bottom".
-   * @returns this instance, suitable for chaining.
-   */
-  setValuePosition(position) {
-    this.valuePosition = position;
-    return this;
-  }
-
-  //////////////////////////////////
-  // Getters/Setters
-  // alphabetical. getter first.
-  //////////////////////////////////
-
-  /**
-   * Sets and gets the number of decimals of precision to be used for the slider. This will effect what is shown in the value label as well as the value property of the slider. A decimals value of 0 will display integers only. Negative decimals will round to the nearest power of 10.
-   */
-  get decimals() {
-    return this._decimals;
-  }
-
-  set decimals(decimals) {
     this._decimals = decimals;
-    this.valueLabel.text = this._formatValue();
+    this._valueLabel.text = this._formatValue();
     this._updateValueLabelPosition();
     this._updateHandlePosition();
+    return this;
   }
 
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    if (this.enabled !== enabled) {
-      super.enabled = enabled;
+  setEnabled(enabled) {
+    if (this._enabled !== enabled) {
+      super.setEnabled(enabled);
       this._updateEnabledStyle();
-      if (this.enabled) {
+      if (this._enabled) {
         this._wrapper.tabIndex = 0;
         this._wrapper.addEventListener("wheel", this._onWheel);
         this._wrapper.addEventListener("mousedown", this._onMouseDown);
@@ -473,155 +393,253 @@ export class HSlider extends Component {
 
   /**
    * Gets and sets the width of the draggable slider handle. If you make the slider thicker by changing its height, you may want to adjust the handle size as well. If handleSize is the same as the slider height, then the handle will be a square.
-   * <div><img src="https://www.minicomps.org/images/hsliderhandlesize.png"/></div>
+   * @param {number} handleSize - The size of the handle.
+   * @returns This instance, suitable for chaining.
    */
-  get handleSize() {
-    return this._handleSize;
-  }
-
-  set handleSize(handleSize) {
+  setHandleSize(handleSize) {
     this._handleSize = handleSize;
-    this.handle.style.width = handleSize + "px";
+    this._handle.style.width = handleSize + "px";
     this._updateHandlePosition();
+    return this;
   }
 
-  /**
-   * Gets and sets the height of this component.
-   */
-  get height() {
-    return super.height;
-  }
-
-  set height(height) {
-    super.height = height;
+  setHeight(height) {
+    super.setHeight(height);
     this._updateLabelPosition();
     this._updateValueLabelPosition();
+    return this;
   }
 
   /**
-   * Gets and sets the position of the text label displayed on the slider. Valid values are "top" (default), "right", "left" and "bottom". Not applicable to a VSlider.
+   * Sets the maximum value of this slider.
+   * @param {number} max - The maximum value of this slider.
+   * @returns This instance, suitable for chaining.
    */
-  get textPosition() {
-    return this.textPosition;
+  setMax(max) {
+    this._max = max;
+    this._updateValue(this.getValue());
+    this._updateHandlePosition();
+    return this;
   }
 
-  set textPosition(position) {
+  /**
+   * Sets the minimum value of this slider.
+   * @param {number} min - The minimum value of this slider.
+   * @returns This instance, suitable for chaining.
+   */
+  setMin(min) {
+    this._min = min;
+    this._updateValue(this.getValue());
+    this._updateHandlePosition();
+    return this;
+  }
+
+  /**
+   * Sets whether the slider is reversed. A reversed HSlider will show its maximum value on the left and minumum on the right. A reversed VSlider will show its maximum value on the bottom and minimum on the top.
+   * @param {boolean} reversed - Whether or not this slider will be reversed.
+   * @returns This instance, suitable for chaining.
+   */
+  setReversed(reversed) {
+    this._reversed = reversed;
+    return this;
+  }
+
+  /**
+   * Sets whether or not the value of this slider will be shown.
+   * @param {boolean} showValue - Whether or not the value will be shown.
+   * @returns This instance, suitable for chaining.
+   */
+  setShowValue(showValue) {
+    this._showValue = showValue;
+    if (this._showValue) {
+      this._valueLabel.style.visibility = "visible";
+    } else {
+      this._valueLabel.style.visibility = "hidden";
+    }
+    return this;
+  }
+
+  /**
+   * Sets the text of this slider.
+   * @param {string} text - The text to set on this slider.
+   * @returns this instance, suitable for chaining.
+   */
+  setText(text) {
+    this._text = text;
+    this._textLabel.text = text;
+    this._updateLabelPosition();
+    return this;
+  }
+
+  /**
+   * Sets the position of the text label.
+   * @param {string} position - The position to place the text lable: "top" (default), "right", "left" or "bottom".
+   * @returns this instance, suitable for chaining.
+   */
+  setTextPosition(position) {
     this._textPosition = position;
     this._updateLabelPosition();
     if (position === "left" && this._valuePosition === "left") {
-      this.valuePosition = "right";
+      this._valuePosition = "right";
     }
     if (position === "right" && this._valuePosition === "right") {
-      this.valuePosition = "left";
+      this._valuePosition = "left";
     }
+    return this;
   }
 
   /**
-   * Gets and sets the position of the value label displayed on the slider. Valid values are "top" (default), "right", "left" and "bottom". Not applicable to a VSlider.
+   * Sets the value of this slider.
+   * @param {number} value - The value of this slider.
+   * @returns This instance, suitable for chaining.
    */
-  get valuePosition() {
-    return this._valuePosition;
+  setValue(value) {
+    this._updateValue(value);
+    return this;
   }
 
-  set valuePosition(position) {
+  /**
+   * Sets the value, minimum and maximum of this slider.
+   * @param {number} value - The value of this slider.
+   * @param {number} min - The minimum value of this slider.
+   * @param {number} max - The maximum value of this slider.
+   * @returns This instance, suitable for chaining.
+   */
+  setValueMinMax(value, min, max) {
+    this._min = min;
+    this._max = max;
+    this.setValue(value);
+    return this;
+  }
+
+  /**
+   * Sets the position of the value label.
+   * @param {string} position - The position to place the value lable: "top" (default), "right", left" or "bottom".
+   * @returns this instance, suitable for chaining.
+   */
+  setValuePosition(position) {
     this._valuePosition = position;
     this._updateValueLabelPosition();
     if (position === "left" && this._textPosition === "left") {
-      this.textPosition = "right";
+      this._textPosition = "right";
     }
     if (position === "right" && this._textPosition === "right") {
-      this.textPosition = "left";
+      this._textPosition = "left";
     }
+    return this;
+  }
+
+  setWidth(width) {
+    super.setWidth(width);
+    this._updateValueLabelPosition();
+    this._updateHandlePosition();
+    return this;
+  }
+
+  //////////////////////////////////
+  // Getters/Setters
+  // alphabetical. getter first.
+  //////////////////////////////////
+
+  /**
+   * Sets and gets the number of decimals of precision to be used for the slider. This will effect what is shown in the value label as well as the value property of the slider. A decimals value of 0 will display integers only. Negative decimals will round to the nearest power of 10.
+   */
+  get decimals() {
+    return this.getDecimals();
+  }
+  set decimals(decimals) {
+    this.setDecimals(decimals);
+  }
+
+  /**
+   * Gets and sets the width of the draggable slider handle. If you make the slider thicker by changing its height, you may want to adjust the handle size as well. If handleSize is the same as the slider height, then the handle will be a square.
+   * <div><img src="https://www.minicomps.org/images/hsliderhandlesize.png"/></div>
+   */
+  get handleSize() {
+    return this.getHandlesSize();
+  }
+  set handleSize(handleSize) {
+    this.setHandleSize(handleSize);
   }
 
   /**
    * Gets and sets the maximum value of the slider.
    */
   get max() {
-    return this._max;
+    return this.getMax();
   }
-
   set max(max) {
-    this._max = max;
-    this._updateValue(this.value);
-    this._updateHandlePosition();
+    this.setMax(max);
   }
 
   /**
    * Gets and sets the minimum value of the slider.
    */
   get min() {
-    return this._min;
+    return this.getMin();
   }
-
   set min(min) {
-    this._min = min;
-    this._updateValue(this.value);
-    this._updateHandlePosition();
+    this.setMin(min);
   }
 
   /**
    * Gets and sets whether the slider is reversed. A reversed HSlider will show its maximum value on the left and minumum on the right. A reversed VSlider will show its maximum value on the bottom and minimum on the top.
    */
   get reversed() {
-    return this._reversed;
+    return this.getReversed();
   }
-
   set reversed(reversed) {
-    this._reversed = reversed;
+    this.setReversed(reversed);
   }
 
   /**
    * Gets and sets whether or not the value label will be displayed.
    */
   get showValue() {
-    return this._showValue;
+    return this.getShowValue();
   }
-
   set showValue(show) {
-    this._showValue = show;
-    if (this._showValue) {
-      this.valueLabel.style.visibility = "visible";
-    } else {
-      this.valueLabel.style.visibility = "hidden";
-    }
+    this.setShowValue(show);
   }
 
   /**
    * Gets and sets the text of the text label of the slider.
    */
   get text() {
-    return this._text;
+    return this.getText();
+  }
+  set text(text) {
+    this.setText(text);
   }
 
-  set text(text) {
-    this._text = text;
-    this.label.text = text;
-    this._updateLabelPosition();
+  /**
+   * Gets and sets the position of the text label displayed on the slider. Valid values are "top" (default), "right", "left" and "bottom". Not applicable to a VSlider.
+   */
+  get textPosition() {
+    return this.getTextPosition();
+  }
+  set textPosition(position) {
+    this.setTextPosition(position);
   }
 
   /**
    * Gets and sets the value of the slider.
    */
   get value() {
-    return this._roundValue(this._value);
+    return this.getValue();
   }
-
   set value(value) {
-    this._updateValue(value);
+    this.setValue(value);
   }
 
   /**
-   * Gets and sets the width of this component.
+   * Gets and sets the position of the value label displayed on the slider. Valid values are "top" (default), "right", "left" and "bottom". Not applicable to a VSlider.
    */
-  get width() {
-    return super.width;
+  get valuePosition() {
+    return this.getValuePosition();
   }
-
-  set width(width) {
-    super.width = width;
-    this._updateValueLabelPosition();
-    this._updateHandlePosition();
+  set valuePosition(position) {
+    this.setValuePosition(position);
   }
 }
 
