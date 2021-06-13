@@ -265,6 +265,7 @@ export class ColorPicker extends Component {
 
   /**
    * @returns Whether or not the color picker is set to use sliders.
+   */
   getUseSliders() {
     return this._useSliders;
   }
@@ -306,6 +307,7 @@ export class ColorPicker extends Component {
         this._input.removeEventListener("input", this._onInput);
       }
     }
+    return this;
   }
 
   /**

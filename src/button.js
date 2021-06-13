@@ -107,11 +107,13 @@ export class Button extends Component {
       this._wrapper.setAttribute("class", "MinimalButtonDisabled");
       this._wrapper.tabIndex = -1;
     }
+    return this;
   }
 
   setHeight(height) {
     super.setHeight(height);
     this._textLabel.height = height;
+    return this;
   }
 
   /**
@@ -128,6 +130,7 @@ export class Button extends Component {
   setWidth(width) {
     super.setWidth(width);
     this._textLabel.width = width;
+    return this;
   }
 
   //////////////////////////////////
