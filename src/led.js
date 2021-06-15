@@ -17,16 +17,15 @@ export class LED extends Component {
    * @param {HTMLElement} parent - The element to add this LED to.
    * @param {number} x - The x position of the LED. Default 0.
    * @param {number} y - The y position of the LED. Default 0.
-   * @param {string} text - The text of the label of the LED. Default empty string.
+   * @param {string} label - The text of the label of the LED. Default empty string.
    * @param {string} color - The color of the LED. Default #f00.
    * @param {boolean} lit - The initial lit state of the LED. Default false.
    */
-  constructor(parent, x, y, text, color, lit) {
+  constructor(parent, x, y, label, color, lit) {
     super(parent, x, y);
-    this._text = text || "";
+    this._label = label || "";
     this._color = color || "#f00";
     this._lit = lit || false;
-    this._textPosition = Defaults.led.textPosition;
 
     const size = 16;
 
@@ -34,6 +33,7 @@ export class LED extends Component {
     this._setWrapperClass("MinimalLED");
     this._createStyle();
 
+    this.setLabelPosition(Defaults.led.labelPosition);
     this.setSize(size, size);
     this._updateLED();
     this._updateLabel();
@@ -45,7 +45,7 @@ export class LED extends Component {
   //////////////////////////////////
 
   _createChildren() {
-    this.label = new Label(this._wrapper, 0, -15, this._text);
+    this._textLabel = new Label(this._wrapper, 0, -15, this._label);
   }
 
   _createStyle() {
@@ -59,32 +59,36 @@ export class LED extends Component {
   //////////////////////////////////
 
   //////////////////////////////////
-  // General
+  // Private
   //////////////////////////////////
 
   _updateLED() {
-    if (this.lit) {
-      this._wrapper.style.background = `radial-gradient(circle at 60% 37%, #fff, ${this.color} 50%, #444 100%)`;
+    if (this._lit) {
+      this._wrapper.style.background = `radial-gradient(circle at 60% 37%, #fff, ${this._color} 50%, #444 100%)`;
     } else {
       this._wrapper.style.background = "radial-gradient(circle at 60% 37%, #fff, #999 50%)";
     }
   }
 
   _updateLabel() {
-    if (this._textPosition === "left") {
-      this.label.x = -this.label.width - 5;
-      this.label.y = (this.height - this.label.height) / 2;
-    } else if (this._textPosition === "top") {
-      this.label.x = (this.width - this.label.width) / 2;
-      this.label.y = -this.label.height - 5;
-    } else if (this._textPosition === "right") {
-      this.label.x = this.width + 5;
-      this.label.y = (this.height - this.label.height) / 2;
+    if (this._labelPosition === "left") {
+      this._textLabel.x = -this._textLabel.width - 5;
+      this._textLabel.y = (this._height - this._textLabel.height) / 2;
+    } else if (this._labelPosition === "top") {
+      this._textLabel.x = (this._width - this._textLabel.width) / 2;
+      this._textLabel.y = -this._textLabel.height - 5;
+    } else if (this._labelPosition === "right") {
+      this._textLabel.x = this._width + 5;
+      this._textLabel.y = (this._height - this._textLabel.height) / 2;
     } else {
-      this.label.x = (this.width - this.label.width) / 2;
-      this.label.y = this.height + 5;
+      this._textLabel.x = (this._width - this._textLabel.width) / 2;
+      this._textLabel.y = this._height + 5;
     }
   }
+
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
 
   /**
    * Starts the LED blinking at a specified or default rate.
@@ -92,28 +96,85 @@ export class LED extends Component {
    * @returns This instance, suitable for chaining.
    */
   blink(bps) {
-    if (!this.enabled) {
+    if (!this._enabled) {
       return;
     }
     bps = bps || 2;
-    clearInterval(this.interval);
-    this.blinking = true;
-    this.interval = setInterval(() => {
-      if (this.blinking) {
-        this.lit = !this.lit;
+    clearInterval(this._interval);
+    this._blinking = true;
+    this._interval = setInterval(() => {
+      if (this._blinking) {
+        this.setLit(!this._lit);
       }
     }, 1 / bps * 1000);
     return this;
   }
 
+  getColor() {
+    return this._color;
+  }
+
+  getLit() {
+    return this._lit;
+  }
+
+  getText() {
+    return this._label;
+  }
+
+  getTextPosition() {
+    return this._labelPosition;
+  }
+
   /**
-   * Stops the LED blinking and turns it off.
+   * Sets the color of this LED.
+   * @param {string} color - The color to set.
    * @returns This instance, suitable for chaining.
    */
-  stop() {
-    this.blinking = false;
-    clearInterval(this.interval);
-    this.lit = false;
+  setColor(color) {
+    this._color = color;
+    this._updateLED();
+    return this;
+  }
+
+  setEnabled(enabled) {
+    super.setEnabled(enabled);
+    this._textLabel.enabled = enabled;
+    if (this._enabled) {
+      this._wrapper.setAttribute("class", "MinimalLED");
+    } else {
+      this.stop();
+      this._wrapper.setAttribute("class", "MinimalLEDDisabled");
+    }
+    return this;
+  }
+
+  setHeight(height) {
+    super.setHeight(height);
+    super.setWidth(height);
+    return this;
+  }
+
+  /**
+   * Sets the label of this LED.
+   * @param {string} label - The label to set on this LED.
+   * @returns this instance, suitable for chaining.
+   */
+  setLabel(label) {
+    this._label = label;
+    this._textLabel.text = label;
+    this._updateLabel();
+    return this;
+  }
+
+  /**
+   * Sets the text position of the text label.
+   * @param {string} position - The position to place the text lable: "top" (default), "left", "right" or "bottom".
+   * @returns this instance, suitable for chaining.
+   */
+  setLabelPosition(position) {
+    this._labelPosition = position;
+    this._updateLabel();
     return this;
   }
 
@@ -123,17 +184,8 @@ export class LED extends Component {
    * @returns This instance, suitable for chaining.
    */
   setLit(lit) {
-    this.lit = lit;
-    return this;
-  }
-
-  /**
-   * Sets the color of this LED.
-   * @param {string} color - The color to set.
-   * @returns This instance, suitable for chaining.
-   */
-  setColor(color) {
-    this.color = color;
+    this._lit = lit;
+    this._updateLED();
     return this;
   }
 
@@ -150,23 +202,20 @@ export class LED extends Component {
     return this;
   }
 
-  /**
-   * Sets the text of this LED.
-   * @param {string} text - The text to set on this LED.
-   * @returns this instance, suitable for chaining.
-   */
-  setText(text) {
-    this.text = text;
+  setWidth(width) {
+    super.setWidth(width);
+    super.setHeight(width);
     return this;
   }
 
   /**
-   * Sets the text position of the text label.
-   * @param {string} position - The position to place the text lable: "top" (default), "left", "right" or "bottom".
-   * @returns this instance, suitable for chaining.
+   * Stops the LED blinking and turns it off.
+   * @returns This instance, suitable for chaining.
    */
-  setTextPosition(position) {
-    this.textPosition = position;
+  stop() {
+    this._blinking = false;
+    clearInterval(this._interval);
+    this.setLit(false);
     return this;
   }
 
@@ -179,91 +228,39 @@ export class LED extends Component {
    * Gets and sets the color of the LED.
    */
   get color() {
-    return this._color;
+    return this.getColor();
   }
-
   set color(color) {
-    this._color = color;
-    this._updateLED();
-  }
-
-  /**
-   * Gets and sets the enabled state of the LED. A disabled LED will not be lit and will not blink.
-   */
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    super.enabled = enabled;
-    this.label.enabled = enabled;
-    if (this._enabled) {
-      this._wrapper.setAttribute("class", "MinimalLED");
-    } else {
-      this.stop();
-      this._wrapper.setAttribute("class", "MinimalLEDDisabled");
-    }
-  }
-
-  /**
-   * Sets and gets the height of this component.
-   */
-  get height() {
-    return super.height;
-  }
-
-  set height(height) {
-    super.height = height;
-    super.width = height;
-  }
-
-  /**
-   * Gets and sets whether or not this LED is lit.
-   */
-  get lit() {
-    return this._lit;
-  }
-
-  set lit(lit) {
-    this._lit = lit;
-    this._updateLED();
+    this.setColor(color);
   }
 
   /**
    * Gets and sets the text of the LED's text label.
    */
-  get text() {
-    return this._text;
+  get label() {
+    return this.getText();
   }
-
-  set text(text) {
-    this._text = text;
-    this.label.text = text;
-    this._updateLabel();
+  set label(label) {
+    this.setText(label);
   }
 
   /**
    * Gets and sets the position of the text label displayed on the LED. Valid values are "top" (default), "left", "right" and "bottom".
    */
-  get textPosition() {
-    return this._textPosition;
+  get labelPosition() {
+    return this.getTextPosition();
   }
-
-  set textPosition(pos) {
-    this._textPosition = pos;
-    this._updateLabel();
+  set labelPosition(pos) {
+    this.setTextPosition(pos);
   }
-
   /**
-   * Sets and gets the width of this component.
+   * Gets and sets whether or not this LED is lit.
    */
-  get width() {
-    return super.width;
+  get lit() {
+    return this.getLit();
   }
-
-  set width(width) {
-    super.width = width;
-    super.height = width;
+  set lit(lit) {
+    this.setLit(lit);
   }
 }
 

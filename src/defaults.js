@@ -62,7 +62,7 @@ export const Defaults = {
    * @property {stirng} textPosition - The default textPosition of a LED.
    */
   led: {
-    textPosition: "top",
+    labelPosition: "top",
   },
   /**
    * Default properties for the Label component.
@@ -76,12 +76,12 @@ export const Defaults = {
    * Default properties for the NumericStepper component.
    * @typedef {object} numericstepper
    * @property {number} decimals - The default decimals of a NumericStepper.
-   * @property {string} textPosition - The default textPosition of a NumericStepper.
+   * @property {string} labelPosition - The default labelPosition of a NumericStepper.
    * @property {number} width - The default width of a NumericStepper.
    */
   numericstepper: {
     decimals: 0,
-    textPosition: "top",
+    labelPosition: "top",
     width: 100,
   },
   /**
@@ -90,7 +90,7 @@ export const Defaults = {
    * @property {string} textPosition - The default textPosition of a Toggle.
    */
   toggle: {
-    textPosition: "top",
+    labelPosition: "top",
   },
   /**
    * Default properties for the VSlider component.

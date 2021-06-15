@@ -17,21 +17,21 @@ export class Toggle extends Component {
    * @param {HTMLElement} parent - The element to add this toggle to.
    * @param {number} x - The x position of the toggle. Default 0.
    * @param {number} y - The y position of the toggle. Default 0.
-   * @param {string} text - The text for the toggle's label. Default empty string.
+   * @param {string} label - The text for the toggle's label. Default empty string.
    * @param {boolean} toggled - The initial toggled state of the toggle. Default false.
    * @param {function} defaultHandler - A function that will handle the "click" event.
    */
-  constructor(parent, x, y, text, toggled, defaultHandler) {
+  constructor(parent, x, y, label, toggled, defaultHandler) {
     super(parent, x, y);
-    this._text = text;
-    this._textPosition = Defaults.toggle.textPosition;
+    this._label = label;
+    this._labelPosition = Defaults.toggle.labelPosition;
 
     this._createChildren();
     this._createStyle();
     this._createListeners();
 
     this.setSize(50, 20);
-    this.toggled = toggled || false;
+    this.setToggled(toggled || false);
     this._updateLabel();
     this.addEventListener("click", defaultHandler);
     this._addToParent();
@@ -44,8 +44,10 @@ export class Toggle extends Component {
   _createChildren() {
     this._setWrapperClass("MinimalToggle");
     this._wrapper.tabIndex = 0;
-    this.label = new Label(this._wrapper, 0, -15, this._text);
-    this.handle = this._createDiv(this._wrapper, "MinimalToggleHandle");
+    this._textLabel = new Label(this._wrapper, 0, -15, this._label);
+    this._stateLabel = new Label(this._wrapper, 5, 0, "On")
+      .setAutosize(false);
+    this._handle = this._createDiv(this._wrapper, "MinimalToggleHandle");
   }
 
   _createStyle() {
@@ -67,45 +69,53 @@ export class Toggle extends Component {
 
   _onClick(event) {
     event.stopPropagation();
-    if (this.enabled) {
+    if (this._enabled) {
       this.toggle();
-      this.dispatchEvent(new CustomEvent("click", { detail: this.toggled }));
+      this.dispatchEvent(new CustomEvent("click", { detail: this._toggled }));
     }
   }
 
   _onKeyPress(event) {
-    if (event.keyCode === 13 && this.enabled) {
+    if (event.keyCode === 13 && this._enabled) {
       this._wrapper.click();
     }
   }
 
   //////////////////////////////////
-  // General
+  // Private
   //////////////////////////////////
 
   _updateLabel() {
-    if (this._textPosition === "left") {
-      this.label.x = -this.label.width - 5;
-      this.label.y = (this.height - this.label.height) / 2;
-    } else if (this._textPosition === "top") {
-      this.label.x = 0;
-      this.label.y = -this.label.height - 5;
-    } else if (this._textPosition === "right") {
-      this.label.x = this.width + 5;
-      this.label.y = (this.height - this.label.height) / 2;
+    if (this._labelPosition === "left") {
+      this._textLabel.x = -this._textLabel.width - 5;
+      this._textLabel.y = (this._height - this._textLabel.height) / 2;
+    } else if (this._labelPosition === "top") {
+      this._textLabel.x = 0;
+      this._textLabel.y = -this._textLabel.height - 5;
+    } else if (this._labelPosition === "right") {
+      this._textLabel.x = this._width + 5;
+      this._textLabel.y = (this._height - this._textLabel.height) / 2;
     } else {
-      this.label.x = 0;
-      this.label.y = this.height + 5;
+      this._textLabel.x = 0;
+      this._textLabel.y = this._height + 5;
     }
   }
 
   _updateToggle() {
-    if (this.toggled) {
-      this.handle.style.left = "50%";
+    if (this._toggled) {
+      this._stateLabel.align = "left";
+      this._stateLabel.text = "On";
+      this._handle.style.left = "50%";
     } else {
-      this.handle.style.left = 0;
+      this._stateLabel.align = "right";
+      this._stateLabel.text = "Off";
+      this._handle.style.left = 0;
     }
   }
+
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
 
   /**
    * Adds a handler function for the "click" event on this toggle.
@@ -130,13 +140,76 @@ export class Toggle extends Component {
     return this;
   }
 
+  getLabel() {
+    return this._label;
+  }
+
+  getLabelPosition() {
+    return this._labelPosition;
+  }
+
+  getToggled() {
+    return this._toggled;
+  }
+
+  setEnabled(enabled) {
+    if (this._enabled !== enabled) {
+      super.setEnabled(enabled);
+      this._textLabel.enable = enabled;
+      if (this._enabled) {
+        this._setWrapperClass("MinimalToggle");
+        this._wrapper.tabIndex = 0;
+      } else {
+        this._setWrapperClass("MinimalToggleDisabled");
+        this._wrapper.tabIndex = -1;
+      }
+    }
+    return this;
+  }
+
+  setHeight(height) {
+    super.setHeight(height);
+    this._stateLabel.height = height;
+    return this;
+  }
+
+  /**
+   * Sets the label of this toggle.
+   * @param {string} label - The label to set on this toggle.
+   * @returns this instance, suitable for chaining.
+   */
+  setLabel(label) {
+    this._label = label;
+    this._textLabel.text = label;
+    this._updateLabel();
+    return this;
+  }
+
+  /**
+   * Sets the label position of the text label.
+   * @param {string} position - The position to place the text lable: "top" (default), "left", "right" or "bottom".
+   * @returns this instance, suitable for chaining.
+   */
+  setlabelPosition(position) {
+    this._labelPosition = position;
+    this._updateLabel();
+    return this;
+  }
+
   /**
    * Sets whether or not this toggle will be toggled (on).
    * @params {boolean} toggle - Whether this toggle will be toggled on or off.
    * @returns This instance, suitable for chaining.
    */
   setToggled(toggled) {
-    this.toggled = toggled;
+    this._toggled = toggled;
+    this._updateToggle();
+    return this;
+  }
+
+  setWidth(width) {
+    super.setWidth(width);
+    this._stateLabel.width = width - 10;
     return this;
   }
 
@@ -145,28 +218,7 @@ export class Toggle extends Component {
    * @returns This instance, suitable for chaining.
    */
   toggle() {
-    this.toggled = !this.toggled;
-    this._updateToggle();
-    return this;
-  }
-
-  /**
-   * Sets the text of this toggle.
-   * @param {string} text - The text to set on this toggle.
-   * @returns this instance, suitable for chaining.
-   */
-  setText(text) {
-    this.text = text;
-    return this;
-  }
-
-  /**
-   * Sets the text position of the text label.
-   * @param {string} position - The position to place the text lable: "top" (default), "left", "right" or "bottom".
-   * @returns this instance, suitable for chaining.
-   */
-  setTextPosition(position) {
-    this.textPosition = position;
+    this.setToggled(!this._toggled);
     return this;
   }
 
@@ -176,58 +228,33 @@ export class Toggle extends Component {
   //////////////////////////////////
 
   /**
-   * Sets and gets the toggled state of the toggle.
-   */
-  get toggled() {
-    return this._toggled;
-  }
-
-  set toggled(toggled) {
-    this._toggled = toggled;
-    this._updateToggle();
-  }
-
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    if (this.enabled !== enabled) {
-      super.enabled = enabled;
-      this.label.enable = enabled;
-      if (this.enabled) {
-        this._setWrapperClass("MinimalToggle");
-        this._wrapper.tabIndex = 0;
-      } else {
-        this._setWrapperClass("MinimalToggleDisabled");
-        this._wrapper.tabIndex = -1;
-      }
-    }
-  }
-
-  /**
    * Gets and sets the text of the toggle's text label.
    */
-  get text() {
-    return this._text;
+  get label() {
+    return this.getLabel();
   }
-
-  set text(text) {
-    this._text = text;
-    this.label.text = text;
-    this._updateLabel();
+  set label(label) {
+    this.setLabel(label);
   }
 
   /**
    * Gets and sets the position of the text label displayed on the toggle. Valid values are "top" (default), "left" and "bottom".
    */
-  get textPosition() {
-    return this._textPosition;
+  get labelPosition() {
+    return this.getLabelPosition();
+  }
+  set labelPosition(pos) {
+    this.setLabelPosition(pos);
   }
 
-  set textPosition(pos) {
-    this._textPosition = pos;
-    this._updateLabel();
+  /**
+   * Sets and gets the toggled state of the toggle.
+   */
+  get toggled() {
+    return this.getToggled();
+  }
+  set toggled(toggled) {
+    this.setToggled(toggled);
   }
 }
 

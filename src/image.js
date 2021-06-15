@@ -36,7 +36,7 @@ export class Image extends Component {
   //////////////////////////////////
 
   _createChildren() {
-    this.image = this._createElement(this._wrapper, "img", "MinimalImage");
+    this._image = this._createElement(this._wrapper, "img", "MinimalImage");
   }
 
   _createStyle() {
@@ -47,7 +47,7 @@ export class Image extends Component {
 
   _createListeners() {
     this._onLoad = this._onLoad.bind(this);
-    this.image.addEventListener("load", this._onLoad);
+    this._image.addEventListener("load", this._onLoad);
   }
 
   //////////////////////////////////
@@ -55,25 +55,55 @@ export class Image extends Component {
   //////////////////////////////////
 
   _onLoad() {
-    this.origWidth = this.image.width;
-    this.origHeight = this.image.height;
+    this._origWidth = this._image.width;
+    this._origHeight = this._image.height;
     this._updateImageSize();
-    this.image.style.visibility = "visible";
+    this._image.style.visibility = "visible";
   }
 
   //////////////////////////////////
-  // General
+  // Private
   //////////////////////////////////
 
   _load() {
-    this.image.style.visibility = "hidden";
-    this.image.setAttribute("src", this._url);
+    this._image.style.visibility = "hidden";
+    this._image.setAttribute("src", this._url);
   }
 
   _updateImageSize() {
-    const aspectRatio = this.origWidth / this.origHeight;
-    this.image.width = this.width;
-    this.image.height = this.height = this.width / aspectRatio;
+    const aspectRatio = this._origWidth / this._origHeight;
+    this._image.width = this._width;
+    this._image.height = this._height = this._width / aspectRatio;
+    super.setHeight(this._image.height);
+  }
+
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
+
+  /**
+   * @returns the current url.
+   */
+  getURL() {
+    return this._url;
+  }
+
+  setEnabled(enabled) {
+    super.setEnabled(enabled);
+    if (this._enabled) {
+      this._image.setAttribute("class", "MinimalImage");
+    } else {
+      this._image.setAttribute("class", "MinimalImageDisabled");
+    }
+    return this;
+  }
+
+  /**
+   * Sets the height of the image. This is has no action because the height will be set according to the assigned width and the aspect ratio of the loaded image.
+   * @returns This instance, suitable for chaining.
+   */
+  setHeight() {
+    return this;
   }
 
   /**
@@ -82,7 +112,21 @@ export class Image extends Component {
    * @returns This instance, suitable for chaining.
    */
   setURL(url) {
-    this.url = url;
+    this._url = url;
+    this._load();
+    return this;
+  }
+
+  /**
+   * Sets the width of the image. When the image is loaded, it will be set to the assigned width. The height will be set according to the assigned with and the aspect ratio of the loaded image.
+   * @param {number} width - The width of the image as displayed.
+   * @returns This instance, suitable for chaining.
+   */
+  setWidth(width) {
+    super.setWidth(width);
+    if (this._image.width) {
+      this._updateImageSize();
+    }
     return this;
   }
 
@@ -91,54 +135,14 @@ export class Image extends Component {
   // alphabetical. getter first.
   //////////////////////////////////
 
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    super.enabled = enabled;
-    if (this._enabled) {
-      this.image.setAttribute("class", "MinimalImage");
-    } else {
-      this.image.setAttribute("class", "MinimalImageDisabled");
-    }
-  }
-
-  /**
-   * Gets and sets the height of the image. This is read only because the height will be set according to the assigned width and the aspect ratio of the loaded image.
-   */
-  get height() {
-    return this.image.height;
-  }
-
-  set height(h) {
-    super.height = h;
-  }
-
   /**
    * Gets and sets the url of the image to be displayed. Setting this value will trigger the load of the new image.
    */
   get url() {
-    return this._url;
+    return this.getURL();
   }
-
   set url(url) {
-    this._url = url;
-    this._load();
-  }
-
-  /**
-   * Gets and sets the width of the image. When the image is loaded, it will be set to the assigned width. The height will be set according to the assigned with and the aspect ratio of the loaded image.
-   */
-  get width() {
-    return super.width;
-  }
-
-  set width(width) {
-    super.width = width;
-    if (this.image.width) {
-      this._updateImageSize();
-    }
+    this.setUrl(url);
   }
 }
 

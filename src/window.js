@@ -18,16 +18,16 @@ export class Window extends Component {
    * @param {number} y - The y position of the window. Default 0.
    * @param {number} w - The width of the window. Default 400.
    * @param {number} h - The height of the window. Default 400.
-   * @param {number} text - The text to put in the title bar. Default 0.
+   * @param {number} label - The label to put in the title bar. Default 0.
    */
-  constructor(parent, x, y, w, h, text) {
+  constructor(parent, x, y, w, h, label) {
     super(parent, x, y);
     w = w || 400;
     h = h || 400;
-    this._text = text;
+    this._label = label;
     this._draggable = true;
     this._minimizable = true;
-    this.minimized = false;
+    this._minimized = false;
 
     this._createChildren();
     this._createStyle();
@@ -43,12 +43,12 @@ export class Window extends Component {
 
   _createChildren() {
     this._setWrapperClass("MinimalWindow");
-    this.titleBar = this._createDiv(this._wrapper, "MinimalWindowTitleBar");
-    this.label = new Label(this.titleBar, 5, 0, this._text);
-    this.label.height = 30;
-    this.button = this._createDiv(this.titleBar, "MinimalWindowButton");
-    this.content = this._createDiv(this._wrapper, "MinimalWindowContent");
-    this.content.appendChild(document.createElement("slot"));
+    this._titleBar = this._createDiv(this._wrapper, "MinimalWindowTitleBar");
+    this._textLabel = new Label(this._titleBar, 5, 0, this._label);
+    this._textLabel.height = 30;
+    this._button = this._createDiv(this._titleBar, "MinimalWindowButton");
+    this._content = this._createDiv(this._wrapper, "MinimalWindowContent");
+    this._content.appendChild(document.createElement("slot"));
   }
 
   _createStyle() {
@@ -67,9 +67,9 @@ export class Window extends Component {
     this._onMouseUp = this._onMouseUp.bind(this);
     this._onMouseMove = this._onMouseMove.bind(this);
     this._onMinimize = this._onMinimize.bind(this);
-    this.titleBar.addEventListener("mousedown", this._onMouseDown);
-    this.titleBar.addEventListener("touchstart", this._onMouseDown);
-    this.button.addEventListener("click", this._onMinimize);
+    this._titleBar.addEventListener("mousedown", this._onMouseDown);
+    this._titleBar.addEventListener("touchstart", this._onMouseDown);
+    this._button.addEventListener("click", this._onMinimize);
   }
 
   //////////////////////////////////
@@ -88,8 +88,8 @@ export class Window extends Component {
       mouseX = event.clientX;
       mouseY = event.clientY;
     }
-    this.offsetX = mouseX - this.getBoundingClientRect().left;
-    this.offsetY = mouseY - this.getBoundingClientRect().top;
+    this._offsetX = mouseX - this.getBoundingClientRect().left;
+    this._offsetY = mouseY - this.getBoundingClientRect().top;
     document.addEventListener("mousemove", this._onMouseMove);
     document.addEventListener("touchmove", this._onMouseMove);
     document.addEventListener("mouseup", this._onMouseUp);
@@ -106,8 +106,8 @@ export class Window extends Component {
       mouseX = event.clientX;
       mouseY = event.clientY;
     }
-    const x = mouseX - this.offsetParent.getBoundingClientRect().left - this.offsetX;
-    const y = mouseY - this.offsetParent.getBoundingClientRect().top - this.offsetY;
+    const x = mouseX - this.offsetParent.getBoundingClientRect().left - this._offsetX;
+    const y = mouseY - this.offsetParent.getBoundingClientRect().top - this._offsetY;
     this.move(x, y);
   }
 
@@ -119,17 +119,29 @@ export class Window extends Component {
   }
 
   _onMinimize() {
-    this.minimized = !this.minimized;
-    if (this.minimized) {
-      super.height = 30;
+    this._minimized = !this._minimized;
+    if (this._minimized) {
+      super.setHeight(30);
     } else {
-      super.height = this._openHeight;
+      super.setHeight(this._openHeight);
     }
   }
 
   //////////////////////////////////
-  // General
+  // Public
   //////////////////////////////////
+
+  getDraggable() {
+    return this._draggable;
+  }
+
+  getMinimizable() {
+    return this._minimizable;
+  }
+
+  getLabel() {
+    return this._label;
+  }
 
   /**
    * Sets whether or not this window can be dragged by its title bar.
@@ -137,7 +149,59 @@ export class Window extends Component {
    * @returns This instance, suitable for chaining.
    */
   setDraggable(draggable) {
-    this.draggable = draggable;
+    if (this._draggable !== draggable) {
+      this._draggable = draggable;
+      if (draggable) {
+        this._titleBar.style.cursor = "pointer";
+        this._titleBar.addEventListener("mousedown", this._onMouseDown);
+        this._titleBar.addEventListener("touchstart", this._onMouseDown);
+      } else {
+        this._titleBar.style.cursor = "default";
+        this._titleBar.removeEventListener("mousedown", this._onMouseDown);
+        this._titleBar.removeEventListener("touchstart", this._onMouseDown);
+      }
+    }
+    return this;
+  }
+
+  setEnabled(enabled) {
+    if (this._enabled === enabled) {
+      return;
+    }
+    super.setEnabled(enabled);
+    if (this._enabled) {
+      this._minimized = true;
+      this._onMinimize();
+      this.setMinimizable(this.enabledMinimizable);
+      this.setDraggable(this.enabledDraggable);
+      this._wrapper.setAttribute("class", "MinimalWindow");
+    } else {
+      this.setMinimized(false);
+      this._onMinimize();
+      this._enabledMinimizable = this._minimizable;
+      this._enabledDraggable = this._draggable;
+      this.setMinimizable(false);
+      this.setDraggable(false);
+      this._wrapper.setAttribute("class", "MinimalWindowDisabled");
+    }
+    return this;
+  }
+
+  setHeight(height) {
+    super.setHeight(height);
+    this._openHeight = height;
+    this._content.style.height = (height - 30) + "px";
+    return this;
+  }
+
+  /**
+   * Sets the test shown in this window's title bar.
+   * @param {string} label - The label in the title bar.
+   * @returns This instance, suitable for chaining.
+   */
+  setLabel(label) {
+    this._label = label;
+    this._textLabel.text = label;
     return this;
   }
 
@@ -147,17 +211,19 @@ export class Window extends Component {
    * @returns This instance, suitable for chaining.
    */
   setMinimizable(minimizable) {
-    this.minimizable = minimizable;
+    this._minimizable = minimizable;
+    if (minimizable) {
+      this._button.style.visibility = "visible";
+    } else {
+      this._button.style.visibility = "hidden";
+    }
     return this;
   }
 
-  /**
-   * Sets the test shown in this window's title bar.
-   * @param {string} text - The text in the title bar.
-   * @returns This instance, suitable for chaining.
-   */
-  setText(text) {
-    this.text = text;
+  setWidth(width) {
+    super.setWidth(width);
+    this._titleBar.style.width = width + "px";
+    this._content.style.width = width + "px";
     return this;
   }
 
@@ -169,104 +235,30 @@ export class Window extends Component {
    * Gets and sets whether the window can be dragged by its title bar.
    */
   get draggable() {
-    return this._draggable;
+    return this.getDraggable();
   }
-
   set draggable(draggable) {
-    if (this._draggable !== draggable) {
-      this._draggable = draggable;
-      if (draggable) {
-        this.titleBar.style.cursor = "pointer";
-        this.titleBar.addEventListener("mousedown", this._onMouseDown);
-        this.titleBar.addEventListener("touchstart", this._onMouseDown);
-      } else {
-        this.titleBar.style.cursor = "default";
-        this.titleBar.removeEventListener("mousedown", this._onMouseDown);
-        this.titleBar.removeEventListener("touchstart", this._onMouseDown);
-      }
-    }
+    this.setDraggable(draggable);
   }
 
   /**
-   * Gets and sets the enabled state of this window. A disabled window will be faded and non-draggable. It will be minimized to prevent its contents from being active and will not be able to be unminimized.
+   * Sets and gets the label shown in the window's title bar.
    */
-  get enabled() {
-    return super.enabled;
+  get label() {
+    return this.getLabel();
   }
-
-  set enabled(enabled) {
-    if (this.enabled === enabled) {
-      return;
-    }
-    super.enabled = enabled;
-    if (this.enabled) {
-      this.minimized = true;
-      this._onMinimize();
-      this.minimizable = this.enabledMinimizable;
-      this.draggable = this.enabledDraggable;
-      this._wrapper.setAttribute("class", "MinimalWindow");
-    } else {
-      this.minimized = false;
-      this._onMinimize();
-      this.enabledMinimizable = this.minimizable;
-      this.enabledDraggable = this.draggable;
-      this.minimizable = false;
-      this.draggable = false;
-      this._wrapper.setAttribute("class", "MinimalWindowDisabled");
-    }
-  }
-  /**
-   * Gets and sets the height of the window.
-   */
-  get height() {
-    return super.height;
-  }
-
-  set height(h) {
-    super.height = h;
-    this._openHeight = h;
-    this.content.style.height = (h - 30) + "px";
+  set label(label) {
+    this.setLabel(label);
   }
 
   /**
    * Gets and sets whether the window has a minimize button.
    */
   get minimizable() {
-    return this._minimizable;
+    return this.getMinimizable();
   }
-
   set minimizable(minimizable) {
-    this._minimizable = minimizable;
-    if (minimizable) {
-      this.button.style.visibility = "visible";
-    } else {
-      this.button.style.visibility = "hidden";
-    }
-  }
-
-  /**
-   * Sets and gets the text shown in the window's title bar.
-   */
-  get text() {
-    return this._text;
-  }
-
-  set text(text) {
-    this._text = text;
-    this.label.text = text;
-  }
-
-  /**
-   * Gets and sets the width of the window.
-   */
-  get width() {
-    return super.width;
-  }
-
-  set width(w) {
-    super.width = w;
-    this.titleBar.style.width = w + "px";
-    this.content.style.width = w + "px";
+    this.setMinimizable(minimizable);
   }
 }
 

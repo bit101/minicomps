@@ -18,16 +18,16 @@ export class NumericStepper extends Component {
    * @param {HTMLElement} parent - The element to add this numeric stepper to.
    * @param {number} x - The x position of the numeric stepper. Default 0.
    * @param {number} y - The y position of the numeric stepper. Default 0.
-   * @param {string} text - The text label of the numeric stepper. Default empty string.
+   * @param {string} label - The text label of the numeric stepper. Default empty string.
    * @param {number} value - The initial value of the numeric stepper. Default 0.
    * @param {number} min - The minimum value of the numeric stepper. Default 0.
    * @param {number} max - The maximum value of the numeric stepper. Default 100.
    * @param {function} defaultHandler - A function that will handle the "change" event.
    */
-  constructor(parent, x, y, text, value, min, max, defaultHandler) {
+  constructor(parent, x, y, label, value, min, max, defaultHandler) {
     super(parent, x, y);
-    this._text = text || "";
-    this._textPosition = Defaults.numericstepper.textPosition;
+    this._label = label || "";
+    this._labelPosition = Defaults.numericstepper.labelPosition;
 
     this._min = min || 0;
     this._max = max || 0;
@@ -51,15 +51,15 @@ export class NumericStepper extends Component {
   _createChildren() {
     this._setWrapperClass("MinimalNumericStepper");
 
-    this.input = this._createInput(this._wrapper, "MinimalNumericStepperInput");
-    this.input.value = this._value;
+    this._input = this._createInput(this._wrapper, "MinimalNumericStepperInput");
+    this._input.value = this._value;
 
-    this.label = new Label(this._wrapper, 0, -15, this._text);
+    this._textLabel = new Label(this._wrapper, 0, -15, this._label);
 
-    this.minus = new Button(this._wrapper, 60, 0, "-");
-    this.minus.setSize(20, 20);
-    this.plus = new Button(this._wrapper, 80, 0, "+");
-    this.plus.setSize(20, 20);
+    this._minus = new Button(this._wrapper, 60, 0, "-");
+    this._minus.setSize(20, 20);
+    this._plus = new Button(this._wrapper, 80, 0, "+");
+    this._plus.setSize(20, 20);
   }
 
   _createStyle() {
@@ -83,18 +83,18 @@ export class NumericStepper extends Component {
 
     this._wrapper.addEventListener("wheel", this._onWheel);
 
-    this.input.addEventListener("input", this._onInput);
-    this.input.addEventListener("change", this._onInputChange);
+    this._input.addEventListener("input", this._onInput);
+    this._input.addEventListener("change", this._onInputChange);
 
-    this.plus.addEventListener("mousedown", this._onPlusDown);
+    this._plus.addEventListener("mousedown", this._onPlusDown);
     document.addEventListener("mouseup", this._onPlusUp);
-    this.plus.addEventListener("keydown", this._onPlusKeyDown);
-    this.plus.addEventListener("keyup", this._onPlusKeyUp);
+    this._plus.addEventListener("keydown", this._onPlusKeyDown);
+    this._plus.addEventListener("keyup", this._onPlusKeyUp);
 
-    this.minus.addEventListener("mousedown", this._onMinusDown);
+    this._minus.addEventListener("mousedown", this._onMinusDown);
     document.addEventListener("mouseup", this._onMinusUp);
-    this.minus.addEventListener("keydown", this._onMinusKeyDown);
-    this.minus.addEventListener("keyup", this._onMinusKeyUp);
+    this._minus.addEventListener("keydown", this._onMinusKeyDown);
+    this._minus.addEventListener("keyup", this._onMinusKeyUp);
   }
 
   //////////////////////////////////
@@ -102,15 +102,15 @@ export class NumericStepper extends Component {
   //////////////////////////////////
 
   _onInput() {
-    let value = this.input.value;
+    let value = this._input.value;
     value = value.replace(/[^-.0-9]/g, "");
-    this.input.value = value;
+    this._input.value = value;
   }
 
   _onInputChange() {
-    let value = parseFloat(this.input.value);
+    let value = parseFloat(this._input.value);
     value = this._roundValue(value);
-    this.input.value = value;
+    this._input.value = value;
     if (this.value !== value) {
       this._value = value;
       this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
@@ -118,42 +118,42 @@ export class NumericStepper extends Component {
   }
 
   _decrement() {
-    if (this.isDecrementing) {
+    if (this._isDecrementing) {
       const value = this._roundValue(this.value - 1 / Math.pow(10, this._decimals));
       if (this.value !== value) {
         this.value = value;
         this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
       }
-      this.timeout = setTimeout(() => this._decrement(), this.delay);
-      if (this.delay === 500) {
-        this.delay = 50;
+      this._timeout = setTimeout(() => this._decrement(), this._delay);
+      if (this._delay === 500) {
+        this._delay = 50;
       }
     }
   }
 
   _increment() {
-    if (this.isIncrementing) {
+    if (this._isIncrementing) {
       const value = this._roundValue(this.value + 1 / Math.pow(10, this._decimals));
       if (this.value !== value) {
         this.value = value;
         this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
       }
-      this.timeout = setTimeout(() => this._increment(), this.delay);
-      if (this.delay === 500) {
-        this.delay = 50;
+      this._timeout = setTimeout(() => this._increment(), this._delay);
+      if (this._delay === 500) {
+        this._delay = 50;
       }
     }
   }
 
   _onMinusDown() {
-    clearTimeout(this.timeout);
-    this.isDecrementing = true;
-    this.delay = 500;
+    clearTimeout(this._timeout);
+    this._isDecrementing = true;
+    this._delay = 500;
     this._decrement();
   }
 
   _onMinusUp() {
-    this.isDecrementing = false;
+    this._isDecrementing = false;
   }
 
   _onMinusKeyDown(event) {
@@ -169,14 +169,14 @@ export class NumericStepper extends Component {
   }
 
   _onPlusDown() {
-    clearTimeout(this.timeout);
-    this.isIncrementing = true;
-    this.delay = 500;
+    clearTimeout(this._timeout);
+    this._isIncrementing = true;
+    this._delay = 500;
     this._increment();
   }
 
   _onPlusUp() {
-    this.isIncrementing = false;
+    this._isIncrementing = false;
   }
 
   _onPlusKeyDown(event) {
@@ -204,35 +204,39 @@ export class NumericStepper extends Component {
   }
 
   //////////////////////////////////
-  // General
+  // Private
   //////////////////////////////////
 
   _roundValue(value) {
-    if (this.max !== null) {
-      value = Math.min(value, this.max);
+    if (this._max !== null) {
+      value = Math.min(value, this._max);
     }
-    if (this.min !== null) {
-      value = Math.max(value, this.min);
+    if (this._min !== null) {
+      value = Math.max(value, this._min);
     }
-    const mult = Math.pow(10, this.decimals);
+    const mult = Math.pow(10, this._decimals);
     return Math.round(value * mult) / mult;
   }
 
   _updateLabel() {
-    if (this._textPosition === "left") {
-      this.label.x = -this.label.width - 5;
-      this.label.y = (this.height - this.label.height) / 2;
-    } else if (this._textPosition === "right") {
-      this.label.x = this.width + 5;
-      this.label.y = (this.height - this.label.height) / 2;
-    } else if (this._textPosition === "top") {
-      this.label.x = 0;
-      this.label.y = -this.label.height - 5;
+    if (this._labelPosition === "left") {
+      this._textLabel.x = -this._textLabel.width - 5;
+      this._textLabel.y = (this._height - this._textLabel.height) / 2;
+    } else if (this._labelPosition === "right") {
+      this._textLabel.x = this._width + 5;
+      this._textLabel.y = (this._height - this._textLabel.height) / 2;
+    } else if (this._labelPosition === "top") {
+      this._textLabel.x = 0;
+      this._textLabel.y = -this._textLabel.height - 5;
     } else {
-      this.label.x = 0;
-      this.label.y = this.height + 5;
+      this._textLabel.x = 0;
+      this._textLabel.y = this._height + 5;
     }
   }
+
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
 
   /**
    * Adds a handler function for the "change" event on this numeric stepper.
@@ -257,13 +261,87 @@ export class NumericStepper extends Component {
     return this;
   }
 
+  getDecimals() {
+    return this._decimals;
+  }
+
+  getLabel() {
+    return this._label;
+  }
+
+  getLabelPosition() {
+    return this._labelPosition;
+  }
+
+  getMax() {
+    return this._max;
+  }
+
+  getMin() {
+    return this._min;
+  }
+
+  getValue() {
+    return this._value;
+  }
+
   /**
    * Sets the number of decimals of precision to be used for the numeric stepper. This will effect what is shown in the value label as well as the value property of the numeric stepper. A decimals value of 0 will display integers only. Negative decimals will round to the nearest power of 10.
    * @param {number} decimals - The decimals of precision to use.
    * @returns This instance, suitable for chaining.
    */
   setDecimals(decimals) {
-    this.decimals = decimals;
+    this._decimals = decimals;
+    const value = this._roundValue(this.value);
+    if (this._value !== value) {
+      this._value = value;
+      this._input.value = value;
+    }
+    return this;
+  }
+
+  setEnabled(enabled) {
+    if (this._enabled !== enabled) {
+      super.setEnabled(enabled);
+      this._input.disabled = !this._enabled;
+      this._plus.enabled = this._enabled;
+      this._minus.enabled = this._enabled;
+      this._textLabel.enabled = enabled;
+      if (this._enabled) {
+        this._wrapper.addEventListener("wheel", this._onWheel);
+      } else {
+        this._wrapper.removeEventListener("wheel", this._onWheel);
+      }
+    }
+    return this;
+  }
+
+  setHeight(height) {
+    super.setHeight(height);
+    this._updateLabel();
+    return this;
+  }
+
+  /**
+   * Sets the text of this numeric stepper.
+   * @param {string} label - The label to set on this numeric stepper.
+   * @returns this instance, suitable for chaining.
+   */
+  setLabel(label) {
+    this._label = label;
+    this._textLabel.text = label;
+    this._updateLabel();
+    return this;
+  }
+
+  /**
+   * Sets the position of the text label.
+   * @param {string} position - The position to place the text lable: "top" (default), "left", "right" or "bottom".
+   * @returns this instance, suitable for chaining.
+   */
+  setLabelPosition(position) {
+    this._labelPosition = position;
+    this._updateLabel();
     return this;
   }
 
@@ -273,7 +351,10 @@ export class NumericStepper extends Component {
    * @returns This instance, suitable for chaining.
    */
   setMax(max) {
-    this.max = max;
+    this._max = max;
+    if (this._max < this.value) {
+      this.value = this._max;
+    }
     return this;
   }
 
@@ -283,7 +364,10 @@ export class NumericStepper extends Component {
    * @returns This instance, suitable for chaining.
    */
   setMin(min) {
-    this.min = min;
+    this._min = min;
+    if (this._min > this.value) {
+      this.value = this._min;
+    }
     return this;
   }
 
@@ -293,7 +377,8 @@ export class NumericStepper extends Component {
    * @returns This instance, suitable for chaining.
    */
   setValue(value) {
-    this.value = value;
+    this._value = this._roundValue(value);
+    this._input.value = this._value;
     return this;
   }
 
@@ -305,29 +390,17 @@ export class NumericStepper extends Component {
    * @returns This instance, suitable for chaining.
    */
   setValueMinMax(value, min, max) {
-    this.min = min;
-    this.max = max;
+    this._min = min;
+    this._max = max;
     this.value = value;
     return this;
   }
 
-  /**
-   * Sets the text of this numeric stepper.
-   * @param {string} text - The text to set on this numeric stepper.
-   * @returns this instance, suitable for chaining.
-   */
-  setText(text) {
-    this.text = text;
-    return this;
-  }
-
-  /**
-   * Sets the text position of the text label.
-   * @param {string} position - The position to place the text lable: "top" (default), "left", "right" or "bottom".
-   * @returns this instance, suitable for chaining.
-   */
-  setTextPosition(position) {
-    this.textPosition = position;
+  setWidth(width) {
+    super.setWidth(width);
+    this._input.style.width = width - 40 + "px";
+    this._minus.x = width - 40;
+    this._plus.x = width - 20;
     return this;
   }
 
@@ -336,129 +409,64 @@ export class NumericStepper extends Component {
   // alphabetical. getter first.
   //////////////////////////////////
 
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    if (this.enabled !== enabled) {
-      super.enabled = enabled;
-      this.input.disabled = !this.enabled;
-      this.plus.enabled = this.enabled;
-      this.minus.enabled = this.enabled;
-      this.label.enabled = enabled;
-      if (this.enabled) {
-        this._wrapper.addEventListener("wheel", this._onWheel);
-      } else {
-        this._wrapper.removeEventListener("wheel", this._onWheel);
-      }
-    }
-  }
-
   /**
    * Sets and gets the number of decimals of precision to be used for the stepper. This will effect what is shown in the value label as well as the value property of the stepper. A decimals value of 0 will display integers only. Negative decimals will round to the nearest power of 10. Clicking the plus and minus button will _increment or _decrement the stepper's value by the smallest displayed value.
    */
   get decimals() {
-    return this._decimals;
+    return this.getDecimals();
   }
-
   set decimals(decimals) {
-    this._decimals = decimals;
-    const value = this._roundValue(this.value);
-    if (this._value !== value) {
-      this._value = value;
-      this.input.value = value;
-    }
+    this.setDecimals(decimals);
   }
 
   /**
-   * Sets and gets the height of this component.
+   * Gets and sets the text of the color picker's text label.
    */
-  get height() {
-    return super.height;
+  get label() {
+    return this.getLabel();
+  }
+  set label(label) {
+    this.setLabel(label);
   }
 
-  set height(h) {
-    super.height = h;
-    this._updateLabel();
+  /**
+   * Gets and sets the position of the text label displayed on the color picker. Valid values are "top" (default), "left", "right" and "bottom".
+   */
+  get labelPosition() {
+    return this.getLabelPosition();
+  }
+  set labelPosition(pos) {
+    this.setLabelPosition(pos);
   }
 
   /**
    * Gets and sets the maximum value of the stepper.
    */
   get max() {
-    return this._max;
+    return this.getMax();
   }
-
   set max(max) {
-    this._max = max;
-    if (this.max < this.value) {
-      this.value = this.max;
-    }
+    this.setMax(max);
   }
 
   /**
    * Gets and sets the minimum value of the stepper.
    */
   get min() {
-    return this._min;
+    return this.getMin();
   }
-
   set min(min) {
-    this._min = min;
-    if (this.min > this.value) {
-      this.value = this.min;
-    }
+    this.setMin(min);
   }
 
-  /**
-   * Gets and sets the text of the color picker's text label.
-   */
-  get text() {
-    return this._text;
-  }
-
-  set text(text) {
-    this._text = text;
-    this.label.text = text;
-    this._updateLabel();
-  }
-
-  /**
-   * Gets and sets the position of the text label displayed on the color picker. Valid values are "top" (default), "left", "right" and "bottom".
-   */
-  get textPosition() {
-    return this._textPosition;
-  }
-
-  set textPosition(pos) {
-    this._textPosition = pos;
-    this._updateLabel();
-  }
   /**
    * Gets and sets the value of the stepper.
    */
   get value() {
-    return this._value;
+    return this.getValue();
   }
-
   set value(value) {
-    this._value = this._roundValue(value);
-    this.input.value = this._value;
-  }
-
-  /**
-   * Sets and gets the width of this component.
-   */
-  get width() {
-    return super.width;
-  }
-
-  set width(w) {
-    super.width = w;
-    this.input.style.width = w - 40 + "px";
-    this.minus.x = w - 40;
-    this.plus.x = w - 20;
+    this.setValue(value);
   }
 }
 

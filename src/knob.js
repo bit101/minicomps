@@ -17,16 +17,16 @@ export class Knob extends Component {
    * @param {HTMLElement} parent - The element to add this knob to.
    * @param {number} x - The x position of the knob. Default 0.
    * @param {number} y - The y position of the knob. Default 0.
-   * @param {string} text - The text label of the knob. Default empty string.
+   * @param {string} label - The text label of the knob. Default empty string.
    * @param {number} value - The initial value of the knob. Default 0.
    * @param {number} min - The minimum value of the knob. Default 0.
    * @param {number} max - The maximum value of the knob. Default 100.
    * @param {function} defaultHandler - A function that will handle the "change" event.
    */
-  constructor(parent, x, y, text, value, min, max, defaultHandler) {
+  constructor(parent, x, y, label, value, min, max, defaultHandler) {
     super(parent, x, y);
 
-    this._text = text || "";
+    this._label = label || "";
     this._min = min || 0;
     this._max = max || 100;
     this._decimals = Defaults.knob.decimals;
@@ -51,11 +51,11 @@ export class Knob extends Component {
 
   _createChildren() {
     this._setWrapperClass("MinimalKnob");
-    this.handle = this._createDiv(this._wrapper, "MinimalKnobHandle");
+    this._handle = this._createDiv(this._wrapper, "MinimalKnobHandle");
     this._wrapper.tabIndex = 0;
-    this.zero = this._createDiv(this.handle, "MinimalKnobZero");
-    this.label = new Label(this._wrapper, 0, 0, this._text);
-    this.valueLabel = new Label(this._wrapper, 0, 0, this._roundValue(this._value));
+    this._zero = this._createDiv(this._handle, "MinimalKnobZero");
+    this._textLabel = new Label(this._wrapper, 0, 0, this._label);
+    this._valueLabel = new Label(this._wrapper, 0, 0, this._roundValue(this._value));
   }
 
   _createStyle() {
@@ -70,7 +70,7 @@ export class Knob extends Component {
     this._onMouseUp = this._onMouseUp.bind(this);
     this._onKeyDown = this._onKeyDown.bind(this);
     this._onWheel = this._onWheel.bind(this);
-    this.handle.addEventListener("wheel", this._onWheel);
+    this._handle.addEventListener("wheel", this._onWheel);
     this._wrapper.addEventListener("mousedown", this._onMouseDown);
     this._wrapper.addEventListener("touchstart", this._onMouseDown);
     this._wrapper.addEventListener("keydown", this._onKeyDown);
@@ -84,11 +84,11 @@ export class Knob extends Component {
     event.preventDefault();
     this._wrapper.focus();
     if (event.changedTouches) {
-      this.startY = event.changedTouches[0].clientY;
+      this._startY = event.changedTouches[0].clientY;
     } else {
-      this.startY = event.clientY;
+      this._startY = event.clientY;
     }
-    this.startValue = this.value;
+    this._startValue = this.value;
     document.addEventListener("mousemove", this._onMouseMove);
     document.addEventListener("touchmove", this._onMouseMove);
     document.addEventListener("mouseup", this._onMouseUp);
@@ -96,15 +96,15 @@ export class Knob extends Component {
   }
 
   _onMouseMove(event) {
-    const mult = (this.max - this.min) / this.sensitivity;
+    const mult = (this._max - this._min) / this._sensitivity;
     let mouseY;
     if (event.changedTouches) {
       mouseY = event.changedTouches[0].clientY;
     } else {
       mouseY = event.clientY;
     }
-    const y = mouseY - this.startY;
-    const value = this.startValue + -y * mult;
+    const y = mouseY - this._startY;
+    const value = this._startValue + -y * mult;
     if (value !== this.value) {
       this._updateValue(value);
       this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
@@ -133,11 +133,11 @@ export class Knob extends Component {
       break;
     case 36: // home
       event.preventDefault();
-      value = this.min;
+      value = this._min;
       break;
     case 35: // end
       event.preventDefault();
-      value = this.max;
+      value = this._max;
       break;
     case 37: // right
     case 40: // up
@@ -174,47 +174,47 @@ export class Knob extends Component {
   }
 
   //////////////////////////////////
-  // General
+  // Private
   //////////////////////////////////
 
   _formatValue() {
     let valStr = this.value.toString();
-    if (this.decimals <= 0) {
+    if (this._decimals <= 0) {
       return valStr;
     }
     if (valStr.indexOf(".") === -1) {
       valStr += ".";
     }
     const dec = valStr.split(".")[1].length;
-    for (let i = dec; i < this.decimals; i++) {
+    for (let i = dec; i < this._decimals; i++) {
       valStr += "0";
     }
     return valStr;
   }
 
   _roundValue(value) {
-    value = Math.min(value, this.max);
-    value = Math.max(value, this.min);
-    const mult = Math.pow(10, this.decimals);
+    value = Math.min(value, this._max);
+    value = Math.max(value, this._min);
+    const mult = Math.pow(10, this._decimals);
     return Math.round(value * mult) / mult;
   }
 
   _updateHandleSize() {
-    this.handle.style.top = (this.height - this.size) / 2 + "px";
-    this.handle.style.left = (this.width - this.size) / 2 + "px";
-    this.handle.style.width = this.size + "px";
-    this.handle.style.height = this.size + "px";
+    this._handle.style.top = (this._height - this._size) / 2 + "px";
+    this._handle.style.left = (this._width - this._size) / 2 + "px";
+    this._handle.style.width = this._size + "px";
+    this._handle.style.height = this._size + "px";
   }
 
   _updateHandleRotation() {
-    const percent = (this.value - this.min) / (this.max - this.min);
-    this.handle.style.transform = `rotate(${-240 + percent * 300}deg`;
+    const percent = (this.value - this._min) / (this._max - this._min);
+    this._handle.style.transform = `rotate(${-240 + percent * 300}deg`;
   }
 
   _updateEnabledStyle() {
-    this.label.enabled = this.enabled;
-    this.valueLabel.enabled = this.enabled;
-    if (this.enabled) {
+    this._textLabel.enabled = this._enabled;
+    this._valueLabel.enabled = this._enabled;
+    if (this._enabled) {
       this._wrapper.setAttribute("class", "MinimalKnob");
     } else {
       this._wrapper.setAttribute("class", "MinimalKnobDisabled");
@@ -222,14 +222,14 @@ export class Knob extends Component {
   }
 
   _updateLabelPositions() {
-    this.label.x = (this.width - this.label.width) / 2;
-    this.valueLabel.x = (this.width - this.valueLabel.width) / 2;
+    this._textLabel.x = (this._width - this._textLabel.width) / 2;
+    this._valueLabel.x = (this._width - this._valueLabel.width) / 2;
     if (this._labelsSwapped) {
-      this.label.y = (this.height + this.size) / 2 + 5;
-      this.valueLabel.y = (this.height - this.size) / 2 - this.label.height - 5;
+      this._textLabel.y = (this._height + this._size) / 2 + 5;
+      this._valueLabel.y = (this._height - this._size) / 2 - this._textLabel.height - 5;
     } else {
-      this.label.y = (this.height - this.size) / 2 - this.label.height - 5;
-      this.valueLabel.y = (this.height + this.size) / 2 + 5;
+      this._textLabel.y = (this._height - this._size) / 2 - this._textLabel.height - 5;
+      this._valueLabel.y = (this._height + this._size) / 2 + 5;
     }
   }
 
@@ -237,10 +237,14 @@ export class Knob extends Component {
     if (this._value !== value) {
       this._value = value;
       this._updateHandleRotation();
-      this.valueLabel.text = this._formatValue();
+      this._valueLabel.text = this._formatValue();
       this._updateLabelPositions();
     }
   }
+
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
 
   /**
    * Adds a handler function for the "change" event on this knob.
@@ -265,14 +269,84 @@ export class Knob extends Component {
     return this;
   }
 
+  getDecimals() {
+    return this._decimals;
+  }
+
+  getLabel() {
+    return this._label;
+  }
+
+  getLabelsSwapped() {
+    return this._labelsSwapped;
+  }
+
+  getMax() {
+    return this._max;
+  }
+
+  getMin() {
+    return this._min;
+  }
+
+  getSensitivity() {
+    return this._sensitivity;
+  }
+
+  /**
+   * @returns the current value.
+   */
+  getValue() {
+    return this._roundValue(this._value);
+  }
+
   /**
    * Sets the number of decimals of precision to be used for the knob. This will effect what is shown in the value label as well as the value property of the knob. A decimals value of 0 will display integers only. Negative decimals will round to the nearest power of 10.
    * @param {number} decimals - The decimals of precision to use.
    * @returns This instance, suitable for chaining.
    */
   setDecimals(decimals) {
-    this.decimals = decimals;
+    this._decimals = decimals;
+    this._updateHandleRotation();
+    this._valueLabel.text = this._formatValue();
+    this._updateLabelPositions();
     return this;
+  }
+
+  setEnabled(enabled) {
+    if (this._enabled !== enabled) {
+      super.setEnabled(enabled);
+      this._updateEnabledStyle();
+      if (this._enabled) {
+        this._wrapper.tabIndex = 0;
+        this._handle.addEventListener("wheel", this._onWheel);
+        this._wrapper.addEventListener("mousedown", this._onMouseDown);
+        this._wrapper.addEventListener("touchstart", this._onMouseDown);
+        this._wrapper.addEventListener("keydown", this._onKeyDown);
+      } else {
+        this._wrapper.tabIndex = -1;
+        this._handle.removeEventListener("wheel", this._onWheel);
+        this._wrapper.removeEventListener("mousedown", this._onMouseDown);
+        this._wrapper.removeEventListener("touchstart", this._onMouseDown);
+        this._wrapper.removeEventListener("keydown", this._onKeyDown);
+        document.removeEventListener("mousemove", this._onMouseMove);
+        document.removeEventListener("touchmove", this._onMouseMove);
+        document.removeEventListener("mouseup", this._onMouseUp);
+        document.removeEventListener("touchend", this._onMouseUp);
+      }
+    }
+  }
+
+  /**
+   * Sets the height of the knob container. Of course the knob itself will always be round, so it will be sized according to the minimum of width and height if they are different, and centered within the container rectangle.
+   * @param {number} height - The height of the knob.
+   * @returns This instance.
+   */
+  setHeight(height) {
+    super.setHeight(height);
+    this._size = Math.min(this._width, this._height);
+    this._updateHandleSize();
+    this._updateLabelPositions();
   }
 
   /**
@@ -281,7 +355,7 @@ export class Knob extends Component {
    * @returns This instance, suitable for chaining.
    */
   setLabelsSwapped(swapped) {
-    this.labelsSwapped = swapped;
+    this._labelsSwapped = swapped;
     return this;
   }
 
@@ -291,7 +365,8 @@ export class Knob extends Component {
    * @returns This instance, suitable for chaining.
    */
   setMax(max) {
-    this.max = max;
+    this._max = max;
+    this._updateValue(this.value);
     return this;
   }
 
@@ -301,7 +376,8 @@ export class Knob extends Component {
    * @returns This instance, suitable for chaining.
    */
   setMin(min) {
-    this.min = min;
+    this._min = min;
+    this._updateValue(this.value);
     return this;
   }
 
@@ -323,19 +399,20 @@ export class Knob extends Component {
    * @returns This instance, suitable for chaining.
    */
   setValueMinMax(value, min, max) {
-    this.min = min;
-    this.max = max;
+    this._min = min;
+    this._max = max;
     this.value = value;
     return this;
   }
 
   /**
-   * Sets the text of this knob.
-   * @param {string} text - The text to set on this knob.
+   * Sets the label of this knob.
+   * @param {string} label - The label to set on this knob.
    * @returns This instance, suitable for chaining.
    */
-  setText(text) {
-    this.text = text;
+  setLabel(label) {
+    this._label = label;
+    this._textLabel.text = label;
     return this;
   }
 
@@ -345,7 +422,8 @@ export class Knob extends Component {
    * @return This instance, suitable for chaining.
    */
   setLabelSwapped(swapped) {
-    this.labelsSwapped = swapped;
+    this._labelsSwapped = swapped;
+    this._updateLabelPositions();
     return this;
   }
 
@@ -355,8 +433,20 @@ export class Knob extends Component {
    * @return This instance, suitable for chaining.
    */
   setSensitivity(sensitivity) {
-    this.sensitivity = sensitivity;
+    this._sensitivity = sensitivity;
     return this;
+  }
+
+  /**
+   * Sets the width of the knob container. Of course the knob itself will always be round, so it will be sized according to the minimum of width and height if they are different, and centered within the container rectangle.
+   * @param {number} width - the width (and height) of the knob.
+   * @returns This instance.
+   */
+  setWidth(width) {
+    super.setWidth(width);
+    this._size = Math.min(this._width, this._height);
+    this._updateHandleSize();
+    this._updateLabelPositions();
   }
 
   //////////////////////////////////
@@ -368,140 +458,70 @@ export class Knob extends Component {
    * Sets and gets the number of decimals of precision to be used for the knob. This will effect what is shown in the value label as well as the value property of the knob. A decimals value of 0 will display integers only. Negative decimals will round to the nearest power of 10.
    */
   get decimals() {
-    return this._decimals;
+    return this.getDecimals();
   }
-
   set decimals(decimals) {
-    this._decimals = decimals;
-    this._updateHandleRotation();
-    this.valueLabel.text = this._formatValue();
-    this._updateLabelPositions();
-  }
-
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    if (this.enabled !== enabled) {
-      super.enabled = enabled;
-      this._updateEnabledStyle();
-      if (this.enabled) {
-        this._wrapper.tabIndex = 0;
-        this.handle.addEventListener("wheel", this._onWheel);
-        this._wrapper.addEventListener("mousedown", this._onMouseDown);
-        this._wrapper.addEventListener("touchstart", this._onMouseDown);
-        this._wrapper.addEventListener("keydown", this._onKeyDown);
-      } else {
-        this._wrapper.tabIndex = -1;
-        this.handle.removeEventListener("wheel", this._onWheel);
-        this._wrapper.removeEventListener("mousedown", this._onMouseDown);
-        this._wrapper.removeEventListener("touchstart", this._onMouseDown);
-        this._wrapper.removeEventListener("keydown", this._onKeyDown);
-        document.removeEventListener("mousemove", this._onMouseMove);
-        document.removeEventListener("touchmove", this._onMouseMove);
-        document.removeEventListener("mouseup", this._onMouseUp);
-        document.removeEventListener("touchend", this._onMouseUp);
-      }
-    }
+    this.setDecimals(decimals);
   }
 
   /**
-   * Gets and sets the height of the knob container. Of course the knob itself will always be round, so it will be sized according to the minimum of width and height if they are different, and centered within the container rectangle.
+   * Gets and sets the text of the text label of the knob.
    */
-  get height() {
-    return super.height;
+  get label() {
+    return this.getLabel();
   }
-
-  set height(height) {
-    super.height = height;
-    this.size = Math.min(this.width, this.height);
-    this._updateHandleSize();
-    this._updateLabelPositions();
+  set label(label) {
+    this.setLabel(label);
   }
 
   /**
    * Gets and sets whether the text label and value label will be swapped. If true, the text label will be on the bottom and the value label will be on the top.
    */
   get labelsSwapped() {
-    return this._labelsSwapped;
+    return this.getLabelsSwapped();
   }
-
   set labelsSwapped(swap) {
-    this._labelsSwapped = swap;
-    this._updateLabelPositions();
+    this.setLabelSwapped(swap);
   }
 
   /**
    * Gets and sets the maximum value of the knob.
    */
   get max() {
-    return this._max;
+    return this.getMax();
   }
-
   set max(max) {
-    this._max = max;
-    this._updateValue(this.value);
+    this.setMax(max);
   }
 
   /**
    * Gets and sets the minimum value of the knob.
    */
   get min() {
-    return this._min;
+    return this.getMin();
   }
-
   set min(min) {
-    this._min = min;
-    this._updateValue(this.value);
+    this.setMin(min);
   }
 
   /**
    * Gets and sets the sensitivity of the knob when clicking and dragging to set a value. Default is 100, which means you'll have to drag the mouse 100 pixels to make the knob value go from its minimum value to its maximum. A higher sensitivity means that the knob will rotate a smaller amount for the same amount of vertical mouse movement.
    */
   get sensitivity() {
-    return this._sensitivity;
+    return this.getSensitivity();
   }
-
   set sensitivity(sensitivity) {
-    this._sensitivity = sensitivity;
-  }
-
-  /**
-   * Gets and sets the text of the text label of the knob.
-   */
-  get text() {
-    return this._text;
-  }
-
-  set text(text) {
-    this._text = text;
-    this.label.text = text;
+    this.setSensitivity(sensitivity);
   }
 
   /**
    * Gets and sets the value of the knob.
    */
   get value() {
-    return this._roundValue(this._value);
+    return this.getValue();
   }
-
   set value(value) {
-    this._updateValue(value);
-  }
-
-  /**
-   * Gets and sets the width of the knob container. Of course the knob itself will always be round, so it will be sized according to the minimum of width and height if they are different, and centered within the container rectangle.
-   */
-  get width() {
-    return super.width;
-  }
-
-  set width(width) {
-    super.width = width;
-    this.size = Math.min(this.width, this.height);
-    this._updateHandleSize();
-    this._updateLabelPositions();
+    this.setValue(value);
   }
 }
 
