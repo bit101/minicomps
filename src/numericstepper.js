@@ -111,18 +111,18 @@ export class NumericStepper extends Component {
     let value = parseFloat(this._input.value);
     value = this._roundValue(value);
     this._input.value = value;
-    if (this.value !== value) {
+    if (this._value !== value) {
       this._value = value;
-      this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+      this.dispatchEvent(new CustomEvent("change", { detail: this._value }));
     }
   }
 
   _decrement() {
     if (this._isDecrementing) {
-      const value = this._roundValue(this.value - 1 / Math.pow(10, this._decimals));
-      if (this.value !== value) {
-        this.value = value;
-        this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+      const value = this._roundValue(this._value - 1 / Math.pow(10, this._decimals));
+      if (this._value !== value) {
+        this.setValue(value);
+        this.dispatchEvent(new CustomEvent("change", { detail: this._value }));
       }
       this._timeout = setTimeout(() => this._decrement(), this._delay);
       if (this._delay === 500) {
@@ -133,10 +133,10 @@ export class NumericStepper extends Component {
 
   _increment() {
     if (this._isIncrementing) {
-      const value = this._roundValue(this.value + 1 / Math.pow(10, this._decimals));
-      if (this.value !== value) {
-        this.value = value;
-        this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+      const value = this._roundValue(this._value + 1 / Math.pow(10, this._decimals));
+      if (this._value !== value) {
+        this.setValue(value);
+        this.dispatchEvent(new CustomEvent("change", { detail: this._value }));
       }
       this._timeout = setTimeout(() => this._increment(), this._delay);
       if (this._delay === 500) {
@@ -195,11 +195,11 @@ export class NumericStepper extends Component {
     event.preventDefault();
     const inc = 1 / Math.pow(10, this._decimals);
     if (event.deltaY > 0) {
-      this.value += inc;
-      this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+      this.setValue(this._value + inc);
+      this.dispatchEvent(new CustomEvent("change", { detail: this._value }));
     } else if (event.deltaY < 0) {
-      this.value -= inc;
-      this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+      this.setValue(this._value - inc);
+      this.dispatchEvent(new CustomEvent("change", { detail: this._value }));
     }
   }
 
@@ -292,7 +292,7 @@ export class NumericStepper extends Component {
    */
   setDecimals(decimals) {
     this._decimals = decimals;
-    const value = this._roundValue(this.value);
+    const value = this._roundValue(this._value);
     if (this._value !== value) {
       this._value = value;
       this._input.value = value;
@@ -352,8 +352,8 @@ export class NumericStepper extends Component {
    */
   setMax(max) {
     this._max = max;
-    if (this._max < this.value) {
-      this.value = this._max;
+    if (this._max < this._value) {
+      this.setValue(this._max);
     }
     return this;
   }
@@ -365,8 +365,8 @@ export class NumericStepper extends Component {
    */
   setMin(min) {
     this._min = min;
-    if (this._min > this.value) {
-      this.value = this._min;
+    if (this._min > this._value) {
+      this.setValue(this._min);
     }
     return this;
   }
@@ -392,7 +392,7 @@ export class NumericStepper extends Component {
   setValueMinMax(value, min, max) {
     this._min = min;
     this._max = max;
-    this.value = value;
+    this.setValue(value);
     return this;
   }
 
