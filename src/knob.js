@@ -105,9 +105,9 @@ export class Knob extends Component {
     }
     const y = mouseY - this._startY;
     const value = this._startValue + -y * mult;
-    if (value !== this.value) {
+    if (value !== this.getValue()) {
       this._updateValue(value);
-      this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+      this.dispatchEvent(new CustomEvent("change", { detail: this.getValue() }));
     }
   }
 
@@ -152,9 +152,9 @@ export class Knob extends Component {
     default:
       break;
     }
-    if (value !== this.value) {
+    if (value !== this.getValue()) {
       this._updateValue(value);
-      this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+      this.dispatchEvent(new CustomEvent("change", { detail: this.getValue() }));
     }
   }
 
@@ -167,9 +167,9 @@ export class Knob extends Component {
     } else if (event.deltaY < 0) {
       value -= inc;
     }
-    if (value !== this.value) {
+    if (value !== this.getValue()) {
       this._updateValue(value);
-      this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+      this.dispatchEvent(new CustomEvent("change", { detail: this.getValue() }));
     }
   }
 
@@ -207,7 +207,7 @@ export class Knob extends Component {
   }
 
   _updateHandleRotation() {
-    const percent = (this.value - this._min) / (this._max - this._min);
+    const percent = (this.getValue() - this._min) / (this._max - this._min);
     this._handle.style.transform = `rotate(${-240 + percent * 300}deg`;
   }
 
@@ -335,6 +335,7 @@ export class Knob extends Component {
         document.removeEventListener("touchend", this._onMouseUp);
       }
     }
+    return this;
   }
 
   /**
@@ -347,6 +348,7 @@ export class Knob extends Component {
     this._size = Math.min(this._width, this._height);
     this._updateHandleSize();
     this._updateLabelPositions();
+    return this;
   }
 
   /**
@@ -387,7 +389,7 @@ export class Knob extends Component {
    * @returns This instance, suitable for chaining.
    */
   setValue(value) {
-    this.value = value;
+    this._value = value;
     return this;
   }
 
@@ -401,7 +403,7 @@ export class Knob extends Component {
   setValueMinMax(value, min, max) {
     this._min = min;
     this._max = max;
-    this.value = value;
+    this._value = value;
     return this;
   }
 
@@ -447,6 +449,7 @@ export class Knob extends Component {
     this._size = Math.min(this._width, this._height);
     this._updateHandleSize();
     this._updateLabelPositions();
+    return this;
   }
 
   //////////////////////////////////

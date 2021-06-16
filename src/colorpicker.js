@@ -387,7 +387,7 @@ export class ColorPicker extends Component {
       green = green.charAt(0);
       blue = blue.charAt(0);
     }
-    this.color = red + green + blue;
+    this.setColor(red + green + blue);
     return this;
   }
 

@@ -160,7 +160,7 @@ export class RadioButton extends Component {
   }
 
   getChecked() {
-    return this.getText();
+    return this._checked;
   }
 
   /**
@@ -233,7 +233,7 @@ export class RadioButton extends Component {
    * Sets and gets the checked state of the radio button.
    */
   get checked() {
-    return this._checked;
+    return this.getChecked();
   }
   set checked(checked) {
     this.setChecked(checked);
@@ -243,10 +243,10 @@ export class RadioButton extends Component {
    * Sets and gets the label shown in the radio button's label.
    */
   get label() {
-    return this.getChecked();
+    return this.getLabel();
   }
   set label(label) {
-    this.setText(label);
+    this.setLabel(label);
   }
 }
 customElements.define("minimal-radiobutton", RadioButton);

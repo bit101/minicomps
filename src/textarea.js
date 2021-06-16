@@ -61,6 +61,10 @@ export class TextArea extends Component {
     this.dispatchEvent(new CustomEvent("input", { detail: this._text }));
   }
 
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
+
   /**
    * Adds a handler function for the "input" event on this component.
    * @param {function} handler - A function that will handle the "input" event.

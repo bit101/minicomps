@@ -3,7 +3,7 @@ import { Style } from "./style.js";
 export class Component extends HTMLElement {
   constructor(parent, x, y) {
     super();
-    this.parent = parent;
+    this._parent = parent;
     this._enabled = true;
 
     this.attachShadow({mode: "open"});
@@ -14,7 +14,7 @@ export class Component extends HTMLElement {
   }
 
   _addToParent() {
-    this.parent && this.parent.appendChild(this);
+    this._parent && this._parent.appendChild(this);
   }
 
   //////////////////////////////////

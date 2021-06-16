@@ -49,9 +49,10 @@ export class VBox extends Component {
       this._ypos += this.spacing;
     }
     child.y = this._ypos;
-    this.setWidth(Math.max(this.width, child.x + child.width));
+    this.setWidth(Math.max(this._width, child.x + child.width));
     this._ypos += child.height;
     this.setHeight(this._ypos);
+    return this;
   }
 
   getSpacing() {
@@ -67,6 +68,11 @@ export class VBox extends Component {
     this._spacing = spacing;
     return this;
   }
+
+  //////////////////////////////////
+  // Getters/Setters
+  // alphabetical. getter first.
+  //////////////////////////////////
 
   /**
    * Gets and sets the spacing between items in this box. Setting this value will not change the layout of existing elements, but will affect the spacing of future elements added.

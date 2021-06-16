@@ -52,6 +52,7 @@ export class HBox extends Component {
     this.setHeight(Math.max(this._height, child.y + child.height));
     this._xpos += child.width;
     this.setWidth(this._xpos);
+    return this;
   }
 
   /**

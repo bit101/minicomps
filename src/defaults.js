@@ -15,16 +15,16 @@ export const Defaults = {
   /**
    * Default properties for the ColorPicker component.
    * @typedef {object} colorpicker
-   * @property {string} textPosition - The default textPosition of a ColorPicker.
+   * @property {string} labelPosition - The default labelPosition of a ColorPicker.
    */
   colorpicker: {
-    textPosition: "top",
+    labelPosition: "top",
   },
   /**
    * Default properties for the HSlider component.
    * @typedef {object} hslider
    * @property {number} decimals - The default decimals of a HSlider.
-   * @property {string} textPosition - The default textPosition of a HSlider.
+   * @property {string} labelPosition - The default labelPosition of a HSlider.
    * @property {string} valuePosition - The default valuePosition of a HSlider.
    * @property {number} width - The default width of a HSlider.
    * @property {number} height - The default height of a HSlider.
@@ -59,7 +59,7 @@ export const Defaults = {
   /**
    * Default properties for the LED component.
    * @typedef {object} led
-   * @property {stirng} textPosition - The default textPosition of a LED.
+   * @property {stirng} labelPosition - The default labelPosition of a LED.
    */
   led: {
     labelPosition: "top",
@@ -87,7 +87,7 @@ export const Defaults = {
   /**
    * Default properties for the Toggle component.
    * @typedef {object} toggle
-   * @property {string} textPosition - The default textPosition of a Toggle.
+   * @property {string} labelPosition - The default labelPosition of a Toggle.
    */
   toggle: {
     labelPosition: "top",
@@ -96,7 +96,7 @@ export const Defaults = {
    * Default properties for the VSlider component.
    * @typedef {object} vslider
    * @property {number} decimals - The default decimals of a VSlider.
-   * @property {string} textPosition - The default textPosition of a VSlider.
+   * @property {string} labelPosition - The default labelPosition of a VSlider.
    * @property {number} width - The default width of a VSlider.
    * @property {number} height - The default height of a VSlider.
    * @property {number} handleSize - The default handleSize of a VSlider.

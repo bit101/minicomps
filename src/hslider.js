@@ -419,6 +419,7 @@ export class HSlider extends Component {
         document.removeEventListener("touchend", this._onMouseUp);
       }
     }
+    return this;
   }
 
   /**

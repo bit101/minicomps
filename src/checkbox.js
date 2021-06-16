@@ -90,7 +90,7 @@ export class Checkbox extends Component {
       className += "MinimalCheckboxCheckDisabled";
     }
     this._check.setAttribute("class", className);
-    if (this.enabled) {
+    if (this._enabled) {
       this._setWrapperClass("MinimalCheckbox");
     } else {
       this._setWrapperClass("MinimalCheckboxDisabled");

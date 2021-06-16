@@ -117,6 +117,10 @@ export class PlayButton extends Component {
     }
   }
 
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
+
   /**
    * Adds a handler function for the "click" event on this button.
    * @param {function} handler - A function that will handle the "click" event.

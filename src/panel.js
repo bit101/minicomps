@@ -47,14 +47,6 @@ export class Panel extends Component {
   // Public
   //////////////////////////////////
 
-  getX() {
-    return super.x;
-  }
-
-  getY() {
-    return super.y;
-  }
-
   setX(x) {
     this._x = x;
     // we'll use margins to position the panel so it plays well with other stuff on the page.

@@ -118,16 +118,16 @@ export class LED extends Component {
     return this._color;
   }
 
-  getLit() {
-    return this._lit;
-  }
-
-  getText() {
+  getLabel() {
     return this._label;
   }
 
-  getTextPosition() {
+  getLabelPosition() {
     return this._labelPosition;
+  }
+
+  getLit() {
+    return this._lit;
   }
 
   /**
@@ -246,20 +246,20 @@ export class LED extends Component {
    * Gets and sets the text of the LED's text label.
    */
   get label() {
-    return this.getText();
+    return this.getLabel();
   }
   set label(label) {
-    this.setText(label);
+    this.setLabel(label);
   }
 
   /**
    * Gets and sets the position of the text label displayed on the LED. Valid values are "top" (default), "left", "right" and "bottom".
    */
   get labelPosition() {
-    return this.getTextPosition();
+    return this.getLabelPosition();
   }
   set labelPosition(pos) {
-    this.setTextPosition(pos);
+    this.setLabelPosition(pos);
   }
   /**
    * Gets and sets whether or not this LED is lit.
