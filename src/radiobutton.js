@@ -185,15 +185,16 @@ export class RadioButton extends Component {
   }
 
   setEnabled(enabled) {
-    if (this._enabled !== enabled) {
-      super.super(enabled);
-      this._updateCheckStyle();
-      this._textLabel.enabled = enabled;
-      if (this._enabled) {
-        this._wrapper.tabIndex = 0;
-      } else {
-        this._wrapper.tabIndex = -1;
-      }
+    if (this._enabled === enabled) {
+      return this;
+    }
+    super.super(enabled);
+    this._updateCheckStyle();
+    this._textLabel.enabled = enabled;
+    if (this._enabled) {
+      this._wrapper.tabIndex = 0;
+    } else {
+      this._wrapper.tabIndex = -1;
     }
     return this;
   }

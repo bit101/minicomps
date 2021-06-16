@@ -301,17 +301,18 @@ export class NumericStepper extends Component {
   }
 
   setEnabled(enabled) {
-    if (this._enabled !== enabled) {
-      super.setEnabled(enabled);
-      this._input.disabled = !this._enabled;
-      this._plus.enabled = this._enabled;
-      this._minus.enabled = this._enabled;
-      this._textLabel.enabled = enabled;
-      if (this._enabled) {
-        this._wrapper.addEventListener("wheel", this._onWheel);
-      } else {
-        this._wrapper.removeEventListener("wheel", this._onWheel);
-      }
+    if (this._enabled === enabled) {
+      return this;
+    }
+    super.setEnabled(enabled);
+    this._input.disabled = !this._enabled;
+    this._plus.enabled = this._enabled;
+    this._minus.enabled = this._enabled;
+    this._textLabel.enabled = enabled;
+    if (this._enabled) {
+      this._wrapper.addEventListener("wheel", this._onWheel);
+    } else {
+      this._wrapper.removeEventListener("wheel", this._onWheel);
     }
     return this;
   }

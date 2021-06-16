@@ -142,6 +142,9 @@ export class LED extends Component {
   }
 
   setEnabled(enabled) {
+    if (this._enabled === enabled) {
+      return this;
+    }
     super.setEnabled(enabled);
     this._textLabel.enabled = enabled;
     if (this._enabled) {

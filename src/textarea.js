@@ -93,14 +93,15 @@ export class TextArea extends Component {
   }
 
   setEnabled(enabled) {
-    if (this._enabled !== enabled) {
-      super.setEnabled(enabled);
-      this._textArea.disabled = !this._enabled;
-      if (this._enabled) {
-        this._textArea.addEventListener("input", this._onInput);
-      } else {
-        this._textArea.removeEventListener("input", this._onInput);
-      }
+    if (this._enabled === enabled) {
+      return this;
+    }
+    super.setEnabled(enabled);
+    this._textArea.disabled = !this._enabled;
+    if (this._enabled) {
+      this._textArea.addEventListener("input", this._onInput);
+    } else {
+      this._textArea.removeEventListener("input", this._onInput);
     }
     return this;
   }

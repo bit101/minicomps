@@ -295,17 +295,18 @@ export class ColorPicker extends Component {
   }
 
   setEnabled(enabled) {
-    if (this._enabled !== enabled) {
-      super.setEnabled(enabled);
-      this._textLabel.enabled = enabled;
-      this._input.disabled = !this._enabled;
-      if (this._enabled) {
-        this._preview.setAttribute("class", "MinimalColorPickerPreview");
-        this._input.addEventListener("input", this._onInput);
-      } else {
-        this._preview.setAttribute("class", "MinimalColorPickerPreviewDisabled");
-        this._input.removeEventListener("input", this._onInput);
-      }
+    if (this._enabled === enabled) {
+      return this;
+    }
+    super.setEnabled(enabled);
+    this._textLabel.enabled = enabled;
+    this._input.disabled = !this._enabled;
+    if (this._enabled) {
+      this._preview.setAttribute("class", "MinimalColorPickerPreview");
+      this._input.addEventListener("input", this._onInput);
+    } else {
+      this._preview.setAttribute("class", "MinimalColorPickerPreviewDisabled");
+      this._input.removeEventListener("input", this._onInput);
     }
     return this;
   }

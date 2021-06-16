@@ -145,6 +145,9 @@ export class Label extends Component {
   }
 
   setEnabled(enabled) {
+    if (this._enabled === enabled) {
+      return this;
+    }
     super.setEnabled(enabled);
     if (this._enabled) {
       this._setWrapperClass("MinimalLabel");

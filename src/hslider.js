@@ -398,26 +398,27 @@ export class HSlider extends Component {
   }
 
   setEnabled(enabled) {
-    if (this._enabled !== enabled) {
-      super.setEnabled(enabled);
-      this._updateEnabledStyle();
-      if (this._enabled) {
-        this._wrapper.tabIndex = 0;
-        this._wrapper.addEventListener("wheel", this._onWheel);
-        this._wrapper.addEventListener("mousedown", this._onMouseDown);
-        this._wrapper.addEventListener("touchstart", this._onMouseDown);
-        this._wrapper.addEventListener("keydown", this._onKeyDown);
-      } else {
-        this._wrapper.tabIndex = -1;
-        this._wrapper.removeEventListener("wheel", this._onWheel);
-        this._wrapper.removeEventListener("mousedown", this._onMouseDown);
-        this._wrapper.removeEventListener("touchstart", this._onMouseDown);
-        this._wrapper.removeEventListener("keydown", this._onKeyDown);
-        document.removeEventListener("mousemove", this._onMouseMove);
-        document.removeEventListener("touchmove", this._onMouseMove);
-        document.removeEventListener("mouseup", this._onMouseUp);
-        document.removeEventListener("touchend", this._onMouseUp);
-      }
+    if (this._enabled === enabled) {
+      return this;
+    }
+    super.setEnabled(enabled);
+    this._updateEnabledStyle();
+    if (this._enabled) {
+      this._wrapper.tabIndex = 0;
+      this._wrapper.addEventListener("wheel", this._onWheel);
+      this._wrapper.addEventListener("mousedown", this._onMouseDown);
+      this._wrapper.addEventListener("touchstart", this._onMouseDown);
+      this._wrapper.addEventListener("keydown", this._onKeyDown);
+    } else {
+      this._wrapper.tabIndex = -1;
+      this._wrapper.removeEventListener("wheel", this._onWheel);
+      this._wrapper.removeEventListener("mousedown", this._onMouseDown);
+      this._wrapper.removeEventListener("touchstart", this._onMouseDown);
+      this._wrapper.removeEventListener("keydown", this._onKeyDown);
+      document.removeEventListener("mousemove", this._onMouseMove);
+      document.removeEventListener("touchmove", this._onMouseMove);
+      document.removeEventListener("mouseup", this._onMouseUp);
+      document.removeEventListener("touchend", this._onMouseUp);
     }
     return this;
   }

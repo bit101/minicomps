@@ -98,14 +98,15 @@ export class TextInput extends Component {
   }
 
   setEnabled(enabled) {
-    if (this._enabled !== enabled) {
-      super.setEnabled(enabled);
-      this._input.disabled = !this._enabled;
-      if (this._enabled) {
-        this._input.addEventListener("input", this._onInput);
-      } else {
-        this._input.removeEventListener("input", this._onInput);
-      }
+    if (this._enabled === enabled) {
+      return this;
+    }
+    super.setEnabled(enabled);
+    this._input.disabled = !this._enabled;
+    if (this._enabled) {
+      this._input.addEventListener("input", this._onInput);
+    } else {
+      this._input.removeEventListener("input", this._onInput);
     }
     return this;
   }

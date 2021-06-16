@@ -153,16 +153,17 @@ export class Toggle extends Component {
   }
 
   setEnabled(enabled) {
-    if (this._enabled !== enabled) {
-      super.setEnabled(enabled);
-      this._textLabel.enable = enabled;
-      if (this._enabled) {
-        this._setWrapperClass("MinimalToggle");
-        this._wrapper.tabIndex = 0;
-      } else {
-        this._setWrapperClass("MinimalToggleDisabled");
-        this._wrapper.tabIndex = -1;
-      }
+    if (this._enabled === enabled) {
+      return this;
+    }
+    super.setEnabled(enabled);
+    this._textLabel.enable = enabled;
+    if (this._enabled) {
+      this._setWrapperClass("MinimalToggle");
+      this._wrapper.tabIndex = 0;
+    } else {
+      this._setWrapperClass("MinimalToggleDisabled");
+      this._wrapper.tabIndex = -1;
     }
     return this;
   }

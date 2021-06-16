@@ -272,7 +272,7 @@ export class Dropdown extends Component {
 
   setEnabled(enabled) {
     if (this._enabled === enabled) {
-      return this;
+      return this this;
     }
     super.setEnabled(enabled);
     if (this._enabled) {
