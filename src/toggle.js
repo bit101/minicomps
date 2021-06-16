@@ -25,6 +25,9 @@ export class Toggle extends Component {
     super(parent, x, y);
     this._label = label;
     this._labelPosition = Defaults.toggle.labelPosition;
+    this._showStateLabels = true;
+    this._onLabel = "On";
+    this._offLabel = "Off";
 
     this._createChildren();
     this._createStyle();
@@ -45,7 +48,7 @@ export class Toggle extends Component {
     this._setWrapperClass("MinimalToggle");
     this._wrapper.tabIndex = 0;
     this._textLabel = new Label(this._wrapper, 0, -15, this._label);
-    this._stateLabel = new Label(this._wrapper, 5, 0, "On")
+    this._stateLabel = new Label(this._wrapper, 5, 0, this._onLabel)
       .setAutosize(false);
     this._handle = this._createDiv(this._wrapper, "MinimalToggleHandle");
   }
@@ -104,11 +107,11 @@ export class Toggle extends Component {
   _updateToggle() {
     if (this._toggled) {
       this._stateLabel.align = "left";
-      this._stateLabel.text = "On";
+      this._stateLabel.text = this._onLabel;
       this._handle.style.left = "50%";
     } else {
       this._stateLabel.align = "right";
-      this._stateLabel.text = "Off";
+      this._stateLabel.text = this._offLabel;
       this._handle.style.left = 0;
     }
   }
@@ -146,6 +149,18 @@ export class Toggle extends Component {
 
   getLabelPosition() {
     return this._labelPosition;
+  }
+
+  getOffLabel() {
+    return this._offLabel;
+  }
+
+  getOnLabel() {
+    return this._onLabel;
+  }
+
+  getShowStateLabels() {
+    return this._showStateLabels;
   }
 
   getToggled() {
@@ -194,6 +209,33 @@ export class Toggle extends Component {
   setLabelPosition(position) {
     this._labelPosition = position;
     this._updateLabel();
+    return this;
+  }
+
+  setOffLabel(label) {
+    this._offLabel = label;
+    if (!this._toggled) {
+      this._stateLabel.text = label;
+    }
+    return this;
+  }
+
+  setOnLabel(label) {
+    this._onLabel = label;
+    if (this._toggled) {
+      this._stateLabel.text = label;
+    }
+    return this;
+  }
+
+  setShowStateLabels(show) {
+    this._showStateLabels = show;
+    if (show) {
+      this._stateLabel.style.visibility = "visible";
+    } else {
+      this._stateLabel.style.visibility = "hidden";
+    }
+    console.log(this._stateLabel.style.visibility);
     return this;
   }
 
@@ -246,6 +288,28 @@ export class Toggle extends Component {
   }
   set labelPosition(pos) {
     this.setLabelPosition(pos);
+  }
+
+  get offLabel() {
+    return this.getOffLabel();
+  }
+  set offLabel(label) {
+    this.setOffLabel(label);
+  }
+
+  get onLabel() {
+    return this.getOnLabel();
+  }
+  set onLabel(label) {
+    this.setOnLabel(label);
+  }
+
+  get showStateLabels() {
+    return this.getShowStateLabels();
+  }
+
+  set showStateLabels(show) {
+    this.setShowStateLabels(show);
   }
 
   /**
