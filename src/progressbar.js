@@ -42,7 +42,7 @@ export class ProgressBar extends Component {
 
   _createChildren() {
     this._setWrapperClass("MinimalProgressBar");
-    this.fill = this._createDiv(this._wrapper, "MinimalProgressBarFill");
+    this._fill = this._createDiv(this._wrapper, "MinimalProgressBarFill");
   }
 
   _createStyle() {
@@ -52,14 +52,38 @@ export class ProgressBar extends Component {
   }
 
   //////////////////////////////////
-  // General
+  // Private
   //////////////////////////////////
 
   _updateBar() {
-    let percent = this.progress / this.max;
+    let percent = this._progress / this._max;
     percent = Math.max(0, percent);
     percent = Math.min(1, percent);
-    this.fill.style.width = percent * this.width + "px";
+    this._fill.style.width = percent * this._width + "px";
+  }
+
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
+
+  getMax() {
+    return this._max;
+  }
+
+  getProgress() {
+    return this._progress;
+  }
+
+  setEnabled(enabled) {
+    super.setEnabled(enabled);
+    if (this._enabled) {
+      this._setWrapperClass("MinimalProgressBar");
+      this._fill.setAttribute("class", "MinimalProgressBarFill");
+    } else {
+      this._setWrapperClass("MinimalProgressBarDisabled");
+      this._fill.setAttribute("class", "MinimalProgressBarFillDisabled");
+    }
+    return this;
   }
 
   /**
@@ -68,7 +92,10 @@ export class ProgressBar extends Component {
    * @returns This instance, suitable for chaining.
    */
   setMax(max) {
-    this.max = max;
+    this._max = max;
+    const progress = Math.min(this._progress, this._max);
+    this.setProgress(Math.max(progress, 0));
+    this._updateBar();
     return this;
   }
 
@@ -78,7 +105,10 @@ export class ProgressBar extends Component {
    * @returns This instance, suitable for chaining.
    */
   setProgress(progress) {
-    this.progress = progress;
+    progress = Math.min(progress, this._max);
+    progress = Math.max(progress, 0);
+    this._progress = progress;
+    this._updateBar();
     return this;
   }
 
@@ -87,47 +117,24 @@ export class ProgressBar extends Component {
   // alphabetical. getter first.
   //////////////////////////////////
 
-  get enabled() {
-    return super.enbled;
-  }
-
-  set enabled(enabled) {
-    super.enabled = enabled;
-    if (this._enabled) {
-      this._setWrapperClass("MinimalProgressBar");
-      this.fill.setAttribute("class", "MinimalProgressBarFill");
-    } else {
-      this._setWrapperClass("MinimalProgressBarDisabled");
-      this.fill.setAttribute("class", "MinimalProgressBarFillDisabled");
-    }
-  }
-
   /**
    * Gets and sets the maximum value of the progress bar.
    */
   get max() {
-    return this._max;
+    return this.getMax();
   }
-
   set max(max) {
-    this._max = max;
-    const progress = Math.min(this.progress, this.max);
-    this.progress = Math.max(progress, 0);
-    this._updateBar();
+    this.setMax(max);
   }
 
   /**
    * Gets and sets the progress value of the progress bar.
    */
   get progress() {
-    return this._progress;
+    return this.getProgress();
   }
-
   set progress(progress) {
-    progress = Math.min(progress, this.max);
-    progress = Math.max(progress, 0);
-    this._progress = progress;
-    this._updateBar();
+    this.setProgress(progress);
   }
 }
 

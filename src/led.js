@@ -110,6 +110,10 @@ export class LED extends Component {
     return this;
   }
 
+  getBlinking() {
+    return this._blinking;
+  }
+
   getColor() {
     return this._color;
   }
@@ -223,6 +227,10 @@ export class LED extends Component {
   // Getters/Setters
   // alphabetical. getter first.
   //////////////////////////////////
+
+  get blinking() {
+    return this.getBlinking();
+  }
 
   /**
    * Gets and sets the color of the LED.

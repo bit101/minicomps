@@ -27,7 +27,7 @@ export class PlayButton extends Component {
 
     this.setSize(40, 20);
     this.addEventListener("click", defaultHandler);
-    this.playing = playing;
+    this.setPlaying(playing);
     this._addToParent();
   }
 
@@ -43,32 +43,32 @@ export class PlayButton extends Component {
   }
 
   _createPlayIcon() {
-    this.playIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    this.playIcon.setAttribute("width", 12);
-    this.playIcon.setAttribute("height", 12);
-    this.playIcon.setAttribute("class", "MinimalPlayButtonIcon");
+    this._playIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    this._playIcon.setAttribute("width", 12);
+    this._playIcon.setAttribute("height", 12);
+    this._playIcon.setAttribute("class", "MinimalPlayButtonIcon");
 
     const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
     arrow.setAttribute("points", "2, 0, 12, 6, 2, 12");
-    this.playIcon.appendChild(arrow);
-    this._wrapper.appendChild(this.playIcon);
+    this._playIcon.appendChild(arrow);
+    this._wrapper.appendChild(this._playIcon);
   }
 
   _createPauseIcon() {
-    this.pauseIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    this.pauseIcon.setAttribute("width", 12);
-    this.pauseIcon.setAttribute("height", 12);
-    this.pauseIcon.setAttribute("class", "MinimalPlayButtonIcon");
+    this._pauseIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    this._pauseIcon.setAttribute("width", 12);
+    this._pauseIcon.setAttribute("height", 12);
+    this._pauseIcon.setAttribute("class", "MinimalPlayButtonIcon");
 
     const bar1 = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
     bar1.setAttribute("points", "1, 0, 5, 0, 5, 12, 1, 12");
-    this.pauseIcon.appendChild(bar1);
+    this._pauseIcon.appendChild(bar1);
 
     const bar2 = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
     bar2.setAttribute("points", "7, 0, 11, 0, 11, 12, 7, 12");
-    this.pauseIcon.appendChild(bar2);
+    this._pauseIcon.appendChild(bar2);
 
-    this._wrapper.appendChild(this.pauseIcon);
+    this._wrapper.appendChild(this._pauseIcon);
   }
 
   _createStyle() {
@@ -90,7 +90,7 @@ export class PlayButton extends Component {
 
   _onClick(event) {
     event.stopPropagation();
-    if (this.enabled) {
+    if (this._enabled) {
       this._playing = !this._playing;
       this._updateButton();
       this.dispatchEvent(new CustomEvent("click", { detail: this._playing }));
@@ -98,7 +98,7 @@ export class PlayButton extends Component {
   }
 
   _onKeyUp(event) {
-    if (event.keyCode === 13 && this.enabled) {
+    if (event.keyCode === 13 && this._enabled) {
       this._wrapper.click();
     }
   }
@@ -109,11 +109,11 @@ export class PlayButton extends Component {
 
   _updateButton() {
     if (this._playing) {
-      this.playIcon.style.display = "none";
-      this.pauseIcon.style.display = "block";
+      this._playIcon.style.display = "none";
+      this._pauseIcon.style.display = "block";
     } else {
-      this.playIcon.style.display = "block";
-      this.pauseIcon.style.display = "none";
+      this._playIcon.style.display = "block";
+      this._pauseIcon.style.display = "none";
     }
   }
 
@@ -140,13 +140,30 @@ export class PlayButton extends Component {
     return this;
   }
 
+  getPlaying() {
+    return this._playing;
+  }
+
+  setEnabled(enabled) {
+    super.setEnabled(enabled);
+    if (this._enabled) {
+      this._wrapper.setAttribute("class", "MinimalPlayButton");
+      this._wrapper.tabIndex = 0;
+    } else {
+      this._wrapper.setAttribute("class", "MinimalPlayButtonDisabled");
+      this._wrapper.tabIndex = -1;
+    }
+    return this;
+  }
+
   /**
    * Sets whether or not the button shows a pause icon (playing == true) or a play icon (playing == false).
    * @param {boolean} playing - Whether or not the button relects it is in a playing state.
    * @returns This instance, suitable for chaining.
    */
   setPlaying(playing) {
-    this.playing = playing;
+    this._playing = playing;
+    this._updateButton();
     return this;
   }
 
@@ -155,47 +172,14 @@ export class PlayButton extends Component {
   // alphabetical. getter first.
   //////////////////////////////////
 
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    super.enabled = enabled;
-    if (this.enabled) {
-      this._wrapper.setAttribute("class", "MinimalPlayButton");
-      this._wrapper.tabIndex = 0;
-    } else {
-      this._wrapper.setAttribute("class", "MinimalPlayButtonDisabled");
-      this._wrapper.tabIndex = -1;
-    }
-  }
-
-  get height() {
-    return super.height;
-  }
-
-  set height(height) {
-    super.height = height;
-  }
-
   /**
    * Gets and sets whether or not the button shows a pause icon (playing == true) or a play icon (playing == false).
    */
   get playing() {
-    return this._playing;
+    return this.getPlaying();
   }
-
   set playing(playing) {
-    this._playing = playing;
-    this._updateButton();
-  }
-
-  get width() {
-    return super.width;
-  }
-
-  set width(width) {
-    super.width = width;
+    this.setPlaying(playing);
   }
 }
 

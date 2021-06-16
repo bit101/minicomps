@@ -25,22 +25,22 @@ export class RadioButton extends Component {
    * @param {number} x - The x position of the radio button. Default 0.
    * @param {number} y - The y position of the radio button. Default 0.
    * @param {string} group - The group this radio button belongs to. Default "group".
-   * @param {string} text - The text label of the radio button. Default empty string.
+   * @param {string} label - The label of the radio button. Default empty string.
    * @param {boolean} checked - The initial checked state of the radio button. Default false.
    * @param {function} defaultHandler - A function that will handle the "click" event.
    */
-  constructor(parent, x, y, group, text, checked, defaultHandler) {
+  constructor(parent, x, y, group, label, checked, defaultHandler) {
     super(parent, x, y);
     RadioButtonGroup._addToGroup(group, this);
-    this.group = group || "group";
-    this._text = text || "";
+    this._group = group || "group";
+    this._label = label || "";
 
     this._createStyle();
     this._createChildren();
     this._createListeners();
 
     this.setSize(100, 10);
-    this.checked = checked || false;
+    this.setChecked(checked || false);
     this.addEventListener("click", defaultHandler);
     this._addToParent();
     this._updateWidth();
@@ -53,8 +53,8 @@ export class RadioButton extends Component {
   _createChildren() {
     this._setWrapperClass("MinimalRadioButton");
     this._wrapper.tabIndex = 0;
-    this.check = this._createDiv(this._wrapper, "MinimalRadioButtonCheck");
-    this.label = new Label(this._wrapper, 15, 0, this.text);
+    this._check = this._createDiv(this._wrapper, "MinimalRadioButtonCheck");
+    this._textLabel = new Label(this._wrapper, 15, 0, this._label);
   }
 
   _createStyle() {
@@ -76,48 +76,48 @@ export class RadioButton extends Component {
 
   _onClick(event) {
     event.stopPropagation();
-    if (this.enabled) {
-      this.checked = true;
-      this.dispatchEvent(new CustomEvent("click", { detail: this.text }));
+    if (this._enabled) {
+      this.setChecked(true);
+      this.dispatchEvent(new CustomEvent("click", { detail: this._label }));
     }
   }
 
   _onKeyPress(event) {
-    if (event.keyCode === 13 && this.enabled) {
+    if (event.keyCode === 13 && this._enabled) {
       // enter
       this._wrapper.click();
     } else if (event.keyCode === 40) {
       // down
       event.preventDefault();
-      RadioButtonGroup._getNextInGroup(this.group, this).focus();
+      RadioButtonGroup._getNextInGroup(this._group, this).focus();
     } else if (event.keyCode === 38) {
       // up
       event.preventDefault();
-      RadioButtonGroup._getPrevInGroup(this.group, this).focus();
+      RadioButtonGroup._getPrevInGroup(this._group, this).focus();
     }
   }
 
   //////////////////////////////////
-  // General
+  // Private
   //////////////////////////////////
 
   focus() {
-    if (this.enabled) {
+    if (this._enabled) {
       this._wrapper.focus();
     }
   }
 
   _updateCheckStyle() {
-    let className = this.checked
+    let className = this._checked
       ? "MinimalRadioButtonCheckChecked "
       : "MinimalRadioButtonCheck ";
 
-    if (!this.enabled) {
+    if (!this._enabled) {
       className += "MinimalRadioButtonCheckDisabled";
     }
-    this.check.setAttribute("class", className);
-    this.check.setAttribute("class", className);
-    if (this.enabled) {
+    this._check.setAttribute("class", className);
+    this._check.setAttribute("class", className);
+    if (this._enabled) {
       this._setWrapperClass("MinimalRadioButton");
     } else {
       this._setWrapperClass("MinimalRadioButtonDisabled");
@@ -125,8 +125,12 @@ export class RadioButton extends Component {
   }
 
   _updateWidth() {
-    this.style.width = this.label.x + this.label.width + "px";
+    this.style.width = this._textLabel.x + this._textLabel.width + "px";
   }
+
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
 
   /**
    * Adds a handler function for the "click" event on this radio button.
@@ -151,23 +155,72 @@ export class RadioButton extends Component {
     return this;
   }
 
+  getLabel() {
+    return this._label;
+  }
+
+  getChecked() {
+    return this.getText();
+  }
+
+  /**
+   * Gets the width of this radio button. Setting the width does nothing because it is automatically determined by the width of the label.
+   */
+  getWidth() {
+    return this._textLabel.x + this._textLabel.width;
+  }
+
   /**
    * Sets the checked state of this radio button.
    * @params {boolean} checked - Whether or not this radio button will be checked.
    * @returns This instance, suitable for chaining.
    */
   setChecked(checked) {
-    this.checked = checked;
+    if (checked) {
+      RadioButtonGroup._clearGroup(this._group);
+    }
+    this._checked = checked;
+    this._updateCheckStyle();
+    return this;
+  }
+
+  setEnabled(enabled) {
+    if (this._enabled !== enabled) {
+      super.super(enabled);
+      this._updateCheckStyle();
+      this._textLabel.enabled = enabled;
+      if (this._enabled) {
+        this._wrapper.tabIndex = 0;
+      } else {
+        this._wrapper.tabIndex = -1;
+      }
+    }
+    return this;
+  }
+
+  setHeight(height) {
+    super.setHeight(height);
+    this._textLabel.height = height;
+    this._check.style.top = Math.round((this._height - 10) / 2) + "px";
+    return this;
+  }
+  /**
+   * Sets the label of this radio button.
+   * @param {string} label - The label to set on this radio button.
+   * @returns this instance, suitable for chaining.
+   */
+  setLabel(label) {
+    this._label = label;
+    this._textLabel.text = label;
+    this._updateWidth();
     return this;
   }
 
   /**
-   * Sets the text of this radio button.
-   * @param {string} text - The text to set on this radio button.
-   * @returns this instance, suitable for chaining.
+   * Does nothing. Width is set automatically based on the size of the check and label.
+   * @returns This instance.
    */
-  setText(text) {
-    this.text = text;
+  setWidth() {
     return this;
   }
 
@@ -177,74 +230,24 @@ export class RadioButton extends Component {
   //////////////////////////////////
 
   /**
-   * Gets and sets the height of this component.
-   */
-  get height() {
-    return super.height;
-  }
-
-  set height(h) {
-    super.height = h;
-    this.label.height = h;
-    this.check.style.top = Math.round((this.height - 10) / 2) + "px";
-  }
-
-  /**
    * Sets and gets the checked state of the radio button.
    */
   get checked() {
     return this._checked;
   }
-
   set checked(checked) {
-    if (checked) {
-      RadioButtonGroup._clearGroup(this.group);
-    }
-    this._checked = checked;
-    this._updateCheckStyle();
-  }
-
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    if (this.enabled !== enabled) {
-      super.enabled = enabled;
-      this._updateCheckStyle();
-      this.label.enabled = enabled;
-      if (this.enabled) {
-        this._wrapper.tabIndex = 0;
-      } else {
-        this._wrapper.tabIndex = -1;
-      }
-    }
+    this.setChecked(checked);
   }
 
   /**
-   * Sets and gets the text shown in the radio button's label.
+   * Sets and gets the label shown in the radio button's label.
    */
-  get text() {
-    return this._text;
+  get label() {
+    return this.getChecked();
   }
-
-  set text(text) {
-    this._text = text;
-    this.label.text = text;
-    this._updateWidth();
-  }
-
-  /**
-   * Gets the width of this radio button. Setting the width does nothing because it is automatically determined by the width of the label.
-   */
-  get width() {
-    return this.label.x + this.label.width;
-  }
-
-  set width(w) {
-    w = w; // noop
+  set label(label) {
+    this.setText(label);
   }
 }
-
 customElements.define("minimal-radiobutton", RadioButton);
 

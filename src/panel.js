@@ -44,32 +44,53 @@ export class Panel extends Component {
   }
 
   //////////////////////////////////
-  // General
+  // Public
+  //////////////////////////////////
+
+  getX() {
+    return super.x;
+  }
+
+  getY() {
+    return super.y;
+  }
+
+  setX(x) {
+    this._x = x;
+    // we'll use margins to position the panel so it plays well with other stuff on the page.
+    this.style.marginLeft = x + "px";
+    return this;
+  }
+
+  setY(y) {
+    this._y = y;
+    this.style.marginTop = y + "px";
+    return this;
+  }
+
+  //////////////////////////////////
+  // Getters/Setters
+  // alphabetical. getter first.
   //////////////////////////////////
 
   /**
    * Gets and sets the x position of this component.
    */
   get x() {
-    return super.x;
+    return this.getX();
   }
-
   set x(x) {
-    this._x = x;
-    // we'll use margins to position the panel so it plays well with other stuff on the page.
-    this.style.marginLeft = x + "px";
+    this.setX(x);
   }
 
   /**
    * Gets and sets the y position of this component.
    */
   get y() {
-    return super.y;
+    return this.getY();
   }
-
   set y(y) {
-    this._y = y;
-    this.style.marginTop = y + "px";
+    this.setY(y);
   }
 }
 

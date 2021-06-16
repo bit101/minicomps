@@ -172,11 +172,11 @@ export class Window extends Component {
     if (this._enabled) {
       this._minimized = true;
       this._onMinimize();
-      this.setMinimizable(this.enabledMinimizable);
-      this.setDraggable(this.enabledDraggable);
+      this.setMinimizable(this._enabledMinimizable);
+      this.setDraggable(this._enabledDraggable);
       this._wrapper.setAttribute("class", "MinimalWindow");
     } else {
-      this.setMinimized(false);
+      this._minimized = false;
       this._onMinimize();
       this._enabledMinimizable = this._minimizable;
       this._enabledDraggable = this._draggable;
@@ -212,6 +212,7 @@ export class Window extends Component {
    */
   setMinimizable(minimizable) {
     this._minimizable = minimizable;
+
     if (minimizable) {
       this._button.style.visibility = "visible";
     } else {

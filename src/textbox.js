@@ -48,13 +48,46 @@ export class TextBox extends Component {
     this.shadowRoot.append(style);
   }
 
+  //////////////////////////////////
+  // Public
+  //////////////////////////////////
+
+  getAlign() {
+    return this._align;
+  }
+
+  getBold() {
+    return this._bold;
+  }
+
+  getColor() {
+    return this._color;
+  }
+
+  getFontSize() {
+    return this._fontSize;
+  }
+
+  getHtml() {
+    return this._html;
+  }
+
+  getItalic() {
+    return this._italics;
+  }
+
+  getText() {
+    return this._text;
+  }
+
   /**
    * Sets the alignment of the text box's text - "left" (default), "right" or "center".
    * @param {string} align - The alignment of the text.
    * @returns This instance, suitable for chaining.
    */
   setAlign(align) {
-    this.align = align;
+    this._align = align;
+    this._wrapper.style.textAlign = align;
     return this;
   }
 
@@ -64,7 +97,12 @@ export class TextBox extends Component {
    * @returns This instance, suitable for chaining.
    */
   setBold(bold) {
-    this.bold = bold;
+    this._bold = bold;
+    if (this._bold) {
+      this._wrapper.style.fontWeight = "bold";
+    } else {
+      this._wrapper.style.fontWeight = "normal";
+    }
     return this;
   }
 
@@ -74,7 +112,18 @@ export class TextBox extends Component {
    * @returns This instance, suitable for chaining.
    */
   setColor(color) {
-    this.color = color;
+    this._color = color;
+    this._wrapper.style.color = color;
+    return this;
+  }
+
+  setEnabled(enabled) {
+    super.setEnabled(enabled);
+    if (this._enabled) {
+      this._setWrapperClass("MinimalTextBox");
+    } else {
+      this._setWrapperClass("MinimalTextBoxDisabled");
+    }
     return this;
   }
 
@@ -84,7 +133,8 @@ export class TextBox extends Component {
    * @returns This instance, suitable for chaining.
    */
   setFontSize(fontSize) {
-    this.fontSize = fontSize;
+    this._fontSize = fontSize;
+    this._wrapper.style.fontSize = fontSize + "px";
     return this;
   }
 
@@ -94,7 +144,12 @@ export class TextBox extends Component {
    * @returns This instance, suitable for chaining.
    */
   setHtml(html) {
-    this.html = html;
+    this._html = html;
+    if (this._html) {
+      this._wrapper.innerHTML = this._text;
+    } else {
+      this._wrapper.textContent = this._text;
+    }
     return this;
   }
 
@@ -104,7 +159,12 @@ export class TextBox extends Component {
    * @returns This instance, suitable for chaining.
    */
   setItalic(italic) {
-    this.italic = italic;
+    this._italic = italic;
+    if (this._italic) {
+      this._wrapper.style.fontStyle = "italic";
+    } else {
+      this._wrapper.style.fontStyle = "normal";
+    }
     return this;
   }
 
@@ -114,7 +174,12 @@ export class TextBox extends Component {
    * @returns This instance, suitable for chaining.
    */
   setText(text) {
-    this.text = text;
+    this._text = text;
+    if (this._html) {
+      this._wrapper.innerHTML = this._text;
+    } else {
+      this._wrapper.textContent = this._text;
+    }
     return this;
   }
 
@@ -127,113 +192,70 @@ export class TextBox extends Component {
    * Gets and sets the horizontal alignment of the text in the text box (left, right, center).
    */
   get align() {
-    return this._align;
+    return this.getAlign();
   }
-
   set align(align) {
-    this._align = align;
-    this._wrapper.style.textAlign = align;
+    this.setAlign(align);
   }
 
   /**
    * Gets and sets whether or not the text will be bold.
    */
   get bold() {
-    return this._bold;
+    return this.getBold();
   }
-
   set bold(bold) {
-    this._bold = bold;
-    if (this._bold) {
-      this._wrapper.style.fontWeight = "bold";
-    } else {
-      this._wrapper.style.fontWeight = "normal";
-    }
+    this.setBold(bold);
   }
 
   /**
    * Gets and sets the color of the text.
    */
   get color() {
-    return this._color;
+    return this.getColor();
   }
-
   set color(color) {
-    this._color = color;
-    this._wrapper.style.color = color;
-  }
-
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    super.enabled = enabled;
-    if (this.enabled) {
-      this._setWrapperClass("MinimalTextBox");
-    } else {
-      this._setWrapperClass("MinimalTextBoxDisabled");
-    }
+    this.setColor(color);
   }
 
   /**
    * Gets and sets the size of the text.
    */
   get fontSize() {
-    return this._fontSize;
+    return this.getFontSize();
   }
-
   set fontSize(fontSize) {
-    this._fontSize = fontSize;
-    this._wrapper.style.fontSize = fontSize + "px";
+    this.setFontSize(fontSize);
   }
 
   /**
    * Gets and sets a string of HTML text to display. This will accept pretty much any kind of valid HTML markup you can put into a string.
    */
   get html() {
-    return this._html;
+    return this.getHtml();
   }
-
   set html(html) {
-    this._html = html;
-    if (this._html) {
-      this._wrapper.innerHTML = this._text;
-    } else {
-      this._wrapper.textContent = this._text;
-    }
+    this.setHtml(html);
   }
 
   /**
    * Gets and sets whether or not the text will be italicized.
    */
   get italic() {
-    return this._italics;
+    return this.getItalic();
   }
-
   set italic(italic) {
-    this._italic = italic;
-    if (this._italic) {
-      this._wrapper.style.fontStyle = "italic";
-    } else {
-      this._wrapper.style.fontStyle = "normal";
-    }
+    this.setItalic(italic);
   }
 
   /**
    * Gets and sets the plain text to be displayed. Compare with the htmlText property.
    */
   get text() {
-    return this._text;
+    return this.getText();
   }
-
   set text(text) {
-    this._text = text;
-    if (this._html) {
-      this._wrapper.innerHTML = this._text;
-    } else {
-      this._wrapper.textContent = this._text;
-    }
+    this.setText(text);
   }
 }
 

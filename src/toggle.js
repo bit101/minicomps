@@ -190,7 +190,7 @@ export class Toggle extends Component {
    * @param {string} position - The position to place the text lable: "top" (default), "left", "right" or "bottom".
    * @returns this instance, suitable for chaining.
    */
-  setlabelPosition(position) {
+  setLabelPosition(position) {
     this._labelPosition = position;
     this._updateLabel();
     return this;

@@ -36,8 +36,8 @@ export class TextArea extends Component {
   //////////////////////////////////
 
   _createChildren() {
-    this.textArea = this._createElement(this.shadowRoot, "textArea", "MinimalTextArea");
-    this.textArea.value = this._text;
+    this._textArea = this._createElement(this.shadowRoot, "textArea", "MinimalTextArea");
+    this._textArea.value = this._text;
   }
 
   _createStyle() {
@@ -48,7 +48,7 @@ export class TextArea extends Component {
 
   _createListeners() {
     this._onInput = this._onInput.bind(this);
-    this.textArea.addEventListener("input", this._onInput);
+    this._textArea.addEventListener("input", this._onInput);
   }
 
   //////////////////////////////////
@@ -57,8 +57,8 @@ export class TextArea extends Component {
 
   _onInput(event) {
     event.stopPropagation();
-    this._text = this.textArea.value;
-    this.dispatchEvent(new CustomEvent("input", { detail: this.text }));
+    this._text = this._textArea.value;
+    this.dispatchEvent(new CustomEvent("input", { detail: this._text }));
   }
 
   /**
@@ -84,13 +84,32 @@ export class TextArea extends Component {
     return this;
   }
 
+  getText() {
+    return this._text;
+  }
+
+  setEnabled(enabled) {
+    if (this._enabled !== enabled) {
+      super.setEnabled(enabled);
+      this._textArea.disabled = !this._enabled;
+      if (this._enabled) {
+        this._textArea.addEventListener("input", this._onInput);
+      } else {
+        this._textArea.removeEventListener("input", this._onInput);
+      }
+    }
+    return this;
+  }
+
   /**
    * Sets the text of this text area.
    * @param {string} text - The text of this text area.
    * @returns This instance, suitable for chaining.
    */
   setText(text) {
-    this.text = text;
+    this._text = text;
+    this._textArea.value = text;
+    return this;
   }
 
   //////////////////////////////////
@@ -98,32 +117,14 @@ export class TextArea extends Component {
   // alphabetical. getter first.
   //////////////////////////////////
 
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    if (this.enabled !== enabled) {
-      super.enabled = enabled;
-      this.textArea.disabled = !this.enabled;
-      if (this.enabled) {
-        this.textArea.addEventListener("input", this._onInput);
-      } else {
-        this.textArea.removeEventListener("input", this._onInput);
-      }
-    }
-  }
-
   /**
    * Gets and sets the text in the text area.
    */
   get text() {
-    return this._text;
+    return this.getText();
   }
-
   set text(text) {
-    this._text = text;
-    this.textArea.value = text;
+    this.setText(text);
   }
 }
 

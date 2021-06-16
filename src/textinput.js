@@ -37,8 +37,8 @@ export class TextInput extends Component {
   //////////////////////////////////
 
   _createChildren() {
-    this.input = this._createInput(this.shadowRoot, "MinimalTextInput");
-    this.input.value = this._text;
+    this._input = this._createInput(this.shadowRoot, "MinimalTextInput");
+    this._input.value = this._text;
   }
 
   _createStyle() {
@@ -49,7 +49,7 @@ export class TextInput extends Component {
 
   _createListeners() {
     this._onInput = this._onInput.bind(this);
-    this.input.addEventListener("input", this._onInput);
+    this._input.addEventListener("input", this._onInput);
   }
 
   //////////////////////////////////
@@ -58,8 +58,8 @@ export class TextInput extends Component {
 
   _onInput(event) {
     event.stopPropagation();
-    this._text = this.input.value;
-    this.dispatchEvent(new CustomEvent("input", { detail: this.text }));
+    this._text = this._input.value;
+    this.dispatchEvent(new CustomEvent("input", { detail: this._text }));
   }
 
   /**
@@ -85,13 +85,36 @@ export class TextInput extends Component {
     return this;
   }
 
+  getMaxLength() {
+    return this._maxLength;
+  }
+
+  getText() {
+    return this._text;
+  }
+
+  setEnabled(enabled) {
+    if (this._enabled !== enabled) {
+      super.setEnabled(enabled);
+      this._input.disabled = !this._enabled;
+      if (this._enabled) {
+        this._input.addEventListener("input", this._onInput);
+      } else {
+        this._input.removeEventListener("input", this._onInput);
+      }
+    }
+    return this;
+  }
+
   /**
    * Sets the text of this text input.
    * @param {string} text - The text of this text input.
    * @returns This instance, suitable for chaining.
    */
   setText(text) {
-    this.text = text;
+    this._text = text;
+    this._input.value = text;
+    return this;
   }
 
   /**
@@ -100,7 +123,8 @@ export class TextInput extends Component {
    * @returns This instance, suitable for chaining.
    */
   setMaxLength(maxLength) {
-    this.maxLength = maxLength;
+    this._maxLength = maxLength;
+    this._input.maxLength = maxLength;
     return this;
   }
 
@@ -109,44 +133,24 @@ export class TextInput extends Component {
   // alphabetical. getter first.
   //////////////////////////////////
 
-  get enabled() {
-    return super.enabled;
-  }
-
-  set enabled(enabled) {
-    if (this.enabled !== enabled) {
-      super.enabled = enabled;
-      this.input.disabled = !this.enabled;
-      if (this.enabled) {
-        this.input.addEventListener("input", this._onInput);
-      } else {
-        this.input.removeEventListener("input", this._onInput);
-      }
-    }
-  }
-
   /**
    * Gets and sets the maximum length of the string that can be typed into the input.
    */
   get maxLength() {
-    return this._maxLength;
+    return this.getMaxLength();
   }
-
   set maxLength(maxLength) {
-    this._maxLength = maxLength;
-    this.input.maxLength = maxLength;
+    this.setMaxLength(maxLength);
   }
 
   /**
    * Gets and sets the text in the input.
    */
   get text() {
-    return this._text;
+    return this.getText();
   }
-
   set text(text) {
-    this._text = text;
-    this.input.value = text;
+    this.setText(text);
   }
 }
 
