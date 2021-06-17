@@ -40,6 +40,15 @@ export class VBox extends Component {
   // Public
   //////////////////////////////////
 
+  addSpace(space) {
+    const div = this._createDiv();
+    div.x = 0;
+    div.y = 0;
+    div.width = 0;
+    div.height = space;
+    this.appendChild(div);
+  }
+
   /**
    * Overrides the built in appendChild method of an HTMLElement to add some very simple vertical layout to its children.
    */
@@ -57,6 +66,22 @@ export class VBox extends Component {
 
   getSpacing() {
     return this._spacing;
+  }
+
+  layout() {
+    let width = 0;
+    this._ypos = 0;
+    for (let i = 0; i < this.children.length; i++) {
+      const child = this.children[i];
+      if (i > 0) {
+        this._ypos += this.spacing;
+      }
+      child.y = this._ypos;
+      this._ypos += child.height;
+      width = Math.max(width, child.x + child.width);
+    }
+    this.setWidth(width);
+    this.setHeight(this._ypos);
   }
 
   /**

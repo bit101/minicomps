@@ -27,16 +27,15 @@ export class LED extends Component {
     this._color = color || "#f00";
     this._lit = lit || false;
 
-    const size = 16;
-
     this._createChildren();
     this._setWrapperClass("MinimalLED");
     this._createStyle();
 
     this.setLabelPosition(Defaults.led.labelPosition);
-    this.setSize(size, size);
+    this.setWidth(80);
+    this.setLEDSize(16);
     this._updateLED();
-    this._updateLabel();
+    this._doLayout();
     this._addToParent();
   }
 
@@ -46,6 +45,7 @@ export class LED extends Component {
 
   _createChildren() {
     this._textLabel = new Label(this._wrapper, 0, -15, this._label);
+    this._led = this._createDiv(this._wrapper, "MinimalLEDLight");
   }
 
   _createStyle() {
@@ -64,25 +64,49 @@ export class LED extends Component {
 
   _updateLED() {
     if (this._lit) {
-      this._wrapper.style.background = `radial-gradient(circle at 60% 37%, #fff, ${this._color} 50%, #444 100%)`;
+      this._led.style.background = `radial-gradient(circle at 60% 37%, #fff, ${this._color} 50%, #444 100%)`;
     } else {
-      this._wrapper.style.background = "radial-gradient(circle at 60% 37%, #fff, #999 50%)";
+      this._led.style.background = "radial-gradient(circle at 60% 37%, #fff, #999 50%)";
     }
   }
 
-  _updateLabel() {
+  _doLayout() {
     if (this._labelPosition === "left") {
-      this._textLabel.x = -this._textLabel.width - 5;
+      super.setHeight(Math.max(this._size, this._textLabel.height));
+      this._textLabel.autosize = false;
+      this._textLabel.width = this._width - this._size - 5;
+      this._textLabel.align = "right";
+      this._textLabel.x = 0;
       this._textLabel.y = (this._height - this._textLabel.height) / 2;
+      this._led.style.left = this._width - this._size + "px";
+      this._led.style.top = (this._height - this._size) / 2 + "px";
     } else if (this._labelPosition === "top") {
-      this._textLabel.x = (this._width - this._textLabel.width) / 2;
-      this._textLabel.y = -this._textLabel.height - 5;
+      super.setHeight(this._textLabel.height + this._size + 5);
+      this._textLabel.autosize = false;
+      this._textLabel.align = "center";
+      this._textLabel.width = this._width;
+      this._textLabel.x = 0;
+      this._textLabel.y = 0;
+      this._led.style.left = (this._width - this._size) / 2 + "px";
+      this._led.style.top = this._textLabel.height + 5 + "px";
     } else if (this._labelPosition === "right") {
-      this._textLabel.x = this._width + 5;
+      super.setHeight(Math.max(this._size, this._textLabel.height));
+      this._textLabel.autosize = false;
+      this._textLabel.width = this._width - this._size - 5;
+      this._textLabel.align = "left";
+      this._textLabel.x = this._size + 5;;
       this._textLabel.y = (this._height - this._textLabel.height) / 2;
+      this._led.style.left = 0;
+      this._led.style.top = (this._height - this._size) / 2 + "px";
     } else {
-      this._textLabel.x = (this._width - this._textLabel.width) / 2;
-      this._textLabel.y = this._height + 5;
+      super.setHeight(this._textLabel.height + this._size + 5);
+      this._textLabel.autosize = false;
+      this._textLabel.align = "center";
+      this._textLabel.width = this._width;
+      this._textLabel.x = 0;
+      this._textLabel.y = this._size + 5;
+      this._led.style.left = (this._width - this._size) / 2 + "px";
+      this._led.style.top = 0;
     }
   }
 
@@ -156,9 +180,11 @@ export class LED extends Component {
     return this;
   }
 
-  setHeight(height) {
-    super.setHeight(height);
-    super.setWidth(height);
+  /**
+   * Sets the height of this component. In fact, this does nothing. The height of the LED component is determined by the height of the label and the LED size.
+   * @returns This instance.
+   */
+  setHeight() {
     return this;
   }
 
@@ -170,7 +196,7 @@ export class LED extends Component {
   setLabel(label) {
     this._label = label;
     this._textLabel.text = label;
-    this._updateLabel();
+    this._doLayout();
     return this;
   }
 
@@ -181,7 +207,7 @@ export class LED extends Component {
    */
   setLabelPosition(position) {
     this._labelPosition = position;
-    this._updateLabel();
+    this._doLayout();
     return this;
   }
 
@@ -196,22 +222,16 @@ export class LED extends Component {
     return this;
   }
 
-  /**
-   * Sets the size of the LED. Because an LED will always be round, if you try to set width and height to different values, they will be set to the smallest value of the two.
-   * @param {number} width - The width of the LED.
-   * @param {number} height - The height of the LED.
-   * @returns This instance, suitable for chaining.
-   */
-  setSize(w, h) {
-    const size = Math.min(w, h);
-    super.width = size;
-    super.height = size;
+  setLEDSize(size) {
+    this._size = size;
+    this._led.style.width = this._size + "px";
+    this._led.style.height = this._size + "px";
+    this._doLayout();
     return this;
   }
-
   setWidth(width) {
     super.setWidth(width);
-    super.setHeight(width);
+    this._doLayout();
     return this;
   }
 

@@ -403,7 +403,13 @@ Style.led = `
     ${Style.baseStyle}
     height: 100%;
     width: 100%;
+    overflow: hidden;
+  }
+  .MinimalLEDLight {
+    ${Style.baseStyle}
     border-radius: 50%;
+    height: 100%;
+    width: 100%;
   }
   .MinimalLEDDisabled {
     ${Style.disabledStyle}

@@ -40,6 +40,15 @@ export class HBox extends Component {
   // Public
   //////////////////////////////////
 
+  addSpace(space) {
+    const div = this._createDiv();
+    div.x = 0;
+    div.y = 0;
+    div.width = space;
+    div.height = 0;
+    this.appendChild(div);
+  }
+
   /**
    * Overrides the built in appendChild method of an HTMLElement to add some very simple horizontal layout to its children.
    */
@@ -60,6 +69,22 @@ export class HBox extends Component {
    */
   getSpacing() {
     return this._spacing;
+  }
+
+  layout() {
+    let height = 0;
+    this._xpos = 0;
+    for (let i = 0; i < this.children.length; i++) {
+      const child = this.children[i];
+      if (i > 0) {
+        this._xpos += this.spacing;
+      }
+      child.x = this._xpos;
+      this._xpos += child.width;
+      height = Math.max(height, child.y + child.height);
+    }
+    this.setWidth(this._xpos);
+    this.setHeight(height);
   }
 
   /**
