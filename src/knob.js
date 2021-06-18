@@ -52,7 +52,7 @@ export class Knob extends Component {
     this._setWrapperClass("MinimalKnob");
     this._handle = this._createDiv(this._wrapper, "MinimalKnobHandle");
     this._wrapper.tabIndex = 0;
-    this._zero = this._createDiv(this._handle, "MinimalKnobZero");
+    this._createDiv(this._handle, "MinimalKnobZero");
     this._textLabel = new Label(this._wrapper, 0, 0, this._label);
     this._valueLabel = new Label(this._wrapper, 0, 0, this._roundValue(this._value));
   }
