@@ -21,10 +21,8 @@
   "homepage": "https://github.com/bit101/minicomps#readme",
   "devDependencies": {
     "clean-jsdoc-theme": "^3.2.7",
+    "jsdoc": "^3.6.7",
     "rollup": "^2.48.0",
     "uglify-js": "^3.13.7"
-  },
-  "dependencies": {
-    "jsdoc": "^3.6.7"
   }
 }
