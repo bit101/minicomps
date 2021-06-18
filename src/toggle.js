@@ -1,5 +1,4 @@
 import { Component } from "./component.js";
-import { Defaults } from "./defaults.js";
 import { Label } from "./label.js";
 import { Style } from "./style.js";
 
@@ -24,16 +23,16 @@ export class Toggle extends Component {
   constructor(parent, x, y, label, toggled, defaultHandler) {
     super(parent, x, y);
     this._label = label;
-    this._labelPosition = Defaults.toggle.labelPosition;
-    this._showStateLabels = true;
-    this._onLabel = "On";
-    this._offLabel = "Off";
+    this._labelPosition = Toggle.labelPosition;
+    this._onLabel = Toggle.onLabel;
+    this._offLabel = Toggle.offLabel;
 
     this._createChildren();
     this._createStyle();
     this._createListeners();
 
-    this.setSize(50, 20);
+    this.setShowStateLabels(Toggle.showStateLabels);
+    this.setSize(Toggle.width, Toggle.height);
     this.setToggled(toggled || false);
     this._updateLabel();
     this.addEventListener("click", defaultHandler);
@@ -105,12 +104,14 @@ export class Toggle extends Component {
   }
 
   _updateToggle() {
+    this._stateLabel.align = "center";
+    this._stateLabel.width = this._width / 2;
     if (this._toggled) {
-      this._stateLabel.align = "left";
+      this._stateLabel.x = 0;
       this._stateLabel.text = this._onLabel;
       this._handle.style.left = "50%";
     } else {
-      this._stateLabel.align = "right";
+      this._stateLabel.x = this._width / 2;
       this._stateLabel.text = this._offLabel;
       this._handle.style.left = 0;
     }
@@ -235,7 +236,6 @@ export class Toggle extends Component {
     } else {
       this._stateLabel.style.visibility = "hidden";
     }
-    console.log(this._stateLabel.style.visibility);
     return this;
   }
 
@@ -322,6 +322,16 @@ export class Toggle extends Component {
     this.setToggled(toggled);
   }
 }
+
+//////////////////////////////////
+// DEFAULTS
+//////////////////////////////////
+Toggle.labelPosition = "top";
+Toggle.showStateLabels = true;
+Toggle.onLabel = "On";
+Toggle.offLabel = "Off";
+Toggle.width = 50;
+Toggle.height = 20;
 
 customElements.define("minimal-toggle", Toggle);
 

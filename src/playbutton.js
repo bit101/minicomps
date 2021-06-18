@@ -25,7 +25,7 @@ export class PlayButton extends Component {
     this._createStyle();
     this._createListeners();
 
-    this.setSize(40, 20);
+    this.setSize(PlayButton.width, PlayButton.height);
     this.addEventListener("click", defaultHandler);
     this.setPlaying(playing);
     this._addToParent();
@@ -189,6 +189,12 @@ export class PlayButton extends Component {
     this.setPlaying(playing);
   }
 }
+
+//////////////////////////////////
+// DEFAULTS
+//////////////////////////////////
+PlayButton.width = 40;
+PlayButton.height = 20;
 
 customElements.define("minimal-playbutton", PlayButton);
 

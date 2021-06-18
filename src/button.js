@@ -1,5 +1,4 @@
 import { Component } from "./component.js";
-import { Defaults } from "./defaults.js";
 import { Label } from "./label.js";
 import { Style } from "./style.js";
 
@@ -28,7 +27,7 @@ export class Button extends Component {
     this._createStyle();
     this._createListeners();
 
-    this.setSize(Defaults.button.width, Defaults.button.height);
+    this.setSize(Button.width, Button.height);
     this.addEventListener("click", defaultHandler);
     this._addToParent();
   }
@@ -151,6 +150,13 @@ export class Button extends Component {
     this.setLabel(label);
   }
 }
+
+//////////////////////////////////
+// Getters/Setters
+// alphabetical. getter first.
+//////////////////////////////////
+Button.width = 100;
+Button.height = 20;
 
 customElements.define("minimal-button", Button);
 

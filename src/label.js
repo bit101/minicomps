@@ -1,5 +1,4 @@
 import { Component } from "./component.js";
-import { Defaults } from "./defaults.js";
 import { Style } from "./style.js";
 
 /**
@@ -32,14 +31,14 @@ export class Label extends Component {
 
     this._createChildren();
     this._createStyle();
-    this.setFontSize(Defaults.label.fontSize);
+    this.setFontSize(Label.fontSize);
     // width will be 0 until it is on the live DOM
     // so we put it on document.body, get width
     // then remove it and add it to parent.
     document.body.appendChild(this);
     this.setWidth(this._wrapper.offsetWidth);
     this.setText(text);
-    this.setHeight(Defaults.label.fontSize + 2);
+    this.setHeight(Label.fontSize + 2);
     this._addToParent();
   }
 
@@ -286,5 +285,10 @@ export class Label extends Component {
     this.setText(text);
   }
 }
+
+//////////////////////////////////
+// Defaults
+//////////////////////////////////
+Label.fontSize = 10;
 
 customElements.define("minimal-label", Label);

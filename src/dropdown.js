@@ -27,16 +27,15 @@ export class Dropdown extends Component {
     this._open = false;
     this._itemElements = [];
     this._text = "";
-    this._dropdownPosition = "bottom";
 
     this._createChildren();
     this._createStyle();
     this._createListeners();
 
-    this.setSize(100, 20);
+    this.setSize(Dropdown.width, Dropdown.height);
     this._createItems();
     this.setIndex(index);
-    this._updateDropdownPosition();
+    this.setDropdownPosition(Dropdown.dropdownPosition);
     this.addEventListener("change", defaultHandler);
     this._addToParent();
   }
@@ -361,6 +360,13 @@ export class Dropdown extends Component {
     return this.getText();
   }
 }
+
+//////////////////////////////////
+// DEFAULTS
+//////////////////////////////////
+Dropdown.width = 100;
+Dropdown.height = 20;
+Dropdown.dropdownPosition = "bottom";
 
 customElements.define("minimal-dropdown", Dropdown);
 

@@ -1,4 +1,3 @@
-import { Defaults } from "./defaults.js";
 import { HSlider } from "./hslider.js";
 import { Style } from "./style.js";
 
@@ -24,7 +23,7 @@ export class VSlider extends HSlider {
    */
   constructor(parent, x, y, label, value, min, max, defaultHandler) {
     super(parent, x, y, label, value, min, max, defaultHandler);
-    this._labelsSwapped = false;
+    this.setLabelsSwapped(VSlider.labelsSwapped);
   }
   //////////////////////////////////
   // Core
@@ -34,7 +33,7 @@ export class VSlider extends HSlider {
     const style = document.createElement("style");
     style.textContent = Style.vslider;
     this.shadowRoot.append(style);
-    this.setHandleSize(Defaults.vslider.handleSize);
+    this.setHandleSize(VSlider.handleSize);
   }
 
   //////////////////////////////////
@@ -89,8 +88,8 @@ export class VSlider extends HSlider {
   }
 
   _setDefaults() {
-    this._decimals = Defaults.vslider.decimals;
-    this._handleSize = Defaults.vslider.handleSize;
+    this._decimals = VSlider.decimals;
+    this._handleSize = VSlider.handleSize;
   }
 
   _updateHandlePosition() {
@@ -122,7 +121,7 @@ export class VSlider extends HSlider {
   }
 
   _setSliderSize() {
-    this.setSize(Defaults.vslider.width, Defaults.vslider.height);
+    this.setSize(VSlider.width, VSlider.height);
   }
 
   _updateValue(value) {
@@ -212,6 +211,15 @@ export class VSlider extends HSlider {
     this.setLabelsSwapped(swap);
   }
 }
+
+//////////////////////////////////
+// DEFAULTS
+//////////////////////////////////
+VSlider.decimals = 0;
+VSlider.width = 15;
+VSlider.height = 150;
+VSlider.handleSize = 15;
+VSlider.labelsSwapped = false;
 
 customElements.define("minimal-vslider", VSlider);
 

@@ -1,5 +1,4 @@
 import { Component } from "./component.js";
-import { Defaults } from "./defaults.js";
 import { Label } from "./label.js";
 import { Style } from "./style.js";
 import { VSlider } from "./vslider.js";
@@ -26,11 +25,10 @@ export class ColorPicker extends Component {
     super(parent, x, y);
     color = color || "#f00";
     this._label = label || "";
-    this._labelPosition = Defaults.colorpicker.labelPosition;
+    this._labelPosition = ColorPicker.labelPosition;
     this._color = this._correctColor(color);
     this._color = this._cropColor(color);
-    this._sliderPosition = "bottom";
-    this._useSliders = true;
+    this._useSliders = ColorPicker.useSliders;
     this._width = 100;
     this._height = 20;
 
@@ -38,6 +36,7 @@ export class ColorPicker extends Component {
     this._createStyle();
     this._createListeners();
 
+    this.setSliderPosition(ColorPicker.sliderPosition);
     this.addEventListener("change", defaultHandler);
     this._addToParent();
   }
@@ -522,5 +521,12 @@ export class ColorPicker extends Component {
     this.setUseSliders(useSliders);
   }
 }
+
+//////////////////////////////////
+// DEFAULTS
+//////////////////////////////////
+ColorPicker.labelPosition = "top";
+ColorPicker.useSliders = true;
+ColorPicker.sliderPosition = "bottom";
 
 customElements.define("minimal-colorpicker", ColorPicker);

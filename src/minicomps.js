@@ -3,7 +3,6 @@ import { Canvas } from "./canvas.js";
 import { Checkbox } from "./checkbox.js";
 import { ColorPicker } from "./colorpicker.js";
 import { Component } from "./component.js";
-import { Defaults } from "./defaults.js";
 import { Dropdown } from "./dropdown.js";
 import { HBox } from "./hbox.js";
 import { HSlider } from "./hslider.js";
@@ -35,7 +34,6 @@ export {
   Checkbox,
   ColorPicker,
   Component,
-  Defaults,
   Dropdown,
   HBox,
   HSlider,

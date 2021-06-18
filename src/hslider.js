@@ -1,5 +1,4 @@
 import { Component } from "./component.js";
-import { Defaults } from "./defaults.js";
 import { Label } from "./label.js";
 import { Style } from "./style.js";
 
@@ -60,7 +59,7 @@ export class HSlider extends Component {
     const style = document.createElement("style");
     style.textContent = Style.hslider;
     this.shadowRoot.append(style);
-    this.setHandleSize(Defaults.hslider.handleSize);
+    this.setHandleSize(HSlider.handleSize);
   }
 
   _createListeners() {
@@ -214,10 +213,10 @@ export class HSlider extends Component {
   }
 
   _setDefaults() {
-    this._handleSize = Defaults.hslider.handleSize;
-    this._decimals = Defaults.hslider.decimals;
-    this._labelPosition = Defaults.hslider.labelPosition;
-    this._valuePosition = Defaults.hslider.valuePosition;
+    this._handleSize = HSlider.handleSize;
+    this._decimals = HSlider.decimals;
+    this._labelPosition = HSlider.labelPosition;
+    this._valuePosition = HSlider.valuePosition;
   }
 
   _updateHandlePosition() {
@@ -275,7 +274,7 @@ export class HSlider extends Component {
   }
 
   _setSliderSize() {
-    this.setSize(Defaults.hslider.width, Defaults.hslider.height);
+    this.setSize(HSlider.width, HSlider.height);
   }
 
   _updateValue(value) {
@@ -674,6 +673,16 @@ export class HSlider extends Component {
     this.setValuePosition(position);
   }
 }
+
+//////////////////////////////////
+// DEFAULTS
+//////////////////////////////////
+HSlider.decimals = 0;
+HSlider.labelPosition = "top";
+HSlider.valuePosition = "top";
+HSlider.width = 150;
+HSlider.height = 15;
+HSlider.handleSize = 15;
 
 customElements.define("minimal-hslider", HSlider);
 

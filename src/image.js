@@ -1,5 +1,4 @@
 import { Component } from "./component.js";
-import { Defaults } from "./defaults.js";
 import { Style } from "./style.js";
 
 /**
@@ -26,7 +25,7 @@ export class Image extends Component {
     this._createStyle();
     this._createListeners();
 
-    this.setSize(Defaults.image.width, 100);
+    this.setSize(Image.width, 100);
     this._load();
     this._addToParent();
   }
@@ -148,6 +147,11 @@ export class Image extends Component {
     this.setUrl(url);
   }
 }
+
+//////////////////////////////////
+// Defaults
+//////////////////////////////////
+Image.width = 100;
 
 customElements.define("minimal-image", Image);
 

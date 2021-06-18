@@ -25,14 +25,14 @@ export class Window extends Component {
     w = w || 400;
     h = h || 400;
     this._label = label;
-    this._draggable = true;
-    this._minimizable = true;
     this._minimized = false;
 
     this._createChildren();
     this._createStyle();
     this._createListeners();
 
+    this.setDraggable(Window.draggable);
+    this.setMinimizable(Window.minimizable);
     this.setSize(w, h);
     this._addToParent();
   }
@@ -262,6 +262,13 @@ export class Window extends Component {
     this.setMinimizable(minimizable);
   }
 }
+
+//////////////////////////////////
+// Defaults
+//////////////////////////////////
+
+Window.draggable = true;
+Window.minimizable = true;
 
 customElements.define("minimal-window", Window);
 

@@ -1,5 +1,4 @@
 import { Component } from "./component.js";
-import { Defaults } from "./defaults.js";
 import { Label } from "./label.js";
 import { Style } from "./style.js";
 
@@ -24,17 +23,15 @@ export class LED extends Component {
   constructor(parent, x, y, label, color, lit) {
     super(parent, x, y);
     this._label = label || "";
-    this._color = color || "#f00";
+    this._color = color || LED.color;
     this._lit = lit || false;
-
-    const size = 16;
 
     this._createChildren();
     this._setWrapperClass("MinimalLED");
     this._createStyle();
 
-    this.setLabelPosition(Defaults.led.labelPosition);
-    this.setSize(size, size);
+    this.setLabelPosition(LED.labelPosition);
+    this.setSize(LED.size, LED.size);
     this._updateLED();
     this._updateLabel();
     this._addToParent();
@@ -274,6 +271,13 @@ export class LED extends Component {
     this.setLit(lit);
   }
 }
+
+//////////////////////////////////
+// Defaults
+//////////////////////////////////
+LED.labelPosition = "top";
+LED.color = "#f00";
+LED.size = 16;
 
 customElements.define("minimal-led", LED);
 

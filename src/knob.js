@@ -1,5 +1,4 @@
 import { Component } from "./component.js";
-import { Defaults } from "./defaults.js";
 import { Label } from "./label.js";
 import { Style } from "./style.js";
 
@@ -29,16 +28,16 @@ export class Knob extends Component {
     this._label = label || "";
     this._min = min || 0;
     this._max = max || 100;
-    this._decimals = Defaults.knob.decimals;
+    this._decimals = Knob.decimals;
     this._value = value || 0;
-    this._sensitivity = 100;
-    this._labelsSwapped = false;
+    this._sensitivity = Knob.sensitivity;
 
     this._createChildren();
     this._createStyle();
     this._createListeners();
 
-    this.setSize(Defaults.knob.size, Defaults.knob.size);
+    this.setLabelSwapped(Knob.labelsSwapped);
+    this.setSize(Knob.size, Knob.size);
     this._updateHandleRotation();
 
     this.addEventListener("change", defaultHandler);
@@ -528,6 +527,14 @@ export class Knob extends Component {
     this.setValue(value);
   }
 }
+
+//////////////////////////////////
+// DEFAULTS
+//////////////////////////////////
+Knob.decimals = 0;
+Knob.size = 40;
+Knob.sensitivity = 100;
+Knob.labelsSwapped = false;
 
 customElements.define("minimal-knob", Knob);
 

@@ -1,6 +1,5 @@
 import { Button } from "./button.js";
 import { Component } from "./component.js";
-import { Defaults } from "./defaults.js";
 import { Label } from "./label.js";
 import { Style } from "./style.js";
 
@@ -27,11 +26,11 @@ export class NumericStepper extends Component {
   constructor(parent, x, y, label, value, min, max, defaultHandler) {
     super(parent, x, y);
     this._label = label || "";
-    this._labelPosition = Defaults.numericstepper.labelPosition;
+    this._labelPosition = NumericStepper.labelPosition;
 
     this._min = min || 0;
     this._max = max || 0;
-    this._decimals = Defaults.numericstepper.decimals;;
+    this._decimals = NumericStepper.decimals;;
     value = value || 0;
     this._value = this._roundValue(value);
 
@@ -39,7 +38,7 @@ export class NumericStepper extends Component {
     this._createStyle();
     this._createListeners();
 
-    this.setSize(Defaults.numericstepper.width, 20);
+    this.setWidth(NumericStepper.width);
     this.addEventListener("change", defaultHandler);
     this._addToParent();
   }
@@ -317,9 +316,9 @@ export class NumericStepper extends Component {
     return this;
   }
 
-  setHeight(height) {
-    super.setHeight(height);
-    this._updateLabel();
+  /**
+   * Sets the height of the stepper. In fact, this component has a fixed height, so this method does nothing.
+  setHeight() {
     return this;
   }
 
@@ -398,6 +397,7 @@ export class NumericStepper extends Component {
   }
 
   setWidth(width) {
+    width = Math.max(width, 40);
     super.setWidth(width);
     this._input.style.width = width - 40 + "px";
     this._minus.x = width - 40;
@@ -470,6 +470,13 @@ export class NumericStepper extends Component {
     this.setValue(value);
   }
 }
+
+//////////////////////////////////
+// Defaults
+//////////////////////////////////
+NumericStepper.decimals = 0;
+NumericStepper.labelPosition = "top";
+NumericStepper.width = 100;
 
 customElements.define("minimal-numericstepper", NumericStepper);
 
