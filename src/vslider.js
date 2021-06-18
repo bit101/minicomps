@@ -49,9 +49,9 @@ export class VSlider extends HSlider {
       mouseY = event.clientY;
     }
     this._offsetY = mouseY - this.getBoundingClientRect().top - this._handle.offsetTop;
-    if (this._offsetY < 0 || this._offsetY > this._handle) {
-      this._offsetY = this._handle / 2;
-      const y = mouseY - this.getBoundingClientRect().top - this._handle / 2;
+    if (this._offsetY < 0 || this._offsetY > this._handleSize) {
+      this._offsetY = this._handleSize / 2;
+      const y = mouseY - this.getBoundingClientRect().top - this._handleSize / 2;
       this._calculateValueFromPos(y);
     }
     document.addEventListener("mousemove", this._onMouseMove);
