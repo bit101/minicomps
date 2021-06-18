@@ -71,6 +71,9 @@ export class HBox extends Component {
     return this._spacing;
   }
 
+  /**
+   * Performs a re-layout of the hbox.
+   */
   layout() {
     let height = 0;
     this._xpos = 0;

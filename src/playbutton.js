@@ -144,6 +144,9 @@ export class PlayButton extends Component {
     return this;
   }
 
+  /**
+   * @returns whether the button is indicating a playing state.
+   */
   getPlaying() {
     return this._playing;
   }
@@ -193,7 +196,14 @@ export class PlayButton extends Component {
 //////////////////////////////////
 // DEFAULTS
 //////////////////////////////////
+
+/**
+ * Default width of all PlayButtons.
+ */
 PlayButton.width = 40;
+/**
+ * Default height of all Playbuttons.
+ */
 PlayButton.height = 20;
 
 customElements.define("minimal-playbutton", PlayButton);

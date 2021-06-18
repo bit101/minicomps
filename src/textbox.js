@@ -52,30 +52,51 @@ export class TextBox extends Component {
   // Public
   //////////////////////////////////
 
+  /**
+   * @returns the alignment of the text.
+   */
   getAlign() {
     return this._align;
   }
 
+  /**
+   * @returns whether or not the text will be bold.
+   */
   getBold() {
     return this._bold;
   }
 
+  /**
+   * @returns the color of the text.
+   */
   getColor() {
     return this._color;
   }
 
+  /**
+   * @returns the font size of th text.
+   */
   getFontSize() {
     return this._fontSize;
   }
 
+  /**
+   * @returns the html text in the textbox (if any).
+   */
   getHtml() {
     return this._html;
   }
 
+  /**
+   * @returns whether the text will be italic.
+   */
   getItalic() {
     return this._italics;
   }
 
+  /**
+   * @returns the text in the textbox.
+   */
   getText() {
     return this._text;
   }

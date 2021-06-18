@@ -525,8 +525,18 @@ export class ColorPicker extends Component {
 //////////////////////////////////
 // DEFAULTS
 //////////////////////////////////
+
+/**
+ * Default labelPosition of all ColorPickers.
+ */
 ColorPicker.labelPosition = "top";
+/**
+ * Default useSliders value of all ColorPickers.
+ */
 ColorPicker.useSliders = true;
+/**
+ * Default sliderPosition of all ColorPickers.
+ */
 ColorPicker.sliderPosition = "bottom";
 
 customElements.define("minimal-colorpicker", ColorPicker);

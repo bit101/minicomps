@@ -364,8 +364,18 @@ export class Dropdown extends Component {
 //////////////////////////////////
 // DEFAULTS
 //////////////////////////////////
+
+/**
+ * Default width of all Dropdowns.
+ */
 Dropdown.width = 100;
+/**
+ * Default height of all Dropdowns.
+ */
 Dropdown.height = 20;
+/**
+ * Default dropdownPosition of all Dropdowns.
+ */
 Dropdown.dropdownPosition = "bottom";
 
 customElements.define("minimal-dropdown", Dropdown);

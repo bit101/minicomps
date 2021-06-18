@@ -268,26 +268,44 @@ export class Knob extends Component {
     return this;
   }
 
+  /**
+   * @returns the number of decimals of precision that will be used.
+   */
   getDecimals() {
     return this._decimals;
   }
 
+  /**
+   * @returns the text in the label.
+   */
   getLabel() {
     return this._label;
   }
 
+  /**
+   * @returns whether the text and value labels are swapped.
+   */
   getLabelsSwapped() {
     return this._labelsSwapped;
   }
 
+  /**
+   * @returns the minimum value of the knob.
+   */
   getMax() {
     return this._max;
   }
 
+  /**
+   * @returns the minimimum value of the knob.
+   */
   getMin() {
     return this._min;
   }
 
+  /**
+   * @returns the sensitivity of the knob.
+   */
   getSensitivity() {
     return this._sensitivity;
   }
@@ -531,9 +549,22 @@ export class Knob extends Component {
 //////////////////////////////////
 // DEFAULTS
 //////////////////////////////////
+
+/**
+ * Default decimals of all Knobs.
+ */
 Knob.decimals = 0;
+/**
+ * Default size of all Knobs.
+ */
 Knob.size = 40;
+/**
+ * Default sensitivity of all Knobs.
+ */
 Knob.sensitivity = 100;
+/**
+ * Default labelsSwapped of all Knobs.
+ */
 Knob.labelsSwapped = false;
 
 customElements.define("minimal-knob", Knob);

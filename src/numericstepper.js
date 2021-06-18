@@ -260,34 +260,51 @@ export class NumericStepper extends Component {
     return this;
   }
 
+  /**
+   * @returns the number of decimals or precision used.
+   */
   getDecimals() {
     return this._decimals;
   }
 
+  /**
+   * @returns the text in the label.
+   */
   getLabel() {
     return this._label;
   }
 
+  /**
+   * @returns the label position (top, right, left, bottom).
+   */
   getLabelPosition() {
     return this._labelPosition;
   }
 
+  /**
+   * @returns the maximum value of the stepper.
+   */
   getMax() {
     return this._max;
   }
 
+  /**
+   * @returns the minimum value of the stepper.
+   */
   getMin() {
     return this._min;
   }
 
+  /**
+   * @returns the current value of the stepper.
+   */
   getValue() {
     return this._value;
   }
 
   /**
-   * Sets the number of decimals of precision to be used for the numeric stepper. This will effect what is shown in the value label as well as the value property of the numeric stepper. A decimals value of 0 will display integers only. Negative decimals will round to the nearest power of 10.
-   * @param {number} decimals - The decimals of precision to use.
-   * @returns This instance, suitable for chaining.
+   * Sets the decimals of precision to use.
+   * @param {number} decimals - How many decimals of precision will be used.
    */
   setDecimals(decimals) {
     this._decimals = decimals;
@@ -474,8 +491,18 @@ export class NumericStepper extends Component {
 //////////////////////////////////
 // Defaults
 //////////////////////////////////
+
+/**
+ * Default decimals for all NumericSteppers.
+ */
 NumericStepper.decimals = 0;
+/**
+ * Default labelPosition of all NumericSteppers.
+ */
 NumericStepper.labelPosition = "top";
+/**
+ * Default width of all NumericSteppers.
+ */
 NumericStepper.width = 100;
 
 customElements.define("minimal-numericstepper", NumericStepper);

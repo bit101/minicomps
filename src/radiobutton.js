@@ -155,17 +155,20 @@ export class RadioButton extends Component {
     return this;
   }
 
+  /**
+   * @returns the text in the label.
+   */
   getLabel() {
     return this._label;
   }
 
+  /**
+   * @returns whether or not the radiobutton is checked.
+   */
   getChecked() {
     return this._checked;
   }
 
-  /**
-   * Gets the width of this radio button. Setting the width does nothing because it is automatically determined by the width of the label.
-   */
   getWidth() {
     return this._textLabel.x + this._textLabel.width;
   }

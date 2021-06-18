@@ -61,30 +61,51 @@ export class Label extends Component {
   // Public
   //////////////////////////////////
 
+  /**
+   * @returns the alignment of the text.
+   */
   getAlign() {
     return this._align;
   }
 
+  /**
+   * @returns whether or not the label will adjust its size automatically.
+   */
   getAutoSize() {
     return this._autosize;
   }
 
+  /**
+   * @returns whether or not the text is bold.
+   */
   getBold() {
     return this._bold;
   }
 
+  /**
+   * @returns the color of the text.
+   */
   getColor() {
     return this._color;
   }
 
+  /**
+   * @returns the font size used in the label.
+   */
   getFontSize() {
     return this._fontSize;
   }
 
+  /**
+   * @returns whether or not the text will be italic.
+   */
   getItalic() {
     return this._italics;
   }
 
+  /**
+   * @returns the text in the label.
+   */
   getText() {
     return this._text;
   }
@@ -289,6 +310,10 @@ export class Label extends Component {
 //////////////////////////////////
 // Defaults
 //////////////////////////////////
+
+/**
+ * Default fontSize of all labels.
+ */
 Label.fontSize = 10;
 
 customElements.define("minimal-label", Label);

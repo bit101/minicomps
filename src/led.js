@@ -107,22 +107,37 @@ export class LED extends Component {
     return this;
   }
 
+  /**
+   * @returns whether or not the LED is blinking.
+   */
   getBlinking() {
     return this._blinking;
   }
 
+  /**
+   * @returns the color of the LED.
+   */
   getColor() {
     return this._color;
   }
 
+  /**
+   * @returns the text in the label.
+   */
   getLabel() {
     return this._label;
   }
 
+  /**
+   * @returns the label position (top, left, right or bottom).
+   */
   getLabelPosition() {
     return this._labelPosition;
   }
 
+  /**
+   * @returns whether or not the LED is lit.
+   */
   getLit() {
     return this._lit;
   }
@@ -228,6 +243,8 @@ export class LED extends Component {
   // alphabetical. getter first.
   //////////////////////////////////
 
+  /**
+   * Gets whether or not the LED is blinking.
   get blinking() {
     return this.getBlinking();
   }
@@ -275,8 +292,17 @@ export class LED extends Component {
 //////////////////////////////////
 // Defaults
 //////////////////////////////////
+/**
+ * Default labelPosition of all LEDs.
+ */
 LED.labelPosition = "top";
+/**
+ * Default color of all LEDs.
+ */
 LED.color = "#f00";
+/**
+ * Default size of all LEDs.
+ */
 LED.size = 16;
 
 customElements.define("minimal-led", LED);

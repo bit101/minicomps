@@ -215,10 +215,26 @@ export class VSlider extends HSlider {
 //////////////////////////////////
 // DEFAULTS
 //////////////////////////////////
+
+/**
+ * Default decimals property for all VSliders.
+ */
 VSlider.decimals = 0;
+/**
+ * Default width property for all VSliders.
+ */
 VSlider.width = 15;
+/**
+ * Default height property for all VSliders.
+ */
 VSlider.height = 150;
+/**
+ * Default handleSize property for all VSliders.
+ */
 VSlider.handleSize = 15;
+/**
+ * Default labelsSwapped property for all VSliders.
+ */
 VSlider.labelsSwapped = false;
 
 customElements.define("minimal-vslider", VSlider);

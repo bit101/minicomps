@@ -155,7 +155,14 @@ export class Button extends Component {
 // Getters/Setters
 // alphabetical. getter first.
 //////////////////////////////////
+
+/**
+ * Default width of all Buttons.
+ */
 Button.width = 100;
+/**
+ * Default height of all Buttons.
+ */
 Button.height = 20;
 
 customElements.define("minimal-button", Button);

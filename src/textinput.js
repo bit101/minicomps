@@ -89,10 +89,16 @@ export class TextInput extends Component {
     return this;
   }
 
+  /**
+   * @returns the maximum number of characters that can be entered in this text input.
+   */
   getMaxLength() {
     return this._maxLength;
   }
 
+  /**
+   * @returns the text in the input.
+   */
   getText() {
     return this._text;
   }

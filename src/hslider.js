@@ -677,11 +677,29 @@ export class HSlider extends Component {
 //////////////////////////////////
 // DEFAULTS
 //////////////////////////////////
+/**
+ * Default decimals of all HSliders.
+ */
 HSlider.decimals = 0;
+/**
+ * Default labelPosition of all HSliders.
+ */
 HSlider.labelPosition = "top";
+/**
+ * Default valuePosition of all HSliders.
+ */
 HSlider.valuePosition = "top";
+/**
+ * Default width of all HSliders.
+ */
 HSlider.width = 150;
+/**
+ * Default height of all HSliders.
+ */
 HSlider.height = 15;
+/**
+ * Default handleSize of all HSliders.
+ */
 HSlider.handleSize = 15;
 
 customElements.define("minimal-hslider", HSlider);

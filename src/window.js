@@ -131,14 +131,23 @@ export class Window extends Component {
   // Public
   //////////////////////////////////
 
+  /**
+   * @returns Whether or not this window can be moved by dragging its title bar.
+   */
   getDraggable() {
     return this._draggable;
   }
 
+  /**
+   * @returns Whether this window has a minimize button.
+   */
   getMinimizable() {
     return this._minimizable;
   }
 
+  /**
+   * @returns This window's label.
+   */
   getLabel() {
     return this._label;
   }
@@ -267,7 +276,13 @@ export class Window extends Component {
 // Defaults
 //////////////////////////////////
 
+/**
+ * Default draggable state for all Windows.
+ */
 Window.draggable = true;
+/**
+ * Default minimizable state for all Windows.
+ */
 Window.minimizable = true;
 
 customElements.define("minimal-window", Window);

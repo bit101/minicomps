@@ -151,6 +151,10 @@ export class Image extends Component {
 //////////////////////////////////
 // Defaults
 //////////////////////////////////
+
+/**
+ * Default width of all images.
+ */
 Image.width = 100;
 
 customElements.define("minimal-image", Image);

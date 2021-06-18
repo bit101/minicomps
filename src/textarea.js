@@ -88,6 +88,9 @@ export class TextArea extends Component {
     return this;
   }
 
+  /**
+   * @returns the text in the text area.
+   */
   getText() {
     return this._text;
   }

@@ -66,10 +66,16 @@ export class ProgressBar extends Component {
   // Public
   //////////////////////////////////
 
+  /**
+   * @returns the maximum value of the progress bar.
+   */
   getMax() {
     return this._max;
   }
 
+  /**
+   * @returns the current progress of the progressbar.
+   */
   getProgress() {
     return this._progress;
   }

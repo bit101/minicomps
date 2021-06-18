@@ -40,6 +40,11 @@ export class VBox extends Component {
   // Public
   //////////////////////////////////
 
+  /**
+   * Adds empty space into the VBox.
+   * @param {number} space - The space in pixels to add.
+   * @returns This instance.
+   */
   addSpace(space) {
     const div = this._createDiv();
     div.x = 0;
@@ -47,6 +52,7 @@ export class VBox extends Component {
     div.width = 0;
     div.height = space;
     this.appendChild(div);
+    return this;
   }
 
   /**
@@ -64,10 +70,17 @@ export class VBox extends Component {
     return this;
   }
 
+  /**
+   * @returns the current spacing between elements.
+   */
   getSpacing() {
     return this._spacing;
   }
 
+  /**
+   * Triggers relayout of the elements in the VBox.
+   * @returns this instance.
+   */
   layout() {
     let width = 0;
     this._ypos = 0;
@@ -82,6 +95,7 @@ export class VBox extends Component {
     }
     this.setWidth(width);
     this.setHeight(this._ypos);
+    return this;
   }
 
   /**

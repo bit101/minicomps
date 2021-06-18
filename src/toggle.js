@@ -144,26 +144,44 @@ export class Toggle extends Component {
     return this;
   }
 
+  /**
+   * @returns the current text of the label.
+   */
   getLabel() {
     return this._label;
   }
 
+  /**
+   * @returns the position of the text label (left, right, top or bottom);
+   */
   getLabelPosition() {
     return this._labelPosition;
   }
 
+  /**
+   * @returns the value of the state label when the toggle is toggled off.
+   */
   getOffLabel() {
     return this._offLabel;
   }
 
+  /**
+   * @returns the value of the state label when the toggle is toggled on.
+   */
   getOnLabel() {
     return this._onLabel;
   }
 
+  /**
+   * @returns whether or not the state labels will be shown.
+   */
   getShowStateLabels() {
     return this._showStateLabels;
   }
 
+  /**
+   * @returns whether or not this toggle is toggled on.
+   */
   getToggled() {
     return this._toggled;
   }
@@ -213,6 +231,11 @@ export class Toggle extends Component {
     return this;
   }
 
+  /**
+   * Sets the value of the state label when the toggle is toggled off.
+   * @param {string} label - the text of the label.
+   * @returns This instance.
+   */
   setOffLabel(label) {
     this._offLabel = label;
     if (!this._toggled) {
@@ -221,6 +244,11 @@ export class Toggle extends Component {
     return this;
   }
 
+  /**
+   * Sets the value of the state label when the toggle is toggled on.
+   * @param {string} label - the text of the label.
+   * @returns This instance.
+   */
   setOnLabel(label) {
     this._onLabel = label;
     if (this._toggled) {
@@ -229,6 +257,11 @@ export class Toggle extends Component {
     return this;
   }
 
+  /**
+   * Sets whether or not the toggle will display state labels showing its on/off state.
+   * @param {boolean} show - Whether or not to show the state labels.
+   * @returns This instance.
+   */
   setShowStateLabels(show) {
     this._showStateLabels = show;
     if (show) {
@@ -290,6 +323,9 @@ export class Toggle extends Component {
     this.setLabelPosition(pos);
   }
 
+  /**
+   * Gets and sets the text of the state label in the off position.
+   */
   get offLabel() {
     return this.getOffLabel();
   }
@@ -297,6 +333,9 @@ export class Toggle extends Component {
     this.setOffLabel(label);
   }
 
+  /**
+   * Gets and sets the text of the state label in the on position.
+   */
   get onLabel() {
     return this.getOnLabel();
   }
@@ -304,6 +343,9 @@ export class Toggle extends Component {
     this.setOnLabel(label);
   }
 
+  /**
+   * Gets and sets whether or not the state labels will be shown.
+   */
   get showStateLabels() {
     return this.getShowStateLabels();
   }
@@ -326,11 +368,30 @@ export class Toggle extends Component {
 //////////////////////////////////
 // DEFAULTS
 //////////////////////////////////
+
+/**
+ * Default labelPosition value for all Toggles.
+ */
 Toggle.labelPosition = "top";
+/**
+ * Default showStateLabels value for all Toggles.
+ */
 Toggle.showStateLabels = true;
+/**
+ * Default onLabel value for all Toggles.
+ */
 Toggle.onLabel = "On";
+/**
+ * Default offLabel value for all Toggles.
+ */
 Toggle.offLabel = "Off";
+/**
+ * Default width for all Toggles.
+ */
 Toggle.width = 50;
+/**
+ * Default height for all Toggles.
+ */
 Toggle.height = 20;
 
 customElements.define("minimal-toggle", Toggle);

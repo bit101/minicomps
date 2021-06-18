@@ -65,9 +65,6 @@ export class Panel extends Component {
   // alphabetical. getter first.
   //////////////////////////////////
 
-  /**
-   * Gets and sets the x position of this component.
-   */
   get x() {
     return this.getX();
   }
@@ -75,9 +72,6 @@ export class Panel extends Component {
     this.setX(x);
   }
 
-  /**
-   * Gets and sets the y position of this component.
-   */
   get y() {
     return this.getY();
   }
