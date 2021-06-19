@@ -1,6 +1,6 @@
 {
   "name": "minicomps",
-  "version": "1.5.1",
+  "version": "0.1.0",
   "description": "minimal ui components",
   "main": "rollup.config.js",
   "scripts": {
