@@ -233,12 +233,10 @@ export class Knob extends Component {
   }
 
   _updateValue(value) {
-    if (this._value !== value) {
-      this._value = value;
-      this._updateHandleRotation();
-      this._valueLabel.text = this._formatValue();
-      this._updateLabelPositions();
-    }
+    this._value = value;
+    this._updateHandleRotation();
+    this._valueLabel.text = this._formatValue();
+    this._updateLabelPositions();
   }
 
   //////////////////////////////////
@@ -407,7 +405,7 @@ export class Knob extends Component {
    * @returns This instance, suitable for chaining.
    */
   setValue(value) {
-    this._value = value;
+    this._updateValue(value);
     return this;
   }
 
