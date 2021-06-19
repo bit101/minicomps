@@ -40,6 +40,11 @@ export class HBox extends Component {
   // Public
   //////////////////////////////////
 
+  /**
+   * Adds empty space into the HBox.
+   * @param {number} space - The space in pixels to add.
+   * @returns This instance.
+   */
   addSpace(space) {
     const div = this._createDiv();
     div.x = 0;

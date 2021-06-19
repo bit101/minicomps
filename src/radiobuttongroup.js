@@ -10,7 +10,7 @@ RadioButtonGroup.getValueForGroup = (group) => {
   for (let i = 0; i < rbGroup.length; i++) {
     const rb = rbGroup[i];
     if (rb.checked) {
-      return rb.text;
+      return rb.label;
     }
   }
   return null;

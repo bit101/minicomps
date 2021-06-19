@@ -4,7 +4,7 @@ export default {
     {
       file: `dist/minicomps.js`,
       format: 'iife',
-      name: "minicomps",
+      name: "mc",
     },
     {
       file: `dist/minicomps.mjs`,
