@@ -114,7 +114,7 @@ export class Button extends Component {
 
   setHeight(height) {
     super.setHeight(height);
-    this._textLabel.height = height;
+    this._textLabel.height = height - 2;
     return this;
   }
 
