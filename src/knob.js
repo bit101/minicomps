@@ -80,9 +80,9 @@ export class Knob extends Component {
   //////////////////////////////////
 
   _onMouseDown(event) {
-    event.preventDefault();
     this._wrapper.focus();
     if (event.changedTouches) {
+      event.preventDefault();
       this._startY = event.changedTouches[0].clientY;
     } else {
       this._startY = event.clientY;
