@@ -1,7 +1,0 @@
-.eslintrc.json
-node_modules
-package-lock.json
-out
-clean-jsdoc-theme
-dist
-Makefile
